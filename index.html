@@ -211,38 +211,49 @@
   <div class="w-full max-w-[520px] min-h-screen flex flex-col relative">
 
     <!-- 頂部手繪標題列 -->
-    <header class="sticky top-0 z-30 bg-[#FAF7F2]/95 backdrop-blur-sm border-b-2 border-[#2D2D2D] px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-2.5">
+    <header class="sticky top-0 z-30 bg-[#FAF7F2]/95 backdrop-blur-sm border-b-2 border-[#2D2D2D] px-3.5 py-2.5 flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2 min-w-0">
         <!-- 手繪笑臉 SVG -->
-        <div class="w-10 h-10 rounded-full bg-[#E5B454] border-2 border-[#2D2D2D] shadow-[2px_2px_0px_#2D2D2D] flex items-center justify-center shrink-0">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2D2D2D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <div class="w-9 h-9 rounded-full bg-[#E5B454] border-2 border-[#2D2D2D] shadow-[2px_2px_0px_#2D2D2D] flex items-center justify-center shrink-0">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2D2D2D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="9" cy="9.5" r="1" fill="#2D2D2D"/>
             <circle cx="15" cy="9.5" r="1" fill="#2D2D2D"/>
             <path d="M8 14.5C9.2 16.5 14.8 16.5 16 14.5"/>
           </svg>
         </div>
-        <div>
-          <h1 class="text-lg font-black tracking-wide leading-tight flex items-center gap-1">
+        <div class="min-w-0">
+          <h1 class="text-base font-black tracking-wide leading-tight flex items-center gap-1 truncate">
             <span>我屋企小管家</span>
-            <span class="font-num text-xl">☺</span>
+            <span class="font-num text-lg">☺</span>
           </h1>
-          <p class="text-xs text-[#5C5852] font-medium flex items-center gap-1.5">
-            <span>家庭共享手帳</span>
-            <span id="syncStatusDot" class="inline-block w-2 h-2 rounded-full bg-[#769676]" title="同步狀態"></span>
+          <p class="text-[11px] text-[#5C5852] font-bold flex items-center gap-1.5">
+            <span id="syncStatusDot" class="inline-block w-2 h-2 rounded-full bg-[#E5B454] shrink-0"></span>
+            <span id="syncStatusText" class="truncate">連線同步中...</span>
           </p>
         </div>
       </div>
 
-      <!-- 右上角家庭房間代碼/設定按鈕 -->
-      <button onclick="openFamilyModal()" class="sketch-btn bg-white px-2.5 py-1.5 flex items-center gap-1.5 text-xs font-bold" aria-label="家庭共用設定">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2D2D2D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-          <circle cx="9" cy="7" r="4"></circle>
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-        </svg>
-        <span id="headerRoomBadge" class="font-num text-sm text-[#3B6E9C]">#YU-888</span>
-      </button>
+      <!-- 右上角立即同步 + 家庭暗號按鈕 -->
+      <div class="flex items-center gap-1.5 shrink-0">
+        <button onclick="manualForceSync()" class="sketch-btn bg-[#769676] text-white p-1.5 flex items-center justify-center" title="立即手動同步雲端資料" aria-label="立即手動同步">
+          <svg id="cloudSyncSpin" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 2v6h-6"></path>
+            <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
+            <path d="M3 22v-6h6"></path>
+            <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
+          </svg>
+        </button>
+
+        <button onclick="openFamilyModal()" class="sketch-btn bg-white px-2.5 py-1.5 flex items-center gap-1 text-xs font-bold" aria-label="家庭共用設定">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2D2D2D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <span id="headerRoomBadge" class="font-num text-xs text-[#3B6E9C]">#YU-CHUI-HOME</span>
+        </button>
+      </div>
     </header>
 
     <!-- 主內容區 -->
@@ -390,7 +401,7 @@
         <div class="sketch-card-alt p-2.5 space-y-2">
           <div class="flex gap-1.5 overflow-x-auto no-scrollbar">
             <button onclick="setDirectionFilter('all')" id="dir-all" class="px-2.5 py-1 rounded-xl text-xs font-bold border-2 border-[#2D2D2D] bg-[#2D2D2D] text-white shrink-0">全部方向</button>
-            <button onclick="setDirectionFilter('out')" id="dir-out" class="px-2.5 py-1 rounded-xl text-xs font-bold border-2 border-[#2D2D2D] bg-white text-[#2D2D2D] shrink-0">往九龍 / 港島 / 青衣</button>
+            <button onclick="setDirectionFilter('out')" id="dir-out" class="px-2.5 py-1 rounded-xl text-xs font-bold border-2 border-[#2D2D2D] bg-white text-[#2D2D2D] shrink-0">往九龍 / 港島 / 機場</button>
             <button onclick="setDirectionFilter('shatin')" id="dir-shatin" class="px-2.5 py-1 rounded-xl text-xs font-bold border-2 border-[#2D2D2D] bg-white text-[#2D2D2D] shrink-0">往沙田市中心 / 火炭 / 馬鞍山</button>
             <button onclick="setDirectionFilter('fav')" id="dir-fav" class="px-2.5 py-1 rounded-xl text-xs font-bold border-2 border-[#2D2D2D] bg-white text-[#2D2D2D] shrink-0">⭐ 常用置頂</button>
           </div>
@@ -398,7 +409,7 @@
           <!-- 路線搜尋框（仿附圖搜尋欄） -->
           <div class="relative">
             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs">🔍</span>
-            <input type="text" id="routeSearchInput" oninput="renderTransportList()" placeholder="搜尋路線編號或目的地 (如 49X, 89X, 808, 沙田)..." class="sketch-input w-full pl-8 pr-8 py-1.5 text-xs font-medium" />
+            <input type="text" id="routeSearchInput" oninput="renderTransportList()" placeholder="搜尋路線或目的地 (如 A41, 機場, 49X, 89X, 808)..." class="sketch-input w-full pl-8 pr-8 py-1.5 text-xs font-medium" />
             <button onclick="clearRouteSearch()" id="clearSearchBtn" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-bold text-[#6B665F]">✕</button>
           </div>
         </div>
@@ -417,28 +428,63 @@
 
 
       <!-- ========================================================= -->
-      <!-- 第三頁：家庭共用行事曆                                    -->
+      <!-- 第三頁：家庭日曆（今日及近期日常行程清單 + 成員篩選）       -->
       <!-- ========================================================= -->
-      <section id="tab-calendar" class="tab-pane space-y-3.5">
-        <!-- 月份切換與新增按鈕 -->
+      <section id="tab-daily" class="tab-pane space-y-3.5">
         <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <button onclick="changeCalMonth(-1)" class="sketch-btn bg-white w-8 h-8 flex items-center justify-center font-bold text-sm">◀</button>
-            <h2 id="calMonthTitle" class="text-base font-black tracking-wide">2026年 11月</h2>
-            <button onclick="changeCalMonth(1)" class="sketch-btn bg-white w-8 h-8 flex items-center justify-center font-bold text-sm">▶</button>
-            <button onclick="jumpToToday()" class="text-xs font-bold text-[#3B6E9C] underline ml-1">今天</button>
+          <div>
+            <h2 class="text-base font-black flex items-center gap-1.5">
+              <span>📋</span>
+              <span class="marker-yellow">家庭日常行程表</span>
+            </h2>
+            <p class="text-[11px] text-[#5C5852] font-medium">即時雲端同步 · 家人可隨時查看及打卡完成</p>
           </div>
 
-          <button onclick="openEventModal()" class="sketch-btn bg-[#E5B454] text-[#2D2D2D] px-3 py-1.5 text-xs font-black flex items-center gap-1">
+          <button onclick="openEventModal(todayStr)" class="sketch-btn bg-[#E5B454] text-[#2D2D2D] px-3 py-1.5 text-xs font-black flex items-center gap-1 shrink-0">
             <span class="text-base leading-none">+</span>
             <span>新增行程</span>
           </button>
         </div>
 
-        <!-- 手繪月曆卡片 -->
-        <div class="sketch-card p-3">
+        <!-- 家庭成員篩選膠囊 -->
+        <div class="flex gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
+          <button onclick="setDailyMemberFilter('ALL')" id="mem-filter-ALL" class="sketch-pill px-3 py-1 text-xs font-bold bg-[#2D2D2D] text-white shrink-0">👨‍👩‍👧‍👦 全部成員</button>
+          <button onclick="setDailyMemberFilter('全家')" id="mem-filter-全家" class="sketch-pill px-3 py-1 text-xs font-bold bg-white text-[#2D2D2D] shrink-0">💛 全家</button>
+          <button onclick="setDailyMemberFilter('爸爸')" id="mem-filter-爸爸" class="sketch-pill px-3 py-1 text-xs font-bold bg-white text-[#2D2D2D] shrink-0">👨 爸爸</button>
+          <button onclick="setDailyMemberFilter('媽媽')" id="mem-filter-媽媽" class="sketch-pill px-3 py-1 text-xs font-bold bg-white text-[#2D2D2D] shrink-0">👩 媽媽</button>
+          <button onclick="setDailyMemberFilter('小朋友')" id="mem-filter-小朋友" class="sketch-pill px-3 py-1 text-xs font-bold bg-white text-[#2D2D2D] shrink-0">🧒 小朋友</button>
+        </div>
+
+        <!-- 今日與即將到來行程列表 -->
+        <div id="familyScheduleFeed" class="space-y-3">
+          <!-- JS 動態渲染分組行程 -->
+        </div>
+      </section>
+
+
+      <!-- ========================================================= -->
+      <!-- 第四頁：月曆總覽（新增獨立行事曆頁面 · 整月網格視圖）       -->
+      <!-- ========================================================= -->
+      <section id="tab-calendar" class="tab-pane space-y-3.5">
+        <!-- 月份切換與新增按鈕 -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-1.5">
+            <button onclick="changeCalMonth(-1)" class="sketch-btn bg-white w-8 h-8 flex items-center justify-center font-bold text-sm">◀</button>
+            <h2 id="calMonthTitle" class="text-base font-black tracking-wide px-1">2026年 11月</h2>
+            <button onclick="changeCalMonth(1)" class="sketch-btn bg-white w-8 h-8 flex items-center justify-center font-bold text-sm">▶</button>
+            <button onclick="jumpToToday()" class="text-xs font-bold text-[#3B6E9C] underline ml-1">今天</button>
+          </div>
+
+          <button onclick="openEventModal(selectedCalDate)" class="sketch-btn bg-[#3B6E9C] text-white px-3 py-1.5 text-xs font-black flex items-center gap-1">
+            <span class="text-base leading-none">+</span>
+            <span>加這天</span>
+          </button>
+        </div>
+
+        <!-- 手繪整月月曆網格卡片 -->
+        <div class="sketch-card p-2.5">
           <!-- 星期標頭 -->
-          <div class="grid grid-cols-7 text-center text-xs font-black mb-2 pb-1.5 border-b border-dashed border-[#2D2D2D]/30">
+          <div class="grid grid-cols-7 text-center text-xs font-black mb-1.5 pb-1.5 border-b border-dashed border-[#2D2D2D]/30">
             <span class="text-[#D96B52]">日</span>
             <span>一</span>
             <span>二</span>
@@ -458,7 +504,7 @@
           <div class="flex items-center justify-between px-1">
             <h3 class="text-sm font-black flex items-center gap-1.5">
               <span>📌</span>
-              <span id="selectedDateLabel" class="marker-yellow">11月25日 (週三) 行程</span>
+              <span id="selectedDateLabel" class="marker-blue">11月25日 (週三) 行程</span>
             </h3>
             <span id="holidayBadge" class="hidden text-[11px] font-bold bg-[#D96B52] text-white px-2 py-0.5 rounded-full border border-[#2D2D2D]">香港公眾假期</span>
           </div>
@@ -471,7 +517,7 @@
 
 
       <!-- ========================================================= -->
-      <!-- 第四頁：Shopping List（分開「家庭用」與「工作用」）         -->
+      <!-- 第五頁：Shopping List（分開「家庭用」與「工作用」）         -->
       <!-- ========================================================= -->
       <section id="tab-shopping" class="tab-pane space-y-3.5">
         <!-- 兩大清單手繪分頁標籤 -->
@@ -523,24 +569,24 @@
 
     </main>
 
-    <!-- 底部固定手繪導覽列（參考附圖 Bottom Bar） -->
-    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[520px] z-30 bg-[#FFFDF9] border-t-2 border-[#2D2D2D] px-2 pt-2 nav-safe shadow-[0_-3px_0px_rgba(45,45,45,0.06)]">
-      <div class="grid grid-cols-4 gap-1">
-        <!-- 1. 今日天氣 -->
+    <!-- 底部固定手繪導覽列（5 個分頁：天氣、報站、家庭日曆、月曆總覽、購物清單） -->
+    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[520px] z-30 bg-[#FFFDF9] border-t-2 border-[#2D2D2D] px-1 pt-2 nav-safe shadow-[0_-3px_0px_rgba(45,45,45,0.06)]">
+      <div class="grid grid-cols-5 gap-0.5">
+        <!-- 1. 天氣 -->
         <button onclick="switchTab('weather')" id="nav-weather" class="nav-btn flex flex-col items-center justify-center py-1 rounded-xl transition-all text-[#3B6E9C] font-black">
-          <div class="nav-icon-wrap w-10 h-7 rounded-full bg-[#3B6E9C]/15 border-2 border-[#2D2D2D] flex items-center justify-center mb-0.5">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D2D2D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <div class="nav-icon-wrap w-9 h-7 rounded-full bg-[#3B6E9C]/15 border-2 border-[#2D2D2D] flex items-center justify-center mb-0.5">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2D2D2D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="4" fill="#E5B454"></circle>
               <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
             </svg>
           </div>
-          <span class="text-[11px]">今日天氣</span>
+          <span class="text-[10px]">天氣</span>
         </button>
 
-        <!-- 2. 巴士小巴 -->
+        <!-- 2. 報站 -->
         <button onclick="switchTab('transport')" id="nav-transport" class="nav-btn flex flex-col items-center justify-center py-1 rounded-xl transition-all text-[#6B665F] font-bold">
-          <div class="nav-icon-wrap w-10 h-7 rounded-full border-2 border-transparent flex items-center justify-center mb-0.5">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D2D2D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <div class="nav-icon-wrap w-9 h-7 rounded-full border-2 border-transparent flex items-center justify-center mb-0.5">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2D2D2D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="4" y="3" width="16" height="15" rx="3" fill="#769676" fill-opacity="0.3"></rect>
               <path d="M4 11h16"></path>
               <path d="M8 18v2M16 18v2"></path>
@@ -548,32 +594,43 @@
               <circle cx="16" cy="14.5" r="1" fill="#2D2D2D"></circle>
             </svg>
           </div>
-          <span class="text-[11px]">巴士小巴</span>
+          <span class="text-[10px]">報站</span>
         </button>
 
         <!-- 3. 家庭日曆 -->
+        <button onclick="switchTab('daily')" id="nav-daily" class="nav-btn flex flex-col items-center justify-center py-1 rounded-xl transition-all text-[#6B665F] font-bold">
+          <div class="nav-icon-wrap w-9 h-7 rounded-full border-2 border-transparent flex items-center justify-center mb-0.5">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2D2D2D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 11l3 3L22 4"></path>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" fill="#E5B454" fill-opacity="0.25"></path>
+            </svg>
+          </div>
+          <span class="text-[10px]">家庭日曆</span>
+        </button>
+
+        <!-- 4. 月曆總覽（獨立行事曆頁面） -->
         <button onclick="switchTab('calendar')" id="nav-calendar" class="nav-btn flex flex-col items-center justify-center py-1 rounded-xl transition-all text-[#6B665F] font-bold">
-          <div class="nav-icon-wrap w-10 h-7 rounded-full border-2 border-transparent flex items-center justify-center mb-0.5">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D2D2D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="4" width="18" height="17" rx="3" fill="#E5B454" fill-opacity="0.35"></rect>
+          <div class="nav-icon-wrap w-9 h-7 rounded-full border-2 border-transparent flex items-center justify-center mb-0.5">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2D2D2D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="17" rx="3" fill="#3B6E9C" fill-opacity="0.25"></rect>
               <line x1="16" y1="2" x2="16" y2="6"></line>
               <line x1="8" y1="2" x2="8" y2="6"></line>
               <line x1="3" y1="10" x2="21" y2="10"></line>
             </svg>
           </div>
-          <span class="text-[11px]">家庭日曆</span>
+          <span class="text-[10px]">月曆總覽</span>
         </button>
 
-        <!-- 4. 購物清單 -->
+        <!-- 5. 購物清單 -->
         <button onclick="switchTab('shopping')" id="nav-shopping" class="nav-btn flex flex-col items-center justify-center py-1 rounded-xl transition-all text-[#6B665F] font-bold">
-          <div class="nav-icon-wrap w-10 h-7 rounded-full border-2 border-transparent flex items-center justify-center mb-0.5">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D2D2D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <div class="nav-icon-wrap w-9 h-7 rounded-full border-2 border-transparent flex items-center justify-center mb-0.5">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2D2D2D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" fill="#D96B52" fill-opacity="0.3"></path>
               <line x1="3" y1="6" x2="21" y2="6"></line>
               <path d="M16 10a4 4 0 0 1-8 0"></path>
             </svg>
           </div>
-          <span class="text-[11px]">購物清單</span>
+          <span class="text-[10px]">購物清單</span>
         </button>
       </div>
     </nav>
@@ -654,30 +711,30 @@
   <div id="familyModal" class="hidden fixed inset-0 z-50 bg-black/45 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="sketch-card w-full max-w-[420px] p-4 space-y-3.5 bg-[#FAF7F2]">
       <div class="flex items-center justify-between border-b-2 border-[#2D2D2D] pb-2">
-        <h3 class="text-base font-black">👨‍👩‍👧‍👦 家人共用手帳設定</h3>
+        <h3 class="text-base font-black">👨‍👩‍👧‍👦 家人雲端即時同步設定</h3>
         <button onclick="closeFamilyModal()" class="w-7 h-7 rounded-full border-2 border-[#2D2D2D] bg-white font-bold text-xs">✕</button>
       </div>
 
+      <div class="bg-white border-2 border-[#2D2D2D] rounded-xl p-2.5 flex items-center justify-between">
+        <span class="text-xs font-bold">目前雲端連線狀態：</span>
+        <span id="modalSyncStatusBadge" class="text-xs font-black text-[#769676]">🟢 雲端即時同步中</span>
+      </div>
+
       <p class="text-xs text-[#4A4741] leading-relaxed">
-        只要家人手機輸入相同的<span class="marker-yellow font-bold">「家庭共享暗號」</span>，大家的家庭日曆同購物清單就會自動即時同步！
+        所有家人只要使用相同的<span class="marker-yellow font-bold">「家庭共享暗號」</span>（預設為 <span class="font-num font-bold">YU-CHUI-HOME</span>），日曆行程與購物清單就會自動跨手機即時雙向同步！
       </p>
 
       <div class="space-y-2">
-        <label class="block text-xs font-bold">目前家庭暗號：</label>
+        <label class="block text-xs font-bold">家庭共享暗號：</label>
         <div class="flex gap-2">
-          <input type="text" id="familyCodeInput" class="sketch-input flex-1 px-3 py-2 font-num text-base font-bold uppercase" placeholder="例如：YU-888" />
+          <input type="text" id="familyCodeInput" class="sketch-input flex-1 px-3 py-2 font-num text-base font-bold uppercase" placeholder="例如：YU-CHUI-HOME" />
           <button onclick="saveFamilyCode()" class="sketch-btn bg-[#3B6E9C] text-white px-4 py-2 text-xs font-bold">套用</button>
         </div>
       </div>
 
-      <div class="bg-white border-2 border-dashed border-[#2D2D2D]/40 rounded-xl p-2.5 text-[11px] text-[#5C5852] space-y-1">
-        <div class="font-bold text-[#2D2D2D]">📱 加到 iPhone 主畫面教學：</div>
-        <div>1. 用 Safari 開啟此網頁，點選底部中間「分享」按鈕 ⬆️</div>
-        <div>2. 向下滑選擇「加入主畫面」，就會變成專屬 App 圖示！</div>
-      </div>
-
-      <div class="flex justify-end">
-        <button onclick="copyShareInfo()" class="sketch-btn bg-[#769676] text-white px-3 py-1.5 text-xs font-bold">📋 複製暗號傳給家人</button>
+      <div class="flex flex-wrap gap-2 justify-between pt-1">
+        <button onclick="copyShareLink()" class="sketch-btn bg-[#E5B454] text-[#2D2D2D] px-3 py-1.5 text-xs font-black flex-1">🔗 複製免輸入專屬網址</button>
+        <button onclick="copyShareInfo()" class="sketch-btn bg-[#769676] text-white px-3 py-1.5 text-xs font-bold">📋 複製暗號</button>
       </div>
     </div>
   </div>
@@ -695,38 +752,50 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
     // ==========================================
-    // 1. 全域狀態與雲端同步架構（支援多人家庭共用）
+    // 1. 全域狀態與跨裝置即時雲端同步架構（徹底修復同步問題）
     // ==========================================
-    const STORAGE_KEY_STATE = 'yuchui_family_assistant_v1';
-    let familyCode = localStorage.getItem('yuchui_family_code') || 'YU-888';
+    const STORAGE_KEY_STATE = 'yuchui_family_assistant_v2';
+
+    // 支援從網址 ?room=XXX 自動讀取家庭共享暗號，方便一鍵分享給家人
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlRoom = urlParams.get('room');
+    if (urlRoom && urlRoom.trim()) {
+      localStorage.setItem('yuchui_family_code', urlRoom.trim().toUpperCase());
+    }
+
+    let familyCode = (localStorage.getItem('yuchui_family_code') || 'YU-CHUI-HOME').toUpperCase();
     let db = null;
     let auth = null;
     let currentUser = null;
     let unsubscribeSnapshot = null;
+    let isRemoteUpdating = false; // 防止快照寫回循環
+    let hasReceivedFirstCloudSnapshot = false;
 
-    // 預設初始家庭資料
     const todayStr = new Date().toISOString().split('T')[0];
+    window.todayStr = todayStr;
+
     const defaultState = {
       events: [
-        { id: 'ev-1', date: todayStr, time: '16:30', title: '接小朋友放學 & 買下午茶', member: '媽媽', category: 'school' },
-        { id: 'ev-2', date: todayStr, time: '19:30', title: '愉翠商場食晚飯', member: '全家', category: 'family' }
+        { id: 'ev-1', date: todayStr, time: '16:30', title: '接小朋友放學 & 買下午茶', member: '媽媽', category: 'school', done: false },
+        { id: 'ev-2', date: todayStr, time: '19:30', title: '愉翠商場食晚飯', member: '全家', category: 'family', done: false }
       ],
       shopping: {
         home: [
-          { id: 'sh-1', name: '維記鮮奶 (家庭裝)', qty: '1盒', category: '生鮮蔬果', done: false },
-          { id: 'sh-2', name: '廚房紙巾 (三卷裝)', qty: '1袋', category: '家居日用', done: false },
-          { id: 'sh-3', name: '小朋友中文練習簿', qty: '2本', category: '小朋友用品', done: true }
+          { id: 'sh-1', name: '維記鮮奶 (家庭裝)', qty: '1盒', category: '🥬 生鮮蔬果', done: false },
+          { id: 'sh-2', name: '廚房紙巾 (三卷裝)', qty: '1袋', category: '🧻 家居日用', done: false },
+          { id: 'sh-3', name: '小朋友中文練習簿', qty: '2本', category: '🧒 小朋友用品', done: true }
         ],
         work: [
-          { id: 'sw-1', name: 'SDXC 高速記憶卡 128GB', qty: '2張', category: '攝影器材配件', done: false },
-          { id: 'sw-2', name: '相機備用電池充電座', qty: '1個', category: '電池/線材', done: false },
-          { id: 'sw-3', name: 'A4 影印紙 & 黑色原子筆', qty: '1盒', category: '辦公文具', done: false }
+          { id: 'sw-1', name: 'SDXC 高速記憶卡 128GB', qty: '2張', category: '📷 攝影器材配件', done: false },
+          { id: 'sw-2', name: '相機備用電池充電座', qty: '1個', category: '🔋 電池 / 記憶卡 / 線材', done: false },
+          { id: 'sw-3', name: 'A4 影印紙 & 黑色原子筆', qty: '1盒', category: '📎 辦公文具', done: false }
         ]
       },
-      favRoutes: ['49X', '89X', '182', '808', '65A']
+      favRoutes: ['A41', '49X', '89X', '182', '808', '65A'],
+      updatedAt: 0
     };
 
     let appState = loadLocalState();
@@ -736,10 +805,13 @@
         const raw = localStorage.getItem(`${STORAGE_KEY_STATE}_${familyCode}`);
         if (raw) {
           const parsed = JSON.parse(raw);
+          const favs = Array.isArray(parsed.favRoutes) ? parsed.favRoutes : defaultState.favRoutes;
+          if (!favs.includes('A41')) favs.unshift('A41');
           return {
             events: Array.isArray(parsed.events) ? parsed.events : defaultState.events,
             shopping: parsed.shopping || defaultState.shopping,
-            favRoutes: Array.isArray(parsed.favRoutes) ? parsed.favRoutes : defaultState.favRoutes
+            favRoutes: favs,
+            updatedAt: parsed.updatedAt || 0
           };
         }
       } catch (e) {
@@ -748,22 +820,57 @@
       return JSON.parse(JSON.stringify(defaultState));
     }
 
-    function saveState() {
-      // 1. 立即存入本機確保無延遲
+    function updateSyncIndicator(status, label) {
+      const dot = document.getElementById('syncStatusDot');
+      const text = document.getElementById('syncStatusText');
+      const modalBadge = document.getElementById('modalSyncStatusBadge');
+      if (status === 'online') {
+        if (dot) dot.className = 'inline-block w-2 h-2 rounded-full bg-[#769676] shrink-0';
+        if (text) text.textContent = label || '🟢 雲端已即時同步';
+        if (modalBadge) {
+          modalBadge.textContent = '🟢 雲端即時雙向同步中';
+          modalBadge.className = 'text-xs font-black text-[#769676]';
+        }
+      } else if (status === 'syncing') {
+        if (dot) dot.className = 'inline-block w-2 h-2 rounded-full bg-[#3B6E9C] animate-ping shrink-0';
+        if (text) text.textContent = label || '同步資料中...';
+      } else {
+        if (dot) dot.className = 'inline-block w-2 h-2 rounded-full bg-[#E5B454] shrink-0';
+        if (text) text.textContent = label || '🟡 本地離線暫存模式';
+        if (modalBadge) {
+          modalBadge.textContent = '🟡 本地暫存模式（連網後自動同步）';
+          modalBadge.className = 'text-xs font-black text-[#B88628]';
+        }
+      }
+    }
+
+    function getFamilyDocRef() {
+      const appId = typeof __app_id !== 'undefined' ? __app_id : 'yuchui-family-app';
+      // 嚴格遵守 /artifacts/{appId}/public/data/{collectionName}/{documentId} 公開共享路徑
+      return doc(db, 'artifacts', appId, 'public', 'data', 'family_rooms', familyCode);
+    }
+
+    async function saveState() {
+      appState.updatedAt = Date.now();
       try {
         localStorage.setItem(`${STORAGE_KEY_STATE}_${familyCode}`, JSON.stringify(appState));
       } catch (e) {}
 
-      // 2. 若已連接 Firebase 雲端，則同步至共用文件讓家人即時看到
-      if (db && currentUser) {
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'yuchui-family-app';
-        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'family_notebooks', familyCode);
-        setDoc(docRef, {
-          events: appState.events,
-          shopping: appState.shopping,
-          favRoutes: appState.favRoutes,
-          updatedAt: Date.now()
-        }, { merge: true }).catch(err => console.warn('Cloud sync warning:', err));
+      if (db && currentUser && !isRemoteUpdating) {
+        updateSyncIndicator('syncing', '正在同步至雲端...');
+        try {
+          const docRef = getFamilyDocRef();
+          await setDoc(docRef, {
+            events: JSON.parse(JSON.stringify(appState.events)),
+            shopping: JSON.parse(JSON.stringify(appState.shopping)),
+            favRoutes: [...appState.favRoutes],
+            updatedAt: appState.updatedAt
+          }, { merge: true });
+          updateSyncIndicator('online', '🟢 雲端已即時同步');
+        } catch (err) {
+          console.error('Firestore write error:', err);
+          updateSyncIndicator('offline', '🟡 暫存本機（寫入異常）');
+        }
       }
     }
 
@@ -772,8 +879,7 @@
       document.getElementById('familyCodeInput').value = familyCode;
 
       if (typeof __firebase_config === 'undefined') {
-        // 本機獨立網頁模式
-        document.getElementById('syncStatusDot').className = 'inline-block w-2 h-2 rounded-full bg-[#E5B454]';
+        updateSyncIndicator('offline', '🟡 單機本地儲存模式');
         return;
       }
 
@@ -783,6 +889,7 @@
         auth = getAuth(app);
         db = getFirestore(app);
 
+        // 必須先完成驗證再進行任何 Firestore 操作
         if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
           const cred = await signInWithCustomToken(auth, __initial_auth_token);
           currentUser = cred.user;
@@ -791,40 +898,95 @@
           currentUser = cred.user;
         }
 
-        subscribeFamilyRoom();
+        await subscribeFamilyRoom();
       } catch (err) {
         console.warn('Firebase init fallback to local:', err);
-        document.getElementById('syncStatusDot').className = 'inline-block w-2 h-2 rounded-full bg-[#E5B454]';
+        updateSyncIndicator('offline', '🟡 本地離線暫存模式');
       }
     }
 
-    function subscribeFamilyRoom() {
+    async function subscribeFamilyRoom() {
       if (!db || !currentUser) return;
       if (unsubscribeSnapshot) unsubscribeSnapshot();
+      hasReceivedFirstCloudSnapshot = false;
 
-      const appId = typeof __app_id !== 'undefined' ? __app_id : 'yuchui-family-app';
-      const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'family_notebooks', familyCode);
+      const docRef = getFamilyDocRef();
 
-      unsubscribeSnapshot = onSnapshot(docRef, (snap) => {
-        document.getElementById('syncStatusDot').className = 'inline-block w-2 h-2 rounded-full bg-[#769676]';
+      unsubscribeSnapshot = onSnapshot(docRef, async (snap) => {
+        updateSyncIndicator('online', '🟢 雲端已即時同步');
+
         if (snap.exists()) {
           const data = snap.data();
-          if (data.events) appState.events = data.events;
-          if (data.shopping) appState.shopping = data.shopping;
-          if (data.favRoutes) appState.favRoutes = data.favRoutes;
-          localStorage.setItem(`${STORAGE_KEY_STATE}_${familyCode}`, JSON.stringify(appState));
-          renderCalendar();
-          renderShopping();
-          renderTransportList();
+          const cloudUpdatedAt = data.updatedAt || 0;
+
+          // 若雲端有資料，且是首次載入或雲端時間戳較新，立即更新本地畫面
+          if (!hasReceivedFirstCloudSnapshot || cloudUpdatedAt >= (appState.updatedAt || 0)) {
+            isRemoteUpdating = true;
+            if (Array.isArray(data.events)) appState.events = data.events;
+            if (data.shopping && typeof data.shopping === 'object') {
+              appState.shopping = {
+                home: Array.isArray(data.shopping.home) ? data.shopping.home : [],
+                work: Array.isArray(data.shopping.work) ? data.shopping.work : []
+              };
+            }
+            if (Array.isArray(data.favRoutes)) appState.favRoutes = data.favRoutes;
+            appState.updatedAt = cloudUpdatedAt;
+
+            localStorage.setItem(`${STORAGE_KEY_STATE}_${familyCode}`, JSON.stringify(appState));
+            renderDailyScheduleFeed();
+            renderCalendar();
+            renderShopping();
+            renderTransportList();
+            isRemoteUpdating = false;
+          }
+          hasReceivedFirstCloudSnapshot = true;
         } else {
-          // 首次建立該家庭暗號雲端資料
-          saveState();
+          // 雲端尚未建立此家庭房間，立即將本地資料初始化上傳至雲端
+          hasReceivedFirstCloudSnapshot = true;
+          await saveState();
         }
       }, (error) => {
-        console.warn('Snapshot error:', error);
-        document.getElementById('syncStatusDot').className = 'inline-block w-2 h-2 rounded-full bg-[#D96B52]';
+        console.error('Snapshot listener error:', error);
+        updateSyncIndicator('offline', '🟡 雲端連線中斷');
       });
     }
+
+    window.manualForceSync = async () => {
+      const spin = document.getElementById('cloudSyncSpin');
+      if (spin) spin.classList.add('animate-spin');
+
+      if (!db || !currentUser) {
+        await initCloudSync();
+      } else {
+        try {
+          const docRef = getFamilyDocRef();
+          const snap = await getDoc(docRef);
+          if (snap.exists()) {
+            const data = snap.data();
+            isRemoteUpdating = true;
+            if (Array.isArray(data.events)) appState.events = data.events;
+            if (data.shopping) appState.shopping = data.shopping;
+            if (Array.isArray(data.favRoutes)) appState.favRoutes = data.favRoutes;
+            appState.updatedAt = data.updatedAt || Date.now();
+            localStorage.setItem(`${STORAGE_KEY_STATE}_${familyCode}`, JSON.stringify(appState));
+            renderDailyScheduleFeed();
+            renderCalendar();
+            renderShopping();
+            renderTransportList();
+            isRemoteUpdating = false;
+            updateSyncIndicator('online', '🟢 雲端已即時同步');
+            showToast('已從雲端刷新最新家庭日曆與清單 ✓');
+          } else {
+            await saveState();
+            showToast('已將本機資料同步至雲端 ✓');
+          }
+        } catch (e) {
+          showToast('同步失敗，請檢查網絡連線');
+        }
+      }
+
+      if (spin) setTimeout(() => spin.classList.remove('animate-spin'), 450);
+    };
 
     // 暴露給全域 HTML 事件使用
     window.openFamilyModal = () => {
@@ -834,22 +996,34 @@
     window.closeFamilyModal = () => {
       document.getElementById('familyModal').classList.add('hidden');
     };
-    window.saveFamilyCode = () => {
+    window.saveFamilyCode = async () => {
       const val = document.getElementById('familyCodeInput').value.trim().toUpperCase();
       if (!val) return showToast('請輸入家庭共享暗號');
       familyCode = val;
       localStorage.setItem('yuchui_family_code', familyCode);
       document.getElementById('headerRoomBadge').textContent = `#${familyCode}`;
       appState = loadLocalState();
+      renderDailyScheduleFeed();
       renderCalendar();
       renderShopping();
       renderTransportList();
-      if (db && currentUser) subscribeFamilyRoom();
+      if (db && currentUser) await subscribeFamilyRoom();
       closeFamilyModal();
       showToast(`已切換至家庭手帳 #${familyCode}`);
     };
+    window.copyShareLink = () => {
+      const baseUrl = window.location.href.split('?')[0];
+      const shareUrl = `${baseUrl}?room=${encodeURIComponent(familyCode)}`;
+      const ta = document.createElement('textarea');
+      ta.value = shareUrl;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('已複製家庭專屬同步網址，貼上給家人即可共用！');
+    };
     window.copyShareInfo = () => {
-      const text = `沙田愉翠苑家庭小管家 🏠\n家庭共享暗號：${familyCode}\n打開網頁輸入此暗號即可同步日曆同購物清單！`;
+      const text = `沙田愉翠苑家庭小管家 🏠\n家庭共享暗號：${familyCode}\n打開網頁輸入此暗號即可即時同步日曆同購物清單！`;
       const ta = document.createElement('textarea');
       ta.value = text;
       document.body.appendChild(ta);
@@ -863,225 +1037,216 @@
     // 2. 分頁導覽切換 & Toast 提示
     // ==========================================
     let currentTab = 'weather';
+    let toastTimer = null;
+
+    window.showToast = (msg) => {
+      const box = document.getElementById('toastBox');
+      const content = document.getElementById('toastContent');
+      if (!box || !content) return;
+      content.textContent = msg;
+      box.classList.remove('opacity-0');
+      box.classList.add('opacity-100');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        box.classList.remove('opacity-100');
+        box.classList.add('opacity-0');
+      }, 2600);
+    };
 
     window.switchTab = (tabName) => {
       currentTab = tabName;
       document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
-      document.getElementById(`tab-${tabName}`).classList.add('active');
+      const targetPane = document.getElementById(`tab-${tabName}`);
+      if (targetPane) targetPane.classList.add('active');
 
       const colors = {
         weather: { text: 'text-[#3B6E9C]', bg: 'bg-[#3B6E9C]/15' },
         transport: { text: 'text-[#769676]', bg: 'bg-[#769676]/20' },
-        calendar: { text: 'text-[#B88628]', bg: 'bg-[#E5B454]/25' },
+        daily: { text: 'text-[#B88628]', bg: 'bg-[#E5B454]/25' },
+        calendar: { text: 'text-[#3B6E9C]', bg: 'bg-[#3B6E9C]/20' },
         shopping: { text: 'text-[#D96B52]', bg: 'bg-[#D96B52]/15' }
       };
 
       document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.className = 'nav-btn flex flex-col items-center justify-center py-1 rounded-xl transition-all text-[#6B665F] font-bold';
         const wrap = btn.querySelector('.nav-icon-wrap');
-        wrap.className = 'nav-icon-wrap w-10 h-7 rounded-full border-2 border-transparent flex items-center justify-center mb-0.5';
+        wrap.className = 'nav-icon-wrap w-9 h-7 rounded-full border-2 border-transparent flex items-center justify-center mb-0.5';
       });
 
       const activeBtn = document.getElementById(`nav-${tabName}`);
-      activeBtn.className = `nav-btn flex flex-col items-center justify-center py-1 rounded-xl transition-all ${colors[tabName].text} font-black`;
-      const activeWrap = activeBtn.querySelector('.nav-icon-wrap');
-      activeWrap.className = `nav-icon-wrap w-10 h-7 rounded-full ${colors[tabName].bg} border-2 border-[#2D2D2D] flex items-center justify-center mb-0.5`;
+      if (activeBtn) {
+        activeBtn.className = `nav-btn flex flex-col items-center justify-center py-1 rounded-xl transition-all ${colors[tabName].text} font-black`;
+        const activeWrap = activeBtn.querySelector('.nav-icon-wrap');
+        activeWrap.className = `nav-icon-wrap w-9 h-7 rounded-full ${colors[tabName].bg} border-2 border-[#2D2D2D] flex items-center justify-center mb-0.5`;
+      }
 
       if (tabName === 'transport' && !etaInitialized) {
         etaInitialized = true;
         refreshAllEtas(false);
       }
-    };
-
-    window.showToast = (msg) => {
-      const box = document.getElementById('toastBox');
-      const content = document.getElementById('toastContent');
-      content.textContent = msg;
-      box.classList.remove('opacity-0', '-translate-y-2');
-      box.classList.add('opacity-100', 'translate-y-0');
-      clearTimeout(window._toastTimer);
-      window._toastTimer = setTimeout(() => {
-        box.classList.remove('opacity-100', 'translate-y-0');
-        box.classList.add('opacity-0', '-translate-y-2');
-      }, 2400);
+      if (tabName === 'daily') renderDailyScheduleFeed();
+      if (tabName === 'calendar') renderCalendar();
     };
 
     // ==========================================
-    // 3. 第一頁：香港天文台（HKO）沙田天氣 API
+    // 3. 第一頁：香港天文台沙田區實時天氣與五日預報
     // ==========================================
     window.fetchWeatherData = async (manual = false) => {
       const spinIcon = document.getElementById('weatherSpinIcon');
       if (manual && spinIcon) spinIcon.classList.add('animate-spin');
 
-      // 設定今日中文日期
       const now = new Date();
-      const weekDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-      document.getElementById('weatherDateText').textContent =
-        `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日 · ${weekDays[now.getDay()]}`;
+      const weekNames = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+      const dateLabel = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日 · ${weekNames[now.getDay()]}`;
+      const dateEl = document.getElementById('weatherDateText');
+      if (dateEl) dateEl.textContent = dateLabel;
 
       try {
-        // 平行請求天文台實時天氣 (rhrread) 與 九天預報 (fnd)
-        const [rhrRes, fndRes] = await Promise.all([
-          fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=tc'),
-          fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=tc')
+        const [rhrRes, flwRes, fndRes, warnRes] = await Promise.all([
+          fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=tc').then(r => r.json()).catch(() => null),
+          fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=flw&lang=tc').then(r => r.json()).catch(() => null),
+          fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=tc').then(r => r.json()).catch(() => null),
+          fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=tc').then(r => r.json()).catch(() => null)
         ]);
 
-        if (!rhrRes.ok || !fndRes.ok) throw new Error('HKO API status error');
+        // 1. 解析沙田區溫度、濕度與紫外線
+        let tempVal = 23;
+        let humidityVal = 68;
+        let uvVal = 4;
+        let uvDesc = '中等';
 
-        const rhr = await rhrRes.json();
-        const fnd = await fndRes.json();
-
-        // 尋找沙田氣溫 (若無則用香港天文台平均氣溫)
-        let shatinTemp = 23;
-        if (rhr.temperature && Array.isArray(rhr.temperature.data)) {
-          const stObj = rhr.temperature.data.find(d => d.place.includes('沙田')) || rhr.temperature.data[0];
-          if (stObj) shatinTemp = stObj.value;
-        }
-        document.getElementById('shatinTemp').textContent = shatinTemp;
-
-        // 相對濕度
-        let humidity = 68;
-        if (rhr.humidity && Array.isArray(rhr.humidity.data) && rhr.humidity.data[0]) {
-          humidity = rhr.humidity.data[0].value;
-        }
-        document.getElementById('hkHumidity').textContent = humidity;
-
-        // 紫外線指數
-        if (rhr.uvindex && Array.isArray(rhr.uvindex.data) && rhr.uvindex.data[0]) {
-          document.getElementById('hkUv').textContent = rhr.uvindex.data[0].value;
-          document.getElementById('hkUvDesc').textContent = rhr.uvindex.data[0].desc || '';
-        } else {
-          document.getElementById('hkUv').textContent = '-';
-          document.getElementById('hkUvDesc').textContent = '柔和';
+        if (rhrRes) {
+          if (rhrRes.temperature && Array.isArray(rhrRes.temperature.data)) {
+            const shatin = rhrRes.temperature.data.find(d => d.place === '沙田') || rhrRes.temperature.data[0];
+            if (shatin && typeof shatin.value === 'number') tempVal = shatin.value;
+          }
+          if (rhrRes.humidity && Array.isArray(rhrRes.humidity.data) && rhrRes.humidity.data[0]) {
+            humidityVal = rhrRes.humidity.data[0].value;
+          }
+          if (rhrRes.uvindex && Array.isArray(rhrRes.uvindex.data) && rhrRes.uvindex.data[0]) {
+            uvVal = rhrRes.uvindex.data[0].value;
+            uvDesc = rhrRes.uvindex.data[0].desc || '中等';
+          }
+          if (rhrRes.updateTime) {
+            const t = new Date(rhrRes.updateTime);
+            const hh = String(t.getHours()).padStart(2, '0');
+            const mm = String(t.getMinutes()).padStart(2, '0');
+            document.getElementById('weatherUpdateTime').textContent = `更新於 ${hh}:${mm}`;
+          }
         }
 
-        // 天氣警告
+        document.getElementById('shatinTemp').textContent = tempVal;
+        document.getElementById('hkHumidity').textContent = humidityVal;
+        document.getElementById('hkUv').textContent = uvVal;
+        document.getElementById('hkUvDesc').textContent = uvDesc;
+
+        // 2. 天氣警告提示
         const warnBanner = document.getElementById('weatherWarningBanner');
-        if (Array.isArray(rhr.warningMessage) && rhr.warningMessage.length > 0) {
-          warnBanner.classList.remove('hidden');
-          document.getElementById('weatherWarningText').textContent = rhr.warningMessage.join('；');
+        const warnText = document.getElementById('weatherWarningText');
+        if (warnRes && typeof warnRes === 'object' && Object.keys(warnRes).length > 0) {
+          const names = Object.values(warnRes).map(w => w.name).filter(Boolean).join('、');
+          if (names) {
+            warnText.textContent = `現正生效：${names}`;
+            warnBanner.classList.remove('hidden');
+          } else {
+            warnBanner.classList.add('hidden');
+          }
         } else {
           warnBanner.classList.add('hidden');
         }
 
-        // 更新時間
-        if (rhr.updateTime) {
-          const t = new Date(rhr.updateTime);
-          document.getElementById('weatherUpdateTime').textContent =
-            `更新於 ${String(t.getHours()).padStart(2, '0')}:${String(t.getMinutes()).padStart(2, '0')}`;
+        // 3. 天氣概況與出門貼士
+        let desc = '東北季候風正為廣東沿岸帶來大致晴朗及乾燥的天氣。本港地區今日天晴乾燥，吹和緩偏東風。';
+        if (flwRes && (flwRes.forecastDesc || flwRes.generalSituation)) {
+          desc = `${flwRes.generalSituation || ''} ${flwRes.forecastDesc || ''}`.trim();
+        }
+        document.getElementById('weatherForecastDesc').textContent = desc;
+
+        const isRainy = desc.includes('雨') || desc.includes('雷');
+        document.getElementById('weatherConditionTag').textContent = isRainy ? '間中有驟雨' : (desc.includes('晴') ? '天晴朗爽' : '多雲有陽光');
+        document.getElementById('weatherAdviceText').textContent = isRainy
+          ? `今日預料有雨，沙田目前 ${tempVal}°C，出門記得帶備雨傘及防滑鞋履！`
+          : (tempVal <= 19
+              ? `沙田天氣較涼（${tempVal}°C），早晚溫差較大，建議為小朋友及長者添衣保暖。`
+              : `沙田目前 ${tempVal}°C，濕度 ${humidityVal}%，天氣舒適，適合在愉翠苑附近散步或外出活動。`);
+
+        // 4. 未來五日預報
+        const forecastListEl = document.getElementById('forecastList');
+        let fiveDays = [];
+        if (fndRes && Array.isArray(fndRes.weatherForecast)) {
+          fiveDays = fndRes.weatherForecast.slice(0, 5).map(d => {
+            const rawDate = String(d.forecastDate || '');
+            const label = rawDate.length === 8 ? `${Number(rawDate.slice(4, 6))}/${Number(rawDate.slice(6, 8))}` : d.week;
+            const wText = d.forecastWeather || '';
+            const icon = wText.includes('雷') ? '⛈️' : (wText.includes('雨') ? '🌧️' : (wText.includes('晴') ? '☀️' : '⛅'));
+            return {
+              date: label,
+              week: (d.week || '').replace('星期', '週'),
+              icon,
+              min: d.forecastMintemp?.value ?? 19,
+              max: d.forecastMaxtemp?.value ?? 25
+            };
+          });
+        } else {
+          for (let i = 1; i <= 5; i++) {
+            const d = new Date(now.getTime() + i * 86400000);
+            fiveDays.push({
+              date: `${d.getMonth() + 1}/${d.getDate()}`,
+              week: ['週日', '週一', '週二', '週三', '週四', '週五', '週六'][d.getDay()],
+              icon: i % 2 === 0 ? '⛅' : '☀️',
+              min: 19 + (i % 2),
+              max: 24 + (i % 3)
+            });
+          }
         }
 
-        // 天氣概況與貼士
-        const generalSituation = fnd.generalSituation || '';
-        const todayForecast = (fnd.weatherForecast && fnd.weatherForecast[0]) ? fnd.weatherForecast[0].forecastWeather : '';
-        document.getElementById('weatherForecastDesc').textContent = `${generalSituation} ${todayForecast}`.trim();
+        forecastListEl.innerHTML = fiveDays.map(day => `
+          <div class="sketch-card p-2 text-center flex flex-col items-center justify-between">
+            <span class="font-num text-[11px] font-bold text-[#3B6E9C]">${day.date}</span>
+            <span class="text-[10px] font-bold text-[#5C5852]">${day.week}</span>
+            <span class="text-xl my-1">${day.icon}</span>
+            <span class="font-num text-xs font-bold text-[#2D2D2D]">${day.min}°~${day.max}°</span>
+          </div>
+        `).join('');
 
-        const iconCode = Array.isArray(rhr.icon) ? rhr.icon[0] : 51;
-        updateWeatherIllustrationAndAdvice(shatinTemp, humidity, iconCode, todayForecast);
-
-        // 渲染未來 5 天預報
-        if (Array.isArray(fnd.weatherForecast)) {
-          renderFiveDayForecast(fnd.weatherForecast.slice(0, 5));
-        }
-
-        document.getElementById('weatherSourceTag').textContent = '(天文台實時)';
-        if (manual) showToast('沙田實時天氣已更新 ☀️');
+        if (manual) showToast('已更新香港天文台沙田最新天氣 🌤️');
       } catch (err) {
-        console.warn('HKO API fallback:', err);
-        document.getElementById('weatherSourceTag').textContent = '(離線快取)';
-        renderFiveDayForecast(getFallbackForecast());
-        if (manual) showToast('已顯示最新沙田天氣快取');
+        console.warn('Weather fetch fallback:', err);
       } finally {
         if (spinIcon) setTimeout(() => spinIcon.classList.remove('animate-spin'), 400);
       }
     };
 
-    function getWeatherEmojiByIcon(code) {
-      if ([50, 51, 52].includes(code)) return { emoji: '☀️', label: '陽光充沛' };
-      if ([53, 54].includes(code)) return { emoji: '🌦️', label: '間有驟雨' };
-      if ([60, 61].includes(code)) return { emoji: '☁️', label: '多雲' };
-      if ([62, 63, 64, 65].includes(code)) return { emoji: '🌧️', label: '有雨帶傘' };
-      if ([80, 81, 82, 83, 84, 85].includes(code)) return { emoji: '🌬️', label: '清涼乾燥' };
-      return { emoji: '⛅', label: '部分天晴' };
-    }
-
-    function updateWeatherIllustrationAndAdvice(temp, humidity, iconCode, desc) {
-      const info = getWeatherEmojiByIcon(iconCode);
-      document.getElementById('weatherConditionTag').textContent = info.label;
-
-      let advice = '';
-      const isRainy = [53, 54, 62, 63, 64, 65].includes(iconCode) || desc.includes('雨');
-      if (isRainy) {
-        advice = `今日預料有雨，接送小朋友或搭巴士出門記得帶備雨傘 ☔！地面濕滑請小心慢行。`;
-      } else if (temp <= 16) {
-        advice = `沙田氣溫偏冷（${temp}°C），早晚溫差大，出門記得著夠暖褸及頸巾 🧣。`;
-      } else if (temp >= 29) {
-        advice = `天氣炎熱（${temp}°C），戶外活動記得多飲水補充水分，注意防曬 🧢。`;
-      } else {
-        advice = `沙田氣溫舒適（${temp}°C，濕度 ${humidity}%），適合帶小朋友去愉翠公園散步，早晚加件薄外套即可。`;
-      }
-      document.getElementById('weatherAdviceText').textContent = advice;
-    }
-
-    function getFallbackForecast() {
-      const days = ['週四', '週五', '週六', '週日', '週一'];
-      return days.map((w, i) => ({
-        week: w,
-        forecastDate: `202611${26 + i}`,
-        forecastMintemp: { value: 19 + (i % 2) },
-        forecastMaxtemp: { value: 24 + (i % 3) },
-        ForecastIcon: i === 2 ? 53 : 51
-      }));
-    }
-
-    function renderFiveDayForecast(list) {
-      const container = document.getElementById('forecastList');
-      container.innerHTML = list.map(item => {
-        const dateStr = item.forecastDate ? `${item.forecastDate.slice(4, 6)}/${item.forecastDate.slice(6, 8)}` : '';
-        const weekShort = (item.week || '').replace('星期', '週');
-        const minT = item.forecastMintemp?.value ?? '--';
-        const maxT = item.forecastMaxtemp?.value ?? '--';
-        const wInfo = getWeatherEmojiByIcon(item.ForecastIcon);
-
-        return `
-          <div class="sketch-card-alt py-2 px-1 flex flex-col items-center justify-between text-center">
-            <span class="text-[11px] font-black text-[#2D2D2D]">${weekShort}</span>
-            <span class="font-num text-[10px] text-[#6B665F]">${dateStr}</span>
-            <span class="text-xl my-1">${wInfo.emoji}</span>
-            <span class="font-num text-xs font-bold text-[#3B6E9C]">${minT}°-${maxT}°</span>
-          </div>
-        `;
-      }).join('');
-    }
-
-
     // ==========================================
-    // 4. 第二頁：沙田愉翠苑巴士及小巴實時報站器
+    // 4. 第二頁：沙田愉翠苑巴士及小巴實時報站器（含龍運 A41 機場線）
     // ==========================================
     // 愉翠苑周邊核心巴士及專線小巴路線資料庫
     const YUCHUI_ROUTES = [
+      // 龍運機場快線 A41（愉翠苑總站）
+      { id: 'lwb-a41-out', route: 'A41', operator: 'LWB 龍運', type: 'bus', dir: 'out', dest: '機場 (地面運輸中心)', stop: '愉翠苑巴士總站', fare: '$23.4', note: '經沙田市中心、青嶼幹線、一號客運大樓、港珠澳口岸' },
+
       // 九巴 / 聯營巴士（愉翠苑總站 / 插桅杆街 / 牛皮沙街）
-      { id: 'kmb-49x-out', route: '49X', operator: 'KMB', type: 'bus', dir: 'out', dest: '青衣碼頭', stop: '愉翠苑巴士總站', kmbDir: 'outbound', kmbService: '1', note: '經城門隧道、荃灣' },
-      { id: 'kmb-89x-out', route: '89X', operator: 'KMB', type: 'bus', dir: 'out', dest: '觀塘站', stop: '愉翠苑 (插桅杆街)', kmbDir: 'outbound', kmbService: '1', note: '經大老山隧道、九龍灣' },
-      { id: 'kmb-89x-in', route: '89X', operator: 'KMB', type: 'bus', dir: 'shatin', dest: '沙田站', stop: '愉翠苑 (插桅杆街)', kmbDir: 'inbound', kmbService: '1', note: '往沙田市中心/港鐵站' },
-      { id: 'kmb-182-out', route: '182', operator: 'KMB/CTB', type: 'bus', dir: 'out', dest: '中環 (港澳碼頭)', stop: '愉翠苑巴士總站', kmbDir: 'outbound', kmbService: '1', note: '過海線 · 經紅隧、灣仔' },
-      { id: 'kmb-982x-out', route: '982X', operator: 'KMB/CTB', type: 'bus', dir: 'out', dest: '灣仔 (菲林明道)', stop: '愉翠苑巴士總站', kmbDir: 'outbound', kmbService: '1', note: '西隧特快 (繁忙時間)' },
-      { id: 'kmb-682b-out', route: '682B', operator: 'CTB', type: 'bus', dir: 'out', dest: '柴灣 (東)', stop: '愉翠苑 (牛皮沙街)', ctbDir: 'outbound', note: '東隧過海線 (繁忙時間)' },
-      { id: 'kmb-85a-out', route: '85A', operator: 'KMB', type: 'bus', dir: 'out', dest: '九龍城碼頭', stop: '愉翠苑 (插桅杆街)', kmbDir: 'outbound', kmbService: '1', note: '經獅子山隧道、九龍塘' },
-      { id: 'kmb-86-out', route: '86', operator: 'KMB', type: 'bus', dir: 'out', dest: '美孚', stop: '愉翠苑 (插桅杆街)', kmbDir: 'outbound', kmbService: '1', note: '經深水埗、長沙灣' },
-      { id: 'kmb-80k-out', route: '80K', operator: 'KMB', type: 'bus', dir: 'shatin', dest: '新翠', stop: '愉翠苑巴士總站', kmbDir: 'outbound', kmbService: '1', note: '經沙田市中心、大圍' },
-      { id: 'kmb-82k-out', route: '82K', operator: 'KMB', type: 'bus', dir: 'shatin', dest: '美林', stop: '愉翠苑 (插桅杆街)', kmbDir: 'outbound', kmbService: '1', note: '經威爾斯醫院、大圍' },
-      { id: 'kmb-83k-out', route: '83K', operator: 'KMB', type: 'bus', dir: 'shatin', dest: '沙田市中心', stop: '愉翠苑 (插桅杆街)', kmbDir: 'outbound', kmbService: '1', note: '循環線 · 往沙田大會堂' },
-      { id: 'kmb-73a-out', route: '73A', operator: 'KMB', type: 'bus', dir: 'shatin', dest: '粉嶺 (華明)', stop: '愉翠苑巴士總站', kmbDir: 'outbound', kmbService: '1', note: '經大埔、科學園' },
+      { id: 'kmb-49x-out', route: '49X', operator: 'KMB', type: 'bus', dir: 'out', dest: '青衣碼頭', stop: '愉翠苑巴士總站', fare: '$8.9', note: '經城門隧道、荃灣' },
+      { id: 'kmb-89x-out', route: '89X', operator: 'KMB', type: 'bus', dir: 'out', dest: '觀塘站', stop: '愉翠苑 (插桅杆街)', fare: '$8.3', note: '經大老山隧道、九龍灣' },
+      { id: 'kmb-89x-in', route: '89X', operator: 'KMB', type: 'bus', dir: 'shatin', dest: '沙田站', stop: '愉翠苑 (插桅杆街)', fare: '$5.2', note: '往沙田市中心/港鐵站' },
+      { id: 'kmb-182-out', route: '182', operator: 'KMB/CTB', type: 'bus', dir: 'out', dest: '中環 (港澳碼頭)', stop: '愉翠苑巴士總站', fare: '$19.3', note: '過海線 · 經紅隧、灣仔' },
+      { id: 'kmb-982x-out', route: '982X', operator: 'KMB/CTB', type: 'bus', dir: 'out', dest: '灣仔 (菲林明道)', stop: '愉翠苑巴士總站', fare: '$19.3', note: '西隧特快 (繁忙時間)' },
+      { id: 'kmb-682b-out', route: '682B', operator: 'CTB', type: 'bus', dir: 'out', dest: '柴灣 (東)', stop: '愉翠苑 (牛皮沙街)', fare: '$21.8', note: '東隧過海線 (繁忙時間)' },
+      { id: 'kmb-85a-out', route: '85A', operator: 'KMB', type: 'bus', dir: 'out', dest: '九龍城碼頭', stop: '愉翠苑 (插桅杆街)', fare: '$7.5', note: '經獅子山隧道、九龍塘' },
+      { id: 'kmb-86-out', route: '86', operator: 'KMB', type: 'bus', dir: 'out', dest: '美孚', stop: '愉翠苑 (插桅杆街)', fare: '$7.5', note: '經深水埗、長沙灣' },
+      { id: 'kmb-80k-out', route: '80K', operator: 'KMB', type: 'bus', dir: 'shatin', dest: '新翠', stop: '愉翠苑巴士總站', fare: '$5.2', note: '經沙田市中心、大圍' },
+      { id: 'kmb-82k-out', route: '82K', operator: 'KMB', type: 'bus', dir: 'shatin', dest: '美林', stop: '愉翠苑 (插桅杆街)', fare: '$5.2', note: '經威爾斯醫院、大圍' },
+      { id: 'kmb-83k-out', route: '83K', operator: 'KMB', type: 'bus', dir: 'shatin', dest: '沙田市中心', stop: '愉翠苑 (插桅杆街)', fare: '$5.2', note: '循環線 · 往沙田大會堂' },
+      { id: 'kmb-73a-out', route: '73A', operator: 'KMB', type: 'bus', dir: 'shatin', dest: '粉嶺 (華明)', stop: '愉翠苑巴士總站', fare: '$11.7', note: '經大埔、科學園' },
 
       // 新界專線小巴（愉翠苑小巴總站 / 牛皮沙街）
-      { id: 'gmb-808-1', route: '808', operator: 'GMB', type: 'minibus', dir: 'shatin', dest: '錦英苑 (馬鞍山)', stop: '愉翠苑小巴總站', gmbId: 2005579, note: '經威爾斯醫院、亞公角' },
-      { id: 'gmb-808-2', route: '808', operator: 'GMB', type: 'minibus', dir: 'shatin', dest: '威爾斯親王醫院', stop: '愉翠苑小巴總站', gmbId: 2005579, note: '醫院專線 · 班次頻密' },
-      { id: 'gmb-65a-1', route: '65A', operator: 'GMB', type: 'minibus', dir: 'shatin', dest: '沙田市中心', stop: '愉翠苑 (牛皮沙街)', gmbId: 2003084, note: '特快往新城市廣場' },
-      { id: 'gmb-65k-1', route: '65K', operator: 'GMB', type: 'minibus', dir: 'shatin', dest: '火炭站', stop: '愉翠苑 (牛皮沙街)', gmbId: 2003086, note: '往火炭工業區/港鐵站' },
-      { id: 'gmb-811-1', route: '811', operator: 'GMB', type: 'minibus', dir: 'shatin', dest: '穗禾苑', stop: '愉翠苑小巴總站', gmbId: 2005585, note: '經沙田第一城、火炭' },
-      { id: 'gmb-811a-1', route: '811A', operator: 'GMB', type: 'minibus', dir: 'shatin', dest: '華翠園 / 碧濤花園', stop: '愉翠苑小巴總站', gmbId: 2005586, note: '經石門、濱景花園' },
-      { id: 'gmb-813-1', route: '813', operator: 'GMB', type: 'minibus', dir: 'shatin', dest: '水泉澳 / 碩門邨', stop: '愉翠苑 (插桅杆街)', gmbId: 2005591, note: '往碩門/石門站' }
+      { id: 'gmb-808-1', route: '808', operator: 'GMB', type: 'minibus', dir: 'shatin', dest: '錦英苑 (馬鞍山)', stop: '愉翠苑小巴總站', fare: '$7.9', gmbId: 2005579, note: '經威爾斯醫院、亞公角' },
+      { id: 'gmb-808-2', route: '808', operator: 'GMB', type: 'minibus', dir: 'shatin', dest: '威爾斯親王醫院', stop: '愉翠苑小巴總站', fare: '$5.8', gmbId: 2005579, note: '醫院專線 · 班次頻密' },
+      { id: 'gmb-65a-1', route: '65A', operator: 'GMB', type: 'minibus', dir: 'shatin', dest: '沙田市中心', stop: '愉翠苑 (牛皮沙街)', fare: '$6.2', gmbId: 2003084, note: '特快往新城市廣場' },
+      { id: 'gmb-65k-1', route: '65K', operator: 'GMB', type: 'minibus', dir: 'shatin', dest: '火炭站', stop: '愉翠苑 (牛皮沙街)', fare: '$6.2', gmbId: 2003086, note: '往火炭工業區/港鐵站' },
+      { id: 'gmb-811-1', route: '811', operator: 'GMB', type: 'minibus', dir: 'shatin', dest: '穗禾苑', stop: '愉翠苑小巴總站', fare: '$7.9', gmbId: 2005585, note: '經沙田第一城、火炭' },
+      { id: 'gmb-811a-1', route: '811A', operator: 'GMB', type: 'minibus', dir: 'shatin', dest: '華翠園 / 碧濤花園', stop: '愉翠苑小巴總站', fare: '$7.9', gmbId: 2005586, note: '經石門、濱景花園' },
+      { id: 'gmb-813-1', route: '813', operator: 'GMB', type: 'minibus', dir: 'shatin', dest: '水泉澳 / 碩門邨', stop: '愉翠苑 (插桅杆街)', fare: '$6.2', gmbId: 2005591, note: '往碩門/石門站' }
     ];
 
     let transportTypeFilter = 'all';
@@ -1303,10 +1468,12 @@
         const isFav = appState.favRoutes.includes(item.route);
         const etas = etaCache[item.id] || [{ min: 5, remark: '載入中' }];
         const isMinibus = item.type === 'minibus';
+        const isAirport = item.route.startsWith('A');
 
-        // 徽章色彩：小巴用鼠尾草綠，九巴/城巴用珊瑚陶紅或復古藍
+        // 徽章色彩：機場A線用醒目橙色，小巴用鼠尾草綠，九巴/城巴用珊瑚陶紅或復古藍
         let badgeBg = 'bg-[#D96B52] text-white';
-        if (isMinibus) badgeBg = 'bg-[#769676] text-white';
+        if (isAirport) badgeBg = 'bg-[#E67E22] text-white';
+        else if (isMinibus) badgeBg = 'bg-[#769676] text-white';
         else if (item.operator.includes('CTB') || item.route.startsWith('1') || item.route.startsWith('6') || item.route.startsWith('9')) {
           badgeBg = 'bg-[#3B6E9C] text-white';
         }
@@ -1316,12 +1483,12 @@
             return `<span class="text-xs font-bold text-[#7A756E] bg-[#FAF7F2] px-2.5 py-1 rounded-lg border border-[#2D2D2D]/30">${e.remark}</span>`;
           }
           const isArriving = e.min <= 1;
-          const timeText = isArriving ? '即將到達' : `${e.min} 分鐘`;
           if (idx === 0) {
             return `
               <div class="flex items-baseline gap-1 bg-[#E5B454]/30 border-2 border-[#2D2D2D] rounded-xl px-2.5 py-1">
                 <span class="font-num text-lg font-bold ${isArriving ? 'text-[#D96B52]' : 'text-[#2D2D2D]'} leading-none">${isArriving ? '即將' : e.min}</span>
                 <span class="text-[11px] font-bold">${isArriving ? '到達' : '分鐘'}</span>
+                ${e.remark && e.remark !== '實時' ? `<span class="text-[9px] text-[#5C5852] ml-0.5">(${e.remark})</span>` : ''}
               </div>
             `;
           }
@@ -1337,9 +1504,10 @@
             <!-- 左側路線編號手繪徽章 -->
             <div class="flex flex-col items-center shrink-0">
               <div class="${badgeBg} border-2 border-[#2D2D2D] shadow-[2px_2px_0px_#2D2D2D] rounded-xl w-16 py-1.5 text-center">
-                <div class="text-[9px] font-bold opacity-90 leading-none mb-0.5">${isMinibus ? '專線小巴' : item.operator}</div>
+                <div class="text-[9px] font-bold opacity-95 leading-none mb-0.5">${isAirport ? '✈️ 機場線' : (isMinibus ? '專線小巴' : item.operator)}</div>
                 <div class="font-num text-xl font-bold leading-none tracking-wide">${item.route}</div>
               </div>
+              ${item.fare ? `<span class="font-num text-[10px] font-bold text-[#5C5852] mt-1">${item.fare}</span>` : ''}
             </div>
 
             <!-- 中間目的地與站點 -->
@@ -1379,7 +1547,127 @@
 
 
     // ==========================================
-    // 5. 第三頁：家庭共用行事曆
+    // 5A. 第三頁：家庭日常行程表（今日及近期清單 + 成員篩選）
+    // ==========================================
+    let dailyMemberFilter = 'ALL';
+
+    window.setDailyMemberFilter = (member) => {
+      dailyMemberFilter = member;
+      ['ALL', '全家', '爸爸', '媽媽', '小朋友'].forEach(m => {
+        const btn = document.getElementById(`mem-filter-${m}`);
+        if (!btn) return;
+        if (m === member) {
+          btn.className = 'sketch-pill px-3 py-1 text-xs font-bold bg-[#2D2D2D] text-white shrink-0';
+        } else {
+          btn.className = 'sketch-pill px-3 py-1 text-xs font-bold bg-white text-[#2D2D2D] shrink-0';
+        }
+      });
+      renderDailyScheduleFeed();
+    };
+
+    window.toggleEventDone = (id) => {
+      const ev = appState.events.find(e => e.id === id);
+      if (ev) {
+        ev.done = !ev.done;
+        saveState();
+        renderDailyScheduleFeed();
+        renderCalendar();
+      }
+    };
+
+    window.renderDailyScheduleFeed = () => {
+      const container = document.getElementById('familyScheduleFeed');
+      if (!container) return;
+
+      let list = [...appState.events];
+      if (dailyMemberFilter !== 'ALL') {
+        list = list.filter(e => e.member === dailyMemberFilter);
+      }
+
+      // 依日期與時間排序
+      list.sort((a, b) => {
+        const dCmp = a.date.localeCompare(b.date);
+        if (dCmp !== 0) return dCmp;
+        return (a.time || '99:99').localeCompare(b.time || '99:99');
+      });
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="sketch-card-alt p-6 text-center space-y-2">
+            <div class="text-3xl">🗓️✨</div>
+            <p class="text-sm font-bold">目前沒有符合篩選的家庭行程</p>
+            <button onclick="openEventModal(todayStr)" class="sketch-btn bg-[#E5B454] px-3 py-1.5 text-xs font-black">+ 新增第一個家庭行程</button>
+          </div>
+        `;
+        return;
+      }
+
+      // 按日期分組顯示
+      const grouped = {};
+      list.forEach(ev => {
+        if (!grouped[ev.date]) grouped[ev.date] = [];
+        grouped[ev.date].push(ev);
+      });
+
+      const weekNames = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
+      container.innerHTML = Object.keys(grouped).map(dateKey => {
+        const [y, m, d] = dateKey.split('-').map(Number);
+        const dt = new Date(y, m - 1, d);
+        const isToday = dateKey === todayStr;
+        const dateHeading = isToday
+          ? `🌟 今天 · ${m}月${d}日 (${weekNames[dt.getDay()]})`
+          : `📅 ${m}月${d}日 (${weekNames[dt.getDay()]})`;
+
+        const cardsHtml = grouped[dateKey].map(ev => renderEventCardHtml(ev)).join('');
+        return `
+          <div class="space-y-2">
+            <div class="flex items-center justify-between px-1">
+              <span class="text-xs font-black ${isToday ? 'text-[#D96B52]' : 'text-[#3B6E9C]'}">${dateHeading}</span>
+              <span class="text-[10px] font-bold text-[#6B665F]">${grouped[dateKey].length} 項安排</span>
+            </div>
+            ${cardsHtml}
+          </div>
+        `;
+      }).join('');
+    };
+
+    function renderEventCardHtml(ev) {
+      const catStyle = {
+        family: { bar: 'bg-[#E5B454]', badge: 'bg-[#E5B454]/30', label: '家庭活動' },
+        school: { bar: 'bg-[#769676]', badge: 'bg-[#769676]/25', label: '上學/興趣班' },
+        chore: { bar: 'bg-[#3B6E9C]', badge: 'bg-[#3B6E9C]/20', label: '繳費/家務' },
+        important: { bar: 'bg-[#D96B52]', badge: 'bg-[#D96B52]/20', label: '重要提醒' }
+      }[ev.category || 'family'];
+
+      return `
+        <div class="sketch-card p-3 flex items-center justify-between gap-2.5 ${ev.done ? 'opacity-65 bg-[#FAF7F2]' : ''}">
+          <!-- 打卡勾選圓鈕 -->
+          <button onclick="toggleEventDone('${ev.id}')" class="w-6 h-6 rounded-full border-2 border-[#2D2D2D] ${ev.done ? 'bg-[#769676] text-white' : 'bg-white'} flex items-center justify-center shrink-0" title="標記完成">
+            ${ev.done ? '✓' : ''}
+          </button>
+
+          <div class="w-1.5 self-stretch rounded-full ${catStyle.bar} border border-[#2D2D2D] shrink-0"></div>
+
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5 flex-wrap">
+              ${ev.time ? `<span class="font-num text-xs font-bold bg-[#2D2D2D] text-white px-2 py-0.5 rounded-md">${ev.time}</span>` : ''}
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded-full border border-[#2D2D2D] ${catStyle.badge}">${ev.member}</span>
+              <span class="text-[10px] text-[#6B665F] font-bold">${catStyle.label}</span>
+            </div>
+            <p class="text-sm font-black ${ev.done ? 'strike-line' : 'text-[#2D2D2D]'} mt-1 break-words">${ev.title}</p>
+          </div>
+
+          <div class="flex items-center gap-1 shrink-0">
+            <button onclick="editCalendarEvent('${ev.id}')" class="w-7 h-7 rounded-lg border-2 border-[#2D2D2D] bg-[#FAF7F2] flex items-center justify-center text-xs" title="編輯">✏️</button>
+            <button onclick="deleteCalendarEvent('${ev.id}')" class="w-7 h-7 rounded-lg border-2 border-[#2D2D2D] bg-[#FAF7F2] flex items-center justify-center text-xs" title="刪除">🗑️</button>
+          </div>
+        </div>
+      `;
+    }
+
+
+    // ==========================================
+    // 5B. 第四頁：月曆總覽（獨立行事曆頁面 · 整月網格視圖）
     // ==========================================
     let calYear = new Date().getFullYear();
     let calMonth = new Date().getMonth(); // 0-11
@@ -1455,6 +1743,11 @@
           return `<span class="w-1.5 h-1.5 rounded-full ${dotColor} border border-[#2D2D2D]"></span>`;
         }).join('');
 
+        // 格子內迷你行程關鍵字預覽（最多顯示 2 個中文字）
+        const miniTag = dayEvents[0]
+          ? `<span class="text-[8px] leading-none font-bold text-[#2D2D2D] truncate max-w-full px-0.5">${dayEvents[0].title.slice(0, 3)}</span>`
+          : '';
+
         let cellBg = 'bg-transparent border-transparent';
         if (isSelected) {
           cellBg = 'bg-[#E5B454] border-[#2D2D2D] shadow-[2px_2px_0px_#2D2D2D]';
@@ -1467,9 +1760,10 @@
         else if (dayOfWeek === 6) numColor = 'text-[#3B6E9C]';
 
         cellsHtml += `
-          <button onclick="selectCalDay('${fullDate}')" class="h-11 rounded-xl border-2 ${cellBg} flex flex-col items-center justify-center transition-all">
-            <span class="font-num text-base font-bold leading-none ${numColor}">${d}</span>
-            <div class="flex gap-0.5 mt-1 h-1.5">${dotsHtml}</div>
+          <button onclick="selectCalDay('${fullDate}')" class="h-13 py-1 rounded-xl border-2 ${cellBg} flex flex-col items-center justify-between transition-all overflow-hidden">
+            <span class="font-num text-sm font-bold leading-none ${numColor}">${d}</span>
+            <div class="flex gap-0.5 h-1.5 items-center">${dotsHtml}</div>
+            <div class="h-2.5 flex items-center justify-center w-full">${miniTag}</div>
           </button>
         `;
       }
@@ -1503,44 +1797,19 @@
         listEl.innerHTML = `
           <div class="sketch-card-alt p-4 text-center space-y-1.5">
             <p class="text-xs font-bold text-[#6B665F]">這天暫時未有安排家庭行程 🍃</p>
-            <button onclick="openEventModal()" class="text-xs font-black text-[#3B6E9C] underline">+ 點此新增這天的活動</button>
+            <button onclick="openEventModal(selectedCalDate)" class="text-xs font-black text-[#3B6E9C] underline">+ 點此新增這天的活動</button>
           </div>
         `;
         return;
       }
 
-      listEl.innerHTML = events.map(ev => {
-        const catStyle = {
-          family: { bar: 'bg-[#E5B454]', badge: 'bg-[#E5B454]/30', label: '家庭活動' },
-          school: { bar: 'bg-[#769676]', badge: 'bg-[#769676]/25', label: '上學/興趣班' },
-          chore: { bar: 'bg-[#3B6E9C]', badge: 'bg-[#3B6E9C]/20', label: '繳費/家務' },
-          important: { bar: 'bg-[#D96B52]', badge: 'bg-[#D96B52]/20', label: '重要提醒' }
-        }[ev.category || 'family'];
-
-        return `
-          <div class="sketch-card p-3 flex items-center justify-between gap-2.5 relative overflow-hidden">
-            <div class="w-1.5 self-stretch rounded-full ${catStyle.bar} border border-[#2D2D2D] shrink-0"></div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center gap-1.5 flex-wrap">
-                ${ev.time ? `<span class="font-num text-xs font-bold bg-[#2D2D2D] text-white px-2 py-0.5 rounded-md">${ev.time}</span>` : ''}
-                <span class="text-[11px] font-bold px-2 py-0.5 rounded-full border border-[#2D2D2D] ${catStyle.badge}">${ev.member}</span>
-                <span class="text-[10px] text-[#6B665F] font-bold">${catStyle.label}</span>
-              </div>
-              <p class="text-sm font-black text-[#2D2D2D] mt-1 break-words">${ev.title}</p>
-            </div>
-            <div class="flex items-center gap-1 shrink-0">
-              <button onclick="editCalendarEvent('${ev.id}')" class="w-8 h-8 rounded-lg border-2 border-[#2D2D2D] bg-[#FAF7F2] flex items-center justify-center text-xs" title="編輯">✏️</button>
-              <button onclick="deleteCalendarEvent('${ev.id}')" class="w-8 h-8 rounded-lg border-2 border-[#2D2D2D] bg-[#FAF7F2] flex items-center justify-center text-xs" title="刪除">🗑️</button>
-            </div>
-          </div>
-        `;
-      }).join('');
+      listEl.innerHTML = events.map(ev => renderEventCardHtml(ev)).join('');
     }
 
-    window.openEventModal = () => {
+    window.openEventModal = (targetDate) => {
       document.getElementById('eventModalTitle').textContent = '✏️ 新增家庭行程';
       document.getElementById('editEventId').value = '';
-      document.getElementById('eventDateInput').value = selectedCalDate;
+      document.getElementById('eventDateInput').value = targetDate || selectedCalDate || todayStr;
       document.getElementById('eventTimeInput').value = '';
       document.getElementById('eventTitleInput').value = '';
       document.querySelector('input[name="eventMember"][value="全家"]').checked = true;
@@ -1580,7 +1849,8 @@
       if (editId) {
         const idx = appState.events.findIndex(item => item.id === editId);
         if (idx > -1) {
-          appState.events[idx] = { id: editId, date, time, title, member, category };
+          const oldDone = Boolean(appState.events[idx].done);
+          appState.events[idx] = { id: editId, date, time, title, member, category, done: oldDone };
         }
         showToast('已更新家庭行程 ✓');
       } else {
@@ -1590,9 +1860,10 @@
           time,
           title,
           member,
-          category
+          category,
+          done: false
         });
-        showToast('已加入家庭日曆 📅');
+        showToast('已加入家庭日曆並同步給家人 📅');
       }
 
       selectedCalDate = date;
@@ -1601,6 +1872,7 @@
       calMonth = m - 1;
 
       saveState();
+      renderDailyScheduleFeed();
       renderCalendar();
       closeEventModal();
     };
@@ -1608,6 +1880,7 @@
     window.deleteCalendarEvent = (id) => {
       appState.events = appState.events.filter(e => e.id !== id);
       saveState();
+      renderDailyScheduleFeed();
       renderCalendar();
       showToast('已刪除該行程');
     };
@@ -1763,6 +2036,7 @@
     // ==========================================
     window.addEventListener('DOMContentLoaded', () => {
       updateShopCategoryOptions();
+      renderDailyScheduleFeed();
       renderCalendar();
       renderShopping();
       fetchWeatherData(false);
