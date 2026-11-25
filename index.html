@@ -3,407 +3,409 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>沙田愉翠苑 · 生活手帳</title>
+  <title>沙田愉翠苑 · 家庭生活助手</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Patrick+Hand&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --paper-bg: #FBF8F1;
-      --paper-card: #FFFFFF;
+      --bg-paper: #FBF8F1;
       --ink-dark: #2C2A29;
       --ink-muted: #6B665F;
-      --sketch-blue: #3B6998;
-      --sketch-green: #6A997E;
-      --sketch-yellow: #F3C65F;
-      --sketch-coral: #E06D53;
+      --accent-blue: #3B6998;
+      --accent-green: #7BA07B;
+      --accent-yellow: #F3C65F;
+      --accent-coral: #E06D53;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: #EDE7DB;
+      font-family: 'Zen Maru Gothic', 'Noto Sans TC', sans-serif;
+      background-color: #EFECE6;
       color: var(--ink-dark);
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
     }
 
-    .font-hand {
-      font-family: 'Patrick Hand', 'Noto Sans TC', cursive;
+    /* 手繪紙張紋理背景 */
+    .paper-canvas {
+      background-color: var(--bg-paper);
+      background-image:
+        radial-gradient(rgba(44, 42, 41, 0.04) 1px, transparent 0),
+        radial-gradient(rgba(59, 105, 152, 0.03) 1px, transparent 0);
+      background-size: 20px 20px;
+      background-position: 0 0, 10px 10px;
     }
 
-    /* 手帳紙張點陣紋理 */
-    .notebook-canvas {
-      background-color: var(--paper-bg);
-      background-image: radial-gradient(#D5CEBF 1px, transparent 1px);
-      background-size: 18px 18px;
-      min-height: 100dvh;
-    }
-
-    /* 手繪炭灰描邊卡片 */
+    /* 手繪卡片邊框與鉛筆陰影 */
     .sketch-card {
-      background-color: var(--paper-card);
+      background: #FFFFFF;
       border: 2px solid var(--ink-dark);
       border-radius: 18px 22px 19px 21px / 21px 18px 22px 19px;
       box-shadow: 3px 3px 0px var(--ink-dark);
-      transition: transform 0.12s ease, box-shadow 0.12s ease;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
 
-    .sketch-card-flat {
-      background-color: var(--paper-card);
-      border: 2px solid var(--ink-dark);
-      border-radius: 16px;
+    .sketch-card:active {
+      transform: translate(1px, 1px);
       box-shadow: 2px 2px 0px var(--ink-dark);
     }
 
     .sketch-btn {
       border: 2px solid var(--ink-dark);
-      border-radius: 14px 16px 15px 14px;
+      border-radius: 999px;
       box-shadow: 2px 2px 0px var(--ink-dark);
-      transition: all 0.1s ease;
+      transition: all 0.12s ease;
+      cursor: pointer;
     }
+
     .sketch-btn:active {
       transform: translate(2px, 2px);
       box-shadow: 0px 0px 0px var(--ink-dark);
     }
 
-    .sketch-pill {
-      border: 1.8px solid var(--ink-dark);
-      border-radius: 999px;
-      box-shadow: 1.5px 1.5px 0px var(--ink-dark);
-    }
-
     .sketch-input {
-      background-color: #FFFDF9;
+      background: #FFFDF7;
       border: 2px solid var(--ink-dark);
       border-radius: 14px;
       outline: none;
       transition: box-shadow 0.15s ease;
     }
+
     .sketch-input:focus {
-      box-shadow: 2px 2px 0px var(--sketch-blue);
+      box-shadow: 2px 2px 0px var(--accent-blue);
     }
 
-    /* 螢光筆底線效果 */
-    .hl-yellow {
-      background: linear-gradient(180deg, transparent 58%, rgba(243, 198, 95, 0.65) 58%);
+    /* 手繪膠帶裝飾 */
+    .tape-strip {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-2deg);
+      width: 72px;
+      height: 18px;
+      background-color: rgba(243, 198, 95, 0.72);
+      border-left: 1px dashed rgba(44, 42, 41, 0.25);
+      border-right: 1px dashed rgba(44, 42, 41, 0.25);
+      pointer-events: none;
+    }
+
+    /* 手繪底線螢光筆效果 */
+    .hl-blue {
+      background: linear-gradient(transparent 58%, rgba(59, 105, 152, 0.22) 58%);
       padding: 0 4px;
     }
-    .hl-blue {
-      background: linear-gradient(180deg, transparent 58%, rgba(59, 105, 152, 0.25) 58%);
+    .hl-yellow {
+      background: linear-gradient(transparent 58%, rgba(243, 198, 95, 0.5) 58%);
       padding: 0 4px;
     }
     .hl-green {
-      background: linear-gradient(180deg, transparent 58%, rgba(106, 153, 126, 0.35) 58%);
+      background: linear-gradient(transparent 58%, rgba(123, 160, 123, 0.3) 58%);
       padding: 0 4px;
     }
     .hl-coral {
-      background: linear-gradient(180deg, transparent 58%, rgba(224, 109, 83, 0.28) 58%);
+      background: linear-gradient(transparent 58%, rgba(224, 109, 83, 0.25) 58%);
       padding: 0 4px;
     }
 
-    /* 紙膠帶裝飾 */
-    .washi-tape {
-      position: relative;
+    /* 隱藏捲軸但保持滑動 */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
     }
-    .washi-tape::before {
-      content: '';
-      position: absolute;
-      top: -9px;
-      left: 50%;
-      transform: translateX(-50%) rotate(-1.5deg);
-      width: 68px;
-      height: 16px;
-      background-color: rgba(243, 198, 95, 0.72);
-      border-left: 1px dashed rgba(44, 42, 41, 0.35);
-      border-right: 1px dashed rgba(44, 42, 41, 0.35);
-      z-index: 10;
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
 
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-    @keyframes spinSlow {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.35); opacity: 0.65; }
     }
-    .spin-once {
-      animation: spinSlow 0.6s ease-in-out;
+    .live-dot {
+      animation: pulseDot 1.6s infinite ease-in-out;
     }
   </style>
 </head>
-<body class="flex justify-center">
-
+<body class="min-h-screen flex justify-center">
   <!-- 手機版置中主容器 -->
-  <div class="notebook-canvas w-full max-w-md relative flex flex-col pb-24 border-x-0 sm:border-x-2 border-[#2C2A29] shadow-xl">
+  <div class="w-full max-w-md min-h-screen paper-canvas relative flex flex-col border-x-2 border-[#2C2A29]/15 shadow-xl">
 
     <!-- 頂部手繪標題列 -->
     <header class="sticky top-0 z-30 bg-[#FBF8F1]/95 backdrop-blur-sm border-b-2 border-[#2C2A29] px-4 py-3">
       <div class="flex items-center justify-between gap-2">
-        <div class="flex items-center gap-2.5 min-w-0">
-          <!-- 手繪微笑徽章 -->
-          <div class="w-9 h-9 rounded-full bg-[#F3C65F] border-2 border-[#2C2A29] flex items-center justify-center shrink-0 shadow-[1.5px_1.5px_0px_#2C2A29]">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2C2A29" stroke-width="2.2" stroke-linecap="round">
-              <circle cx="9" cy="10" r="1" fill="#2C2A29"/>
-              <circle cx="15" cy="10" r="1" fill="#2C2A29"/>
-              <path d="M8.5 14.5c1.2 1.8 5.8 1.8 7 0"/>
-            </svg>
+        <div class="flex items-center gap-2 min-w-0">
+          <div class="w-9 h-9 rounded-full bg-[#F3C65F] border-2 border-[#2C2A29] flex items-center justify-center text-lg shadow-[2px_2px_0px_#2C2A29] shrink-0">
+            🏡
           </div>
-          <div class="truncate">
-            <div class="flex items-center gap-1.5">
-              <h1 class="text-lg font-black tracking-tight leading-none">沙田愉翠苑</h1>
-              <span class="text-[11px] font-bold px-1.5 py-0.5 bg-[#E06D53] text-white rounded-md border border-[#2C2A29]">生活手帳</span>
-            </div>
+          <div class="min-w-0">
+            <h1 class="text-base font-black tracking-wide leading-tight flex items-center gap-1.5 truncate">
+              <span>沙田愉翠苑</span>
+              <span class="text-xs font-bold px-2 py-0.5 bg-[#3B6998] text-white rounded-full border border-[#2C2A29] shrink-0">出行助手</span>
+            </h1>
             <p id="headerSubtitleText" class="text-[11px] text-[#6B665F] mt-0.5 truncate">
-              報站 · 路線 · 港鐵 · 自駕 · 待辦 · 購物 · 天氣
+              報站 · 路線 · 港鐵 · 自駕 · 天氣
             </p>
           </div>
         </div>
 
-        <!-- 當前日期與時間膠囊 -->
-        <div class="sketch-pill bg-white px-2.5 py-1 text-[11px] font-black text-[#2C2A29] shrink-0">
-          <span id="headerClock">--:--</span>
+        <!-- 右側實時時鐘 -->
+        <div class="flex items-center gap-1.5 shrink-0">
+          <div id="headerClock" class="text-xs font-black bg-white border-2 border-[#2C2A29] rounded-full px-2.5 py-1 shadow-[1.5px_1.5px_0px_#2C2A29]">
+            --:--
+          </div>
         </div>
       </div>
     </header>
 
-    <!-- 主內容區 -->
-    <main class="flex-1 px-4 pt-4 space-y-4">
+    <!-- 主要內容捲動區（底部預留導覽列空間） -->
+    <main class="flex-1 px-4 pt-4 pb-28 space-y-4">
 
       <!-- ==================== 第一頁：沙田愉翠苑 巴士 & 小巴報站器 ==================== -->
       <section id="tab-transport" class="space-y-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="w-6 h-6 rounded-full bg-[#6A997E] text-white text-xs font-bold flex items-center justify-center border border-[#2C2A29]">1</span>
-            <h2 class="text-lg font-black hl-green">愉翠苑實時報站器</h2>
+            <span class="w-6 h-6 rounded-full bg-[#7BA07B] text-white text-xs font-bold flex items-center justify-center border border-[#2C2A29]">1</span>
+            <h2 class="text-lg font-black hl-green">愉翠苑實時報站</h2>
           </div>
-          <button onclick="refreshAllETA(true)" class="sketch-btn bg-[#3B6998] text-white px-3 py-1 text-xs font-bold flex items-center gap-1.5">
-            <svg id="etaRefreshIcon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-              <path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/>
-            </svg>
-            <span>刷新 (<span id="etaCountdown">30</span>s)</span>
+          <button onclick="refreshAllETA(true)" class="sketch-btn bg-[#7BA07B] text-white px-3 py-1 text-xs font-bold flex items-center gap-1">
+            <span>⏱️</span> <span id="etaCountdownText">30s</span>
           </button>
         </div>
 
-        <!-- 巴士 / 專線小巴 切換大按鈕 -->
-        <div class="grid grid-cols-2 gap-2.5">
-          <button id="btnModeBus" onclick="switchTransportMode('bus')" class="sketch-btn py-2.5 px-3 font-black text-sm bg-[#3B6998] text-white flex items-center justify-center gap-2">
-            <span>🚌</span> 巴士站 (含 A41)
+        <!-- 交通工具類型切換（全部 / 專營巴士 / 專線小巴） -->
+        <div class="grid grid-cols-3 gap-2">
+          <button onclick="setTransportFilter('all')" id="filter-all" class="sketch-btn py-1.5 text-xs font-black bg-[#2C2A29] text-white">
+            全部路線
           </button>
-          <button id="btnModeMinibus" onclick="switchTransportMode('minibus')" class="sketch-btn py-2.5 px-3 font-black text-sm bg-white text-[#2C2A29] flex items-center justify-center gap-2">
-            <span>🚐</span> 專線小巴站
+          <button onclick="setTransportFilter('bus')" id="filter-bus" class="sketch-btn py-1.5 text-xs font-bold bg-white text-[#2C2A29]">
+            🚌 九巴/城巴/龍運
+          </button>
+          <button onclick="setTransportFilter('minibus')" id="filter-minibus" class="sketch-btn py-1.5 text-xs font-bold bg-white text-[#2C2A29]">
+            🚐 專線小巴
           </button>
         </div>
 
-        <!-- 方向與站點篩選膠囊 -->
-        <div id="directionFilterBar" class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-          <button onclick="setDirectionFilter('all')" data-dir="all" class="dir-chip sketch-pill px-3 py-1 text-xs font-bold bg-[#F3C65F] text-[#2C2A29] whitespace-nowrap">全部方向</button>
-          <button onclick="setDirectionFilter('outbound')" data-dir="outbound" class="dir-chip sketch-pill px-3 py-1 text-xs font-bold bg-white text-[#2C2A29] whitespace-nowrap">往九龍 / 港島 / 機場</button>
-          <button onclick="setDirectionFilter('inbound')" data-dir="inbound" class="dir-chip sketch-pill px-3 py-1 text-xs font-bold bg-white text-[#2C2A29] whitespace-nowrap">往沙田站 / 馬鞍山 / 大埔</button>
-          <button onclick="setDirectionFilter('fav')" data-dir="fav" class="dir-chip sketch-pill px-3 py-1 text-xs font-bold bg-white text-[#2C2A29] whitespace-nowrap">⭐ 常用置頂</button>
+        <!-- 方向與常用篩選列 -->
+        <div class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
+          <button onclick="setDirectionFilter('all')" id="dir-all" class="px-3 py-1 rounded-full text-xs font-bold border-2 border-[#2C2A29] bg-[#F3C65F] shrink-0">
+            📍 全部站點
+          </button>
+          <button onclick="setDirectionFilter('outbound')" id="dir-outbound" class="px-3 py-1 rounded-full text-xs font-bold border-2 border-[#2C2A29] bg-white shrink-0">
+            🏙️ 往九龍 / 港島 / 機場
+          </button>
+          <button onclick="setDirectionFilter('shatin')" id="dir-shatin" class="px-3 py-1 rounded-full text-xs font-bold border-2 border-[#2C2A29] bg-white shrink-0">
+            🏘️ 往沙田 / 馬鞍山 / 大埔
+          </button>
+          <button onclick="setDirectionFilter('fav')" id="dir-fav" class="px-3 py-1 rounded-full text-xs font-bold border-2 border-[#2C2A29] bg-white shrink-0">
+            ⭐ 常用置頂
+          </button>
         </div>
 
-        <!-- 站點提示橫幅 -->
-        <div id="stopLocationBanner" class="sketch-card-flat bg-[#FFFDF7] px-3.5 py-2.5 text-xs flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="text-base">🚏</span>
-            <div>
-              <p class="font-bold text-[#2C2A29]">愉翠苑總站 / 插桅杆街 / 牛皮沙街</p>
-              <p class="text-[11px] text-[#6B665F]">實時串接九巴、龍運 A41 及運輸署小巴系統</p>
-            </div>
-          </div>
-          <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-[#6A997E]/20 border border-[#2C2A29]">LIVE</span>
+        <!-- 站點提示膠囊 -->
+        <div class="bg-[#EEF5EE] border-2 border-[#2C2A29] rounded-2xl px-3 py-2 flex items-center justify-between text-xs">
+          <span class="font-bold text-[#2C2A29]">🚏 愉翠苑總站 · 插桅杆街 · 牛皮沙街</span>
+          <span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#3B6998]">
+            <span class="w-2 h-2 rounded-full bg-[#7BA07B] live-dot"></span> 官方實時數據
+          </span>
         </div>
 
-        <!-- 報站列表容器 -->
-        <div id="etaCardsContainer" class="space-y-3">
-          <!-- JS 動態渲染實時到站時間 -->
+        <!-- 報站卡片列表 -->
+        <div id="transportList" class="space-y-3">
+          <!-- JS 動態生成路線卡片 -->
         </div>
       </section>
 
-      <!-- ==================== 第二頁（新增）：點對點最佳乘車路線推介 ==================== -->
+      <!-- ==================== 第二頁：點對點最佳乘車路線推介 ==================== -->
       <section id="tab-route" class="hidden space-y-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="w-6 h-6 rounded-full bg-[#E06D53] text-white text-xs font-bold flex items-center justify-center border border-[#2C2A29]">2</span>
-            <h2 class="text-lg font-black hl-coral">點對點最佳乘車推介</h2>
+            <span class="w-6 h-6 rounded-full bg-[#3B6998] text-white text-xs font-bold flex items-center justify-center border border-[#2C2A29]">2</span>
+            <h2 class="text-lg font-black hl-blue">點對點乘車推介</h2>
           </div>
-          <span class="sketch-pill bg-white px-2.5 py-0.5 text-[11px] font-black text-[#E06D53]">
-            🧭 巴士 · 港鐵 · 小巴綜合比較
+          <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-[#EAF2F8] border border-[#2C2A29] text-[#3B6998]">
+            公共交通智能分析
           </span>
         </div>
 
-        <!-- 起點與終點輸入卡片 -->
-        <div class="sketch-card washi-tape p-4 space-y-3">
+        <!-- 起點與終點輸入卡 -->
+        <div class="sketch-card bg-white p-4 space-y-3 relative">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-black text-[#2C2A29]">🧭 輸入出發地與目的地</span>
+            <button onclick="swapPointToPoint()" class="text-[11px] font-black px-2.5 py-0.5 rounded-full bg-[#F3C65F] border border-[#2C2A29] shadow-[1px_1px_0px_#2C2A29] active:translate-y-0.5">
+              ⇅ 起終點對調
+            </button>
+          </div>
+
           <div class="space-y-2">
-            <div>
-              <label class="text-[11px] font-black text-[#2C2A29] mb-1 block">🟢 出發地點（起點）：</label>
-              <div class="flex gap-1.5">
-                <input id="routeOriginInput" type="text" value="沙田愉翠苑" placeholder="輸入起點（如：沙田愉翠苑、旺角、中環）" onkeydown="if(event.key==='Enter') recommendBestTransit()" class="sketch-input flex-1 px-3 py-2 text-sm font-bold" />
-                <button onclick="swapRoutePoints()" class="sketch-btn bg-[#FBF8F1] px-2.5 py-2 text-xs font-black shrink-0" title="對調起點與終點">
-                  ⇅ 對調
-                </button>
-              </div>
+            <div class="flex items-center gap-2">
+              <span class="w-7 h-7 rounded-full bg-[#7BA07B] text-white text-xs font-black flex items-center justify-center border border-[#2C2A29] shrink-0">起</span>
+              <input id="p2pOriginInput" type="text" value="沙田愉翠苑" placeholder="輸入出發地點..." class="sketch-input flex-1 px-3 py-2 text-sm font-bold" />
             </div>
 
-            <div>
-              <label class="text-[11px] font-black text-[#2C2A29] mb-1 block">🔴 目的地（終點）：</label>
-              <div class="flex gap-2">
-                <input id="routeDestInput" type="text" placeholder="輸入目的地（如：中環、尖沙咀、觀塘、機場、銅鑼灣）" onkeydown="if(event.key==='Enter') recommendBestTransit()" class="sketch-input flex-1 px-3 py-2 text-sm font-bold" />
-                <button onclick="recommendBestTransit()" class="sketch-btn bg-[#E06D53] text-white px-4 py-2 text-sm font-black shrink-0">
-                  推介
-                </button>
-              </div>
+            <div class="flex items-center gap-2">
+              <span class="w-7 h-7 rounded-full bg-[#E06D53] text-white text-xs font-black flex items-center justify-center border border-[#2C2A29] shrink-0">終</span>
+              <input id="p2pDestInput" type="text" placeholder="輸入目的地（如：中環、尖沙咀、機場、西貢...）" class="sketch-input flex-1 px-3 py-2 text-sm font-bold" onkeydown="if(event.key==='Enter') calculateBestTransitRoute()" />
             </div>
           </div>
 
-          <!-- 常用點對點快捷組合 -->
+          <button onclick="calculateBestTransitRoute()" class="sketch-btn w-full bg-[#3B6998] text-white py-2.5 text-xs font-black flex items-center justify-center gap-1.5">
+            <span>🔍</span> 推介最佳乘車路線
+          </button>
+
+          <!-- 愉翠苑出發熱門點對點快捷鍵 -->
           <div>
-            <p class="text-[11px] font-bold text-[#6B665F] mb-1.5">✨ 熱門點對點路線一鍵查詢：</p>
+            <div class="text-[11px] font-bold text-[#6B665F] mb-1.5">🔥 愉翠苑出發熱門路線一按查詢：</div>
             <div class="flex flex-wrap gap-1.5">
-              <button onclick="setQuickRoutePair('沙田愉翠苑', '中環 / 金鐘')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">愉翠苑 ➔ 中環</button>
-              <button onclick="setQuickRoutePair('沙田愉翠苑', '尖沙咀')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">愉翠苑 ➔ 尖沙咀</button>
-              <button onclick="setQuickRoutePair('沙田愉翠苑', '觀塘')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">愉翠苑 ➔ 觀塘</button>
-              <button onclick="setQuickRoutePair('沙田愉翠苑', '香港國際機場')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">愉翠苑 ➔ 機場</button>
-              <button onclick="setQuickRoutePair('沙田愉翠苑', '銅鑼灣')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">愉翠苑 ➔ 銅鑼灣</button>
-              <button onclick="setQuickRoutePair('沙田愉翠苑', '荃灣')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">愉翠苑 ➔ 荃灣</button>
-              <button onclick="setQuickRoutePair('沙田愉翠苑', '沙田市中心')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">愉翠苑 ➔ 沙田站</button>
-              <button onclick="setQuickRoutePair('旺角', '銅鑼灣')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">旺角 ➔ 銅鑼灣</button>
+              <button onclick="setQuickRoutePair('沙田愉翠苑', '中環 / 金鐘')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">愉翠苑 → 中環</button>
+              <button onclick="setQuickRoutePair('沙田愉翠苑', '尖沙咀')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">愉翠苑 → 尖沙咀</button>
+              <button onclick="setQuickRoutePair('沙田愉翠苑', '觀塘')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">愉翠苑 → 觀塘</button>
+              <button onclick="setQuickRoutePair('沙田愉翠苑', '香港國際機場')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">愉翠苑 → 機場</button>
+              <button onclick="setQuickRoutePair('沙田愉翠苑', '荃灣')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">愉翠苑 → 荃灣</button>
+              <button onclick="setQuickRoutePair('沙田愉翠苑', '西貢市中心')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">愉翠苑 → 西貢</button>
+              <button onclick="setQuickRoutePair('沙田愉翠苑', '沙田市中心')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">愉翠苑 → 沙田市中心</button>
             </div>
           </div>
         </div>
 
-        <!-- 點對點乘車推介結果顯示區 -->
-        <div id="routeRecommendContainer" class="space-y-3">
-          <!-- JS 動態生成最佳乘車路線推介 -->
+        <!-- 乘車路線推介結果區 -->
+        <div id="p2pResultContainer" class="space-y-3">
+          <!-- JS 動態生成最佳路線建議 -->
         </div>
       </section>
 
-      <!-- ==================== 第三頁：港鐵車程計算（預設第一城站出發，可更改） ==================== -->
+      <!-- ==================== 第三頁：港鐵車程計算（可自訂出發站與目的地） ==================== -->
       <section id="tab-mtr" class="hidden space-y-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="w-6 h-6 rounded-full bg-[#F3C65F] text-[#2C2A29] text-xs font-bold flex items-center justify-center border border-[#2C2A29]">3</span>
-            <h2 class="text-lg font-black hl-yellow">港鐵車程計算</h2>
+            <span class="w-6 h-6 rounded-full bg-[#3B6998] text-white text-xs font-bold flex items-center justify-center border border-[#2C2A29]">3</span>
+            <h2 class="text-lg font-black hl-blue">港鐵車程計算</h2>
           </div>
-          <span id="mtrOriginLineBadge" class="sketch-pill bg-white px-2.5 py-0.5 text-[11px] font-black text-[#9C5C1E]">
-            🟫 屯馬綫 · 第一城站
+          <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-[#EAF2F8] border border-[#2C2A29] text-[#3B6998]">
+            多路線轉車對比
           </span>
         </div>
 
-        <!-- 起點與目的地輸入卡片 -->
-        <div class="sketch-card washi-tape p-4 space-y-3">
-          <div class="space-y-1.5 relative">
-            <div class="flex items-center justify-between">
-              <label class="text-xs font-black text-[#2C2A29] flex items-center gap-1.5">
-                <span id="mtrOriginDot" class="w-3 h-3 rounded-full bg-[#9C5C1E] border border-[#2C2A29] inline-block"></span>
-                <span>🟢 出發港鐵站（預設第一城，可更改）：</span>
-              </label>
-              <button onclick="resetMtrOriginToCityOne()" class="text-[11px] font-bold text-[#3B6998] underline">重設第一城</button>
-            </div>
-            <div class="flex gap-1.5">
-              <input id="mtrOriginInput" type="text" value="第一城" placeholder="預設：第一城（可輸入其他車站）" oninput="handleMtrStationInput('origin', this.value)" onkeydown="if(event.key==='Enter') calculateMtrTrip()" class="sketch-input flex-1 px-3 py-2 text-sm font-bold" />
-              <button onclick="swapMtrStations()" class="sketch-btn bg-[#FBF8F1] px-2.5 py-2 text-xs font-black shrink-0" title="對調出發站與目的地">
+        <!-- 出發站與目的地輸入卡（預設第一城站，可自由更改） -->
+        <div class="sketch-card bg-white p-4 space-y-3 relative">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-black text-[#2C2A29]">🚇 選擇出發站與目的地</span>
+            <div class="flex items-center gap-1.5">
+              <button onclick="resetMtrOriginDefault()" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#EAF2F8] text-[#3B6998] border border-[#2C2A29]">
+                重設第一城
+              </button>
+              <button onclick="swapMtrStations()" class="text-[11px] font-black px-2.5 py-0.5 rounded-full bg-[#F3C65F] border border-[#2C2A29] shadow-[1px_1px_0px_#2C2A29] active:translate-y-0.5">
                 ⇅ 對調
               </button>
             </div>
-            <!-- 出發站自動完成建議 -->
-            <div id="mtrOriginSuggestions" class="hidden flex flex-wrap gap-1.5 pt-1"></div>
           </div>
 
-          <div class="space-y-1.5 relative">
-            <label class="text-xs font-black text-[#2C2A29] flex items-center justify-between">
-              <span>🎯 輸入目的地港鐵站：</span>
-              <span class="text-[11px] font-normal text-[#6B665F]">支援繁簡或模糊搜尋</span>
-            </label>
-            <div class="flex gap-2">
-              <input id="mtrDestInput" type="text" placeholder="例如：金鐘、尖沙咀、旺角、機場..." oninput="handleMtrStationInput('dest', this.value)" onkeydown="if(event.key==='Enter') calculateMtrTrip()" class="sketch-input flex-1 px-3 py-2.5 text-sm font-bold" />
-              <button onclick="calculateMtrTrip()" class="sketch-btn bg-[#3B6998] text-white px-4 py-2 text-sm font-black shrink-0">
-                計算
-              </button>
+          <div class="space-y-2">
+            <!-- 出發站輸入框 -->
+            <div class="relative">
+              <div class="flex items-center gap-2">
+                <span class="w-7 h-7 rounded-full bg-[#7BA07B] text-white text-xs font-black flex items-center justify-center border border-[#2C2A29] shrink-0">起</span>
+                <input id="mtrOriginInput" type="text" value="第一城" placeholder="輸入出發港鐵站（預設：第一城）" class="sketch-input flex-1 px-3 py-2 text-sm font-bold" oninput="handleMtrStationInput('origin', this.value)" onfocus="handleMtrStationInput('origin', this.value)" />
+              </div>
+              <div id="mtrOriginSuggest" class="hidden mt-1.5 flex flex-wrap gap-1.5 pl-9"></div>
             </div>
-            <!-- 目的地自動完成站名建議列表 -->
-            <div id="mtrSuggestions" class="hidden flex flex-wrap gap-1.5 pt-1"></div>
+
+            <!-- 目的地輸入框 -->
+            <div class="relative">
+              <div class="flex items-center gap-2">
+                <span class="w-7 h-7 rounded-full bg-[#E06D53] text-white text-xs font-black flex items-center justify-center border border-[#2C2A29] shrink-0">終</span>
+                <input id="mtrDestInput" type="text" placeholder="輸入目的地站名（如：金鐘、尖沙咀、旺角...）" class="sketch-input flex-1 px-3 py-2 text-sm font-bold" oninput="handleMtrStationInput('dest', this.value)" onfocus="handleMtrStationInput('dest', this.value)" />
+              </div>
+              <div id="mtrDestSuggest" class="hidden mt-1.5 flex flex-wrap gap-1.5 pl-9"></div>
+            </div>
           </div>
 
-          <!-- 常用熱門站點快捷膠囊 -->
+          <button onclick="calculateMtrFromInput()" class="sketch-btn w-full bg-[#3B6998] text-white py-2.5 text-xs font-black flex items-center justify-center gap-1.5">
+            <span>🔍</span> 計算車程及轉車時間
+          </button>
+
+          <!-- 常用目的地快捷鍵 -->
           <div>
-            <p class="text-[11px] font-bold text-[#6B665F] mb-1.5">🔥 常用熱門目的地：</p>
+            <div class="text-[11px] font-bold text-[#6B665F] mb-1.5">⚡ 熱門目的地一按即查：</div>
             <div class="flex flex-wrap gap-1.5">
-              <button onclick="selectQuickMtrStation('金鐘')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">金鐘</button>
-              <button onclick="selectQuickMtrStation('尖沙咀')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">尖沙咀</button>
-              <button onclick="selectQuickMtrStation('旺角')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">旺角</button>
-              <button onclick="selectQuickMtrStation('銅鑼灣')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">銅鑼灣</button>
-              <button onclick="selectQuickMtrStation('中環')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">中環</button>
-              <button onclick="selectQuickMtrStation('九龍塘')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">九龍塘</button>
-              <button onclick="selectQuickMtrStation('紅磡')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">紅磡</button>
-              <button onclick="selectQuickMtrStation('觀塘')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">觀塘</button>
-              <button onclick="selectQuickMtrStation('荃灣')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">荃灣</button>
-              <button onclick="selectQuickMtrStation('羅湖')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">羅湖</button>
-              <button onclick="selectQuickMtrStation('機場')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">機場</button>
+              <button onclick="selectQuickMtrStation('金鐘')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">金鐘</button>
+              <button onclick="selectQuickMtrStation('尖沙咀')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">尖沙咀</button>
+              <button onclick="selectQuickMtrStation('旺角')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">旺角</button>
+              <button onclick="selectQuickMtrStation('銅鑼灣')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">銅鑼灣</button>
+              <button onclick="selectQuickMtrStation('觀塘')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">觀塘</button>
+              <button onclick="selectQuickMtrStation('中環')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">中環</button>
+              <button onclick="selectQuickMtrStation('紅磡')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">紅磡</button>
+              <button onclick="selectQuickMtrStation('大圍')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">大圍</button>
+              <button onclick="selectQuickMtrStation('機場')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">機場</button>
             </div>
           </div>
         </div>
 
-        <!-- 港鐵車程結果卡片 -->
+        <!-- 港鐵車程結果顯示區（包含多種轉車路線時間對比） -->
         <div id="mtrResultContainer" class="space-y-3">
           <!-- JS 動態生成計算結果 -->
         </div>
       </section>
 
-      <!-- ==================== 第四頁：自駕時間與的士收費估算 ==================== -->
+      <!-- ==================== 第四頁：自駕時間與的士車資估算（可更改出發地點） ==================== -->
       <section id="tab-drive" class="hidden space-y-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="w-6 h-6 rounded-full bg-[#6A997E] text-white text-xs font-bold flex items-center justify-center border border-[#2C2A29]">4</span>
-            <h2 class="text-lg font-black hl-green">自駕時間與的士估算</h2>
+            <span class="w-6 h-6 rounded-full bg-[#E06D53] text-white text-xs font-bold flex items-center justify-center border border-[#2C2A29]">4</span>
+            <h2 class="text-lg font-black hl-coral">自駕與的士車資估算</h2>
           </div>
-          <span id="driveTrafficStatusBadge" class="sketch-pill bg-white px-2.5 py-0.5 text-[11px] font-black text-[#6A997E]">
-            🟢 交通暢順
+          <span id="trafficStatusBadge" class="text-xs font-bold px-2.5 py-1 rounded-full bg-[#FFF1EE] border border-[#2C2A29] text-[#E06D53]">
+            🚦 路況檢測中
           </span>
         </div>
 
-        <!-- 自駕起訖點輸入卡片 -->
-        <div class="sketch-card washi-tape p-4 space-y-3">
-          <div class="space-y-1.5">
-            <div class="flex items-center justify-between">
-              <label class="text-xs font-black text-[#2C2A29] flex items-center gap-1.5">
-                <span>🟢 出發地點（預設沙田愉翠苑，可更改）：</span>
-              </label>
-              <button onclick="resetDriveOriginToYuChui()" class="text-[11px] font-bold text-[#3B6998] underline">重設愉翠苑</button>
-            </div>
-            <div class="flex gap-1.5">
-              <input id="driveOriginInput" type="text" value="沙田愉翠苑" placeholder="預設：沙田愉翠苑（可輸入其他出發地）" onkeydown="if(event.key==='Enter') calculateDriveTrip()" class="sketch-input flex-1 px-3 py-2 text-sm font-bold" />
-              <button onclick="swapDriveLocations()" class="sketch-btn bg-[#FBF8F1] px-2.5 py-2 text-xs font-black shrink-0" title="對調出發地與目的地">
+        <!-- 起點與目的地輸入卡（預設沙田愉翠苑，可自由更改） -->
+        <div class="sketch-card bg-white p-4 space-y-3 relative">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-black text-[#2C2A29]">🚗 設定出發地點與目的地</span>
+            <div class="flex items-center gap-1.5">
+              <button onclick="resetDriveOriginDefault()" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#FFF1EE] text-[#E06D53] border border-[#2C2A29]">
+                重設愉翠苑
+              </button>
+              <button onclick="swapDriveLocations()" class="text-[11px] font-black px-2.5 py-0.5 rounded-full bg-[#F3C65F] border border-[#2C2A29] shadow-[1px_1px_0px_#2C2A29] active:translate-y-0.5">
                 ⇅ 對調
               </button>
             </div>
           </div>
 
-          <div class="space-y-1.5">
-            <label class="text-xs font-black text-[#2C2A29]">📍 輸入駕車目的地（香港各區 / 地標）：</label>
-            <div class="flex gap-2">
-              <input id="driveDestInput" type="text" placeholder="例如：中環、尖沙咀、觀塘、機場、荃灣..." onkeydown="if(event.key==='Enter') calculateDriveTrip()" class="sketch-input flex-1 px-3 py-2.5 text-sm font-bold" />
-              <button onclick="calculateDriveTrip()" class="sketch-btn bg-[#6A997E] text-white px-4 py-2 text-sm font-black shrink-0">
-                估算
-              </button>
+          <div class="space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="w-7 h-7 rounded-full bg-[#7BA07B] text-white text-xs font-black flex items-center justify-center border border-[#2C2A29] shrink-0">起</span>
+              <input id="driveOriginInput" type="text" value="沙田愉翠苑" placeholder="輸入出發地點（預設：沙田愉翠苑）" class="sketch-input flex-1 px-3 py-2 text-sm font-bold" onkeydown="if(event.key==='Enter') calculateDriveFromInput()" />
+            </div>
+
+            <div class="flex items-center gap-2">
+              <span class="w-7 h-7 rounded-full bg-[#E06D53] text-white text-xs font-black flex items-center justify-center border border-[#2C2A29] shrink-0">終</span>
+              <input id="driveDestInput" type="text" placeholder="輸入目的地（如：中環、機場、尖沙咀、西貢...）" class="sketch-input flex-1 px-3 py-2 text-sm font-bold" onkeydown="if(event.key==='Enter') calculateDriveFromInput()" />
             </div>
           </div>
 
-          <!-- 常用自駕目的地快捷標籤 -->
+          <button onclick="calculateDriveFromInput()" class="sketch-btn w-full bg-[#E06D53] text-white py-2.5 text-xs font-black flex items-center justify-center gap-1.5">
+            <span>計算行車時間與的士車資</span>
+          </button>
+
+          <!-- 常用地點快捷鍵 -->
           <div>
-            <p class="text-[11px] font-bold text-[#6B665F] mb-1.5">🛣️ 常用自駕目的地：</p>
+            <div class="text-[11px] font-bold text-[#6B665F] mb-1.5">📍 熱門地點一按查詢：</div>
             <div class="flex flex-wrap gap-1.5">
-              <button onclick="selectQuickDriveDest('中環 / 金鐘')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">中環 / 金鐘</button>
-              <button onclick="selectQuickDriveDest('尖沙咀')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">尖沙咀</button>
-              <button onclick="selectQuickDriveDest('九龍塘 / 旺角')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">九龍塘 / 旺角</button>
-              <button onclick="selectQuickDriveDest('觀塘 / 九龍灣')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">觀塘 / 九龍灣</button>
-              <button onclick="selectQuickDriveDest('香港國際機場')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">香港國際機場</button>
-              <button onclick="selectQuickDriveDest('荃灣 / 葵芳')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">荃灣 / 葵芳</button>
-              <button onclick="selectQuickDriveDest('銅鑼灣 / 灣仔')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">銅鑼灣 / 灣仔</button>
-              <button onclick="selectQuickDriveDest('大埔 / 科學園')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">大埔 / 科學園</button>
-              <button onclick="selectQuickDriveDest('西貢市中心')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">西貢市中心</button>
-              <button onclick="selectQuickDriveDest('將軍澳')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">將軍澳</button>
+              <button onclick="selectQuickDriveDest('沙田愉翠苑')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FFF1EE] border border-[#2C2A29] hover:bg-[#F3C65F]">沙田愉翠苑</button>
+              <button onclick="selectQuickDriveDest('尖沙咀')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">尖沙咀</button>
+              <button onclick="selectQuickDriveDest('中環')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">中環</button>
+              <button onclick="selectQuickDriveDest('觀塘')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">觀塘</button>
+              <button onclick="selectQuickDriveDest('香港國際機場')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">機場</button>
+              <button onclick="selectQuickDriveDest('荃灣')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">荃灣</button>
+              <button onclick="selectQuickDriveDest('西貢市中心')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">西貢</button>
+              <button onclick="selectQuickDriveDest('大埔墟')" class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#FBF8F1] border border-[#2C2A29] hover:bg-[#F3C65F]">大埔</button>
             </div>
           </div>
         </div>
@@ -414,248 +416,125 @@
         </div>
       </section>
 
-      <!-- ==================== 第五頁：To-Do List 待辦事項 ==================== -->
-      <section id="tab-todo" class="hidden space-y-4">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="w-6 h-6 rounded-full bg-[#3B6998] text-white text-xs font-bold flex items-center justify-center border border-[#2C2A29]">5</span>
-            <h2 class="text-lg font-black hl-blue">To-Do List 待辦事項</h2>
-          </div>
-          <button onclick="clearCompletedTodos()" class="sketch-btn bg-white px-2.5 py-1 text-xs font-bold text-[#E06D53]">
-            🧹 清除已完成
-          </button>
-        </div>
-
-        <!-- 新增待辦輸入框 -->
-        <div class="sketch-card p-3.5 space-y-2.5">
-          <div class="flex gap-2">
-            <input id="todoItemInput" type="text" placeholder="寫下待辦事項（例如：交管理費、預約驗車）..." onkeydown="if(event.key==='Enter') addTodoItem()" class="sketch-input flex-1 px-3 py-2 text-sm font-bold" />
-            <button onclick="addTodoItem()" class="sketch-btn bg-[#3B6998] text-white px-3.5 py-2 text-sm font-black">
-              加入
-            </button>
-          </div>
-          <div class="flex gap-2">
-            <select id="todoPrioritySelect" class="sketch-input px-2.5 py-1.5 text-xs font-bold bg-white">
-              <option value="high">🔴 緊急優先</option>
-              <option value="normal" selected>🟡 一般事項</option>
-              <option value="low">🟢 稍後處理</option>
-            </select>
-            <input id="todoNoteInput" type="text" placeholder="備註或期限（如：週五前 / 下午3點）" onkeydown="if(event.key==='Enter') addTodoItem()" class="sketch-input flex-1 px-2.5 py-1.5 text-xs" />
-          </div>
-        </div>
-
-        <!-- 待辦清單容器 -->
-        <div class="sketch-card washi-tape p-4 space-y-3">
-          <div class="flex items-center justify-between border-b-2 border-dashed border-[#2C2A29]/25 pb-2">
-            <h3 class="font-black text-sm flex items-center gap-1.5">
-              <span>📋</span> 待辦任務清單
-            </h3>
-            <span id="todoCountBadge" class="text-xs font-bold px-2 py-0.5 rounded-full bg-[#F3C65F] border border-[#2C2A29]">0 項未完成</span>
-          </div>
-          <div id="todoItemsContainer" class="space-y-2.5">
-            <!-- JS 動態渲染待辦事項 -->
-          </div>
-        </div>
-      </section>
-
-      <!-- ==================== 第六頁：Shopping List 購物清單（家庭用 / 工作用） ==================== -->
-      <section id="tab-shopping" class="hidden space-y-4">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="w-6 h-6 rounded-full bg-[#E06D53] text-white text-xs font-bold flex items-center justify-center border border-[#2C2A29]">6</span>
-            <h2 class="text-lg font-black hl-coral">Shopping List 購物清單</h2>
-          </div>
-          <button onclick="clearCompletedShopping()" class="sketch-btn bg-white px-2.5 py-1 text-xs font-bold text-[#E06D53]">
-            🧹 清除已買
-          </button>
-        </div>
-
-        <!-- 家庭用 vs 工作用 切換大按鈕 -->
-        <div class="grid grid-cols-2 gap-2.5">
-          <button id="btnShopHome" onclick="switchShoppingScope('home')" class="sketch-btn py-2.5 px-3 font-black text-sm bg-[#6A997E] text-white flex items-center justify-center gap-2">
-            <span>🏠</span> 家庭用清單
-          </button>
-          <button id="btnShopWork" onclick="switchShoppingScope('work')" class="sketch-btn py-2.5 px-3 font-black text-sm bg-white text-[#2C2A29] flex items-center justify-center gap-2">
-            <span>💼</span> 工作用清單
-          </button>
-        </div>
-
-        <!-- 新增購物項目輸入框 -->
-        <div class="sketch-card p-3.5 space-y-2.5">
-          <div class="flex gap-2">
-            <input id="shopItemInput" type="text" placeholder="輸入要買的物品..." onkeydown="if(event.key==='Enter') addShoppingItem()" class="sketch-input flex-1 px-3 py-2 text-sm font-bold" />
-            <button onclick="addShoppingItem()" class="sketch-btn bg-[#F3C65F] px-3.5 py-2 text-sm font-black">
-              + 加入
-            </button>
-          </div>
-          <div class="flex gap-2">
-            <select id="shopCategorySelect" class="sketch-input px-2.5 py-1.5 text-xs font-bold bg-white">
-              <!-- JS 依據家庭用或工作用自動切換分類 -->
-            </select>
-            <input id="shopQtyInput" type="text" placeholder="數量/備註 (如: 2盒 / 惠康買)" onkeydown="if(event.key==='Enter') addShoppingItem()" class="sketch-input flex-1 px-2.5 py-1.5 text-xs" />
-          </div>
-        </div>
-
-        <!-- 購物清單容器 -->
-        <div class="sketch-card washi-tape p-4 space-y-3">
-          <div class="flex items-center justify-between border-b-2 border-dashed border-[#2C2A29]/25 pb-2">
-            <h3 id="shopListHeader" class="font-black text-sm flex items-center gap-1.5">
-              <span>🏠</span> 家庭用購物清單
-            </h3>
-            <span id="shopCountBadge" class="text-xs font-bold px-2 py-0.5 rounded-full bg-[#F3C65F] border border-[#2C2A29]">0 項待買</span>
-          </div>
-          <div id="shoppingItemsContainer" class="space-y-2.5">
-            <!-- JS 動態渲染購物項目 -->
-          </div>
-        </div>
-      </section>
-
-      <!-- ==================== 第七頁：今日天氣資訊 ==================== -->
+      <!-- ==================== 第五頁：今日天氣資訊 ==================== -->
       <section id="tab-weather" class="hidden space-y-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="w-6 h-6 rounded-full bg-[#3B6998] text-white text-xs font-bold flex items-center justify-center border border-[#2C2A29]">7</span>
+            <span class="w-6 h-6 rounded-full bg-[#3B6998] text-white text-xs font-bold flex items-center justify-center border border-[#2C2A29]">5</span>
             <h2 class="text-lg font-black hl-blue">沙田區今日天氣</h2>
           </div>
           <button onclick="fetchWeatherData(true)" class="sketch-btn bg-[#F3C65F] px-3 py-1 text-xs font-bold flex items-center gap-1">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#2C2A29" stroke-width="2.5" stroke-linecap="round">
-              <path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/>
-            </svg>
-            更新天氣
+            <span>🔄</span> 更新
           </button>
         </div>
 
-        <!-- 主天氣手繪卡片 -->
-        <div class="sketch-card washi-tape p-4 relative overflow-hidden">
+        <!-- 警告信號橫幅（動態顯示） -->
+        <div id="weatherWarningBanner" class="hidden sketch-card bg-[#FFF1EE] border-[#E06D53] p-3 flex items-center gap-2.5">
+          <span class="text-xl">⚠️</span>
+          <div class="text-xs font-bold text-[#B83B21]" id="weatherWarningText"></div>
+        </div>
+
+        <!-- 主天氣卡片 -->
+        <div class="sketch-card bg-white p-4 relative overflow-hidden">
           <div class="flex items-center justify-between">
             <div>
-              <span class="inline-block text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#6A997E]/20 border border-[#2C2A29] mb-2">
-                📍 香港天文台 · 沙田區實況
-              </span>
-              <div class="flex items-baseline gap-2">
-                <span id="weatherTemp" class="text-5xl font-black tracking-tighter">--°</span>
-                <span id="weatherCondition" class="text-base font-bold text-[#3B6998]">載入中...</span>
+              <div class="inline-flex items-center gap-1.5 bg-[#EAF2F8] border border-[#2C2A29] rounded-full px-2.5 py-0.5 text-xs font-bold text-[#3B6998]">
+                <span>📍 沙田氣象站</span>
               </div>
-              <p id="weatherUpdateTime" class="text-[11px] text-[#6B665F] mt-1">正在讀取天文台最新數據</p>
+              <div class="mt-2 flex items-baseline gap-2">
+                <span id="weatherTemp" class="text-5xl font-black tracking-tight text-[#2C2A29]">--°</span>
+                <span id="weatherDesc" class="text-sm font-bold text-[#6B665F]">載入中...</span>
+              </div>
+              <p id="weatherUpdateTime" class="text-[11px] text-[#6B665F] mt-1">正在連線香港天文台...</p>
             </div>
-            <!-- 手繪太陽雲朵插畫 -->
-            <div id="weatherIllustration" class="w-24 h-24 rounded-2xl bg-[#FBF8F1] border-2 border-[#2C2A29] flex items-center justify-center shrink-0">
-              <svg width="64" height="64" viewBox="0 0 80 80" fill="none">
-                <circle cx="48" cy="28" r="14" fill="#F3C65F" stroke="#2C2A29" stroke-width="2.5"/>
-                <path d="M48 8v4M48 44v4M28 28h4M64 28h4M34 14l3 3M59 39l3 3M34 42l3-3M59 17l3-3" stroke="#2C2A29" stroke-width="2.2" stroke-linecap="round"/>
-                <path d="M24 58h30a11 11 0 0 0 1.5-21.9A15 15 0 0 0 26.5 33 12 12 0 0 0 24 58z" fill="#FFFFFF" stroke="#2C2A29" stroke-width="2.5" stroke-linejoin="round"/>
-              </svg>
+            <div id="weatherIconBox" class="w-20 h-20 rounded-2xl bg-[#FFFDF7] border-2 border-[#2C2A29] flex items-center justify-center text-4xl shadow-[2px_2px_0px_#2C2A29]">
+              🌤️
             </div>
           </div>
 
-          <!-- 濕度 / 紫外線 / 降雨提示三格 -->
-          <div class="grid grid-cols-3 gap-2 mt-4 pt-3 border-t-2 border-dashed border-[#2C2A29]/25 text-center">
-            <div class="bg-[#FBF8F1] rounded-xl p-2 border border-[#2C2A29]">
-              <p class="text-[11px] text-[#6B665F]">相對濕度</p>
-              <p id="weatherHumidity" class="text-base font-black text-[#3B6998] mt-0.5">--%</p>
+          <div class="grid grid-cols-3 gap-2 mt-4 pt-3 border-t-2 border-dashed border-[#D6CFC2]">
+            <div class="bg-[#FBF8F1] rounded-xl p-2 text-center border border-[#2C2A29]/20">
+              <div class="text-[11px] text-[#6B665F] font-bold">相對濕度</div>
+              <div id="weatherHumidity" class="text-base font-black text-[#3B6998] mt-0.5">--%</div>
             </div>
-            <div class="bg-[#FBF8F1] rounded-xl p-2 border border-[#2C2A29]">
-              <p class="text-[11px] text-[#6B665F]">紫外線指數</p>
-              <p id="weatherUV" class="text-base font-black text-[#E06D53] mt-0.5">--</p>
+            <div class="bg-[#FBF8F1] rounded-xl p-2 text-center border border-[#2C2A29]/20">
+              <div class="text-[11px] text-[#6B665F] font-bold">紫外線指數</div>
+              <div id="weatherUV" class="text-base font-black text-[#E06D53] mt-0.5">--</div>
             </div>
-            <div class="bg-[#FBF8F1] rounded-xl p-2 border border-[#2C2A29]">
-              <p class="text-[11px] text-[#6B665F]">天氣警告</p>
-              <p id="weatherWarningBadge" class="text-xs font-black text-[#6A997E] mt-1 truncate">無警告</p>
+            <div class="bg-[#FBF8F1] rounded-xl p-2 text-center border border-[#2C2A29]/20">
+              <div class="text-[11px] text-[#6B665F] font-bold">出門建議</div>
+              <div id="weatherTipShort" class="text-xs font-black text-[#7BA07B] mt-1">舒適宜人</div>
             </div>
           </div>
         </div>
 
-        <!-- 出門貼心小提醒 -->
-        <div class="sketch-card-flat bg-[#FFFDF7] p-3.5 flex items-start gap-3">
-          <div class="w-8 h-8 rounded-xl bg-[#F3C65F] border-2 border-[#2C2A29] flex items-center justify-center shrink-0 font-bold">
-            🎒
-          </div>
-          <div>
-            <h3 class="text-xs font-black text-[#2C2A29]">出門穿衣與帶傘貼士</h3>
-            <p id="weatherAdviceText" class="text-xs text-[#6B665F] leading-relaxed mt-0.5">
-              正在分析今日氣溫與降雨機率，為您準備出門建議...
-            </p>
+        <!-- 出門貼士手繪便利貼 -->
+        <div class="sketch-card bg-[#FFF9E6] p-3.5 relative">
+          <div class="tape-strip"></div>
+          <div class="flex items-start gap-2.5 pt-1">
+            <span class="text-lg">📝</span>
+            <div>
+              <h3 class="text-xs font-black text-[#2C2A29]">家人出門溫馨提示</h3>
+              <p id="weatherAdviceText" class="text-xs text-[#4A4744] mt-1 leading-relaxed">
+                正在獲取最新天氣概況，稍後為您提供穿衣與帶傘建議...
+              </p>
+            </div>
           </div>
         </div>
 
-        <!-- 未來五日預報 -->
-        <div class="sketch-card p-4">
-          <h3 class="text-sm font-black mb-3 flex items-center gap-1.5">
-            <span>🌤️</span> 未來五日天氣預報
+        <!-- 未來數日天氣預報 -->
+        <div class="sketch-card bg-white p-3.5">
+          <h3 class="text-xs font-black text-[#2C2A29] mb-2.5 flex items-center gap-1.5">
+            <span>📅</span> 香港天文台未來五日預報
           </h3>
-          <div id="forecastList" class="grid grid-cols-5 gap-1.5 text-center">
-            <!-- JS 動態生成 -->
+          <div id="weatherForecastList" class="space-y-2">
+            <div class="text-xs text-[#6B665F] text-center py-3">載入預報中...</div>
           </div>
         </div>
       </section>
 
     </main>
 
-    <!-- 底部手繪導覽列（報站 -> 路線 -> 港鐵 -> 自駕 -> 待辦 -> 購物 -> 天氣） -->
-    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-40 bg-[#FBF8F1]/95 backdrop-blur-md border-t-2 border-[#2C2A29] px-1 py-2">
-      <div class="grid grid-cols-7 gap-0.5">
-        <button onclick="switchTab('transport')" data-tab="transport" class="nav-tab flex flex-col items-center justify-center py-1 rounded-xl font-black text-[#2C2A29] bg-[#F3C65F] border-2 border-[#2C2A29] shadow-[1.5px_1.5px_0px_#2C2A29]">
-          <span class="text-sm leading-none">🚌</span>
-          <span class="text-[10px] mt-1">報站</span>
+    <!-- 底部手繪導覽列（報站 -> 路線 -> 港鐵 -> 自駕 -> 天氣） -->
+    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-40 bg-[#FBF8F1]/95 backdrop-blur-md border-t-2 border-[#2C2A29] px-2 py-2">
+      <div class="grid grid-cols-5 gap-1">
+        <button onclick="switchTab('transport')" data-tab="transport" class="nav-tab flex flex-col items-center justify-center py-1.5 rounded-xl font-black text-[#2C2A29] bg-[#F3C65F] border-2 border-[#2C2A29] shadow-[1.5px_1.5px_0px_#2C2A29]">
+          <span class="text-base leading-none">🚌</span>
+          <span class="text-[11px] mt-1">報站</span>
         </button>
-        <button onclick="switchTab('route')" data-tab="route" class="nav-tab flex flex-col items-center justify-center py-1 rounded-xl font-bold text-[#6B665F] border-2 border-transparent">
-          <span class="text-sm leading-none">🧭</span>
-          <span class="text-[10px] mt-1">路線</span>
+        <button onclick="switchTab('route')" data-tab="route" class="nav-tab flex flex-col items-center justify-center py-1.5 rounded-xl font-bold text-[#6B665F] border-2 border-transparent">
+          <span class="text-base leading-none">🧭</span>
+          <span class="text-[11px] mt-1">路線</span>
         </button>
-        <button onclick="switchTab('mtr')" data-tab="mtr" class="nav-tab flex flex-col items-center justify-center py-1 rounded-xl font-bold text-[#6B665F] border-2 border-transparent">
-          <span class="text-sm leading-none">🚇</span>
-          <span class="text-[10px] mt-1">港鐵</span>
+        <button onclick="switchTab('mtr')" data-tab="mtr" class="nav-tab flex flex-col items-center justify-center py-1.5 rounded-xl font-bold text-[#6B665F] border-2 border-transparent">
+          <span class="text-base leading-none">🚇</span>
+          <span class="text-[11px] mt-1">港鐵</span>
         </button>
-        <button onclick="switchTab('drive')" data-tab="drive" class="nav-tab flex flex-col items-center justify-center py-1 rounded-xl font-bold text-[#6B665F] border-2 border-transparent">
-          <span class="text-sm leading-none">🚗</span>
-          <span class="text-[10px] mt-1">自駕</span>
+        <button onclick="switchTab('drive')" data-tab="drive" class="nav-tab flex flex-col items-center justify-center py-1.5 rounded-xl font-bold text-[#6B665F] border-2 border-transparent">
+          <span class="text-base leading-none">🚗</span>
+          <span class="text-[11px] mt-1">自駕</span>
         </button>
-        <button onclick="switchTab('todo')" data-tab="todo" class="nav-tab flex flex-col items-center justify-center py-1 rounded-xl font-bold text-[#6B665F] border-2 border-transparent">
-          <span class="text-sm leading-none">✅</span>
-          <span class="text-[10px] mt-1">待辦</span>
-        </button>
-        <button onclick="switchTab('shopping')" data-tab="shopping" class="nav-tab flex flex-col items-center justify-center py-1 rounded-xl font-bold text-[#6B665F] border-2 border-transparent">
-          <span class="text-sm leading-none">🛒</span>
-          <span class="text-[10px] mt-1">購物</span>
-        </button>
-        <button onclick="switchTab('weather')" data-tab="weather" class="nav-tab flex flex-col items-center justify-center py-1 rounded-xl font-bold text-[#6B665F] border-2 border-transparent">
-          <span class="text-sm leading-none">🌤️</span>
-          <span class="text-[10px] mt-1">天氣</span>
+        <button onclick="switchTab('weather')" data-tab="weather" class="nav-tab flex flex-col items-center justify-center py-1.5 rounded-xl font-bold text-[#6B665F] border-2 border-transparent">
+          <span class="text-base leading-none">🌤️</span>
+          <span class="text-[11px] mt-1">天氣</span>
         </button>
       </div>
     </nav>
 
     <!-- 輕量手繪提示框 Toast -->
-    <div id="toastBox" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-opacity duration-200">
-      <div class="sketch-pill bg-[#2C2A29] text-white px-4 py-2 text-xs font-bold shadow-lg whitespace-nowrap">
-        <span id="toastMsg">操作成功</span>
+    <div id="toastBox" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 hidden">
+      <div class="sketch-card bg-[#2C2A29] text-white px-4 py-2 text-xs font-bold shadow-lg flex items-center gap-2">
+        <span id="toastMsg">已更新</span>
       </div>
     </div>
-
   </div>
 
-  <!-- 核心應用程式邏輯（報站 -> 港鐵 -> 自駕 -> 待辦 -> 購物 -> 天氣） -->
+  <!-- 核心應用程式邏輯（報站 -> 路線 -> 港鐵 -> 自駕 -> 天氣） -->
   <script>
     // ==================== 1. 本地狀態初始化 ====================
-    const STORAGE_KEY = 'yu_chui_notebook_v5';
+    const STORAGE_KEY = 'yu_chui_notebook_v6';
     let appState = {
-      favRoutes: ['A41', '89X', '49X', '80K', '182', '811', '65A'],
-      todos: [
-        { id: 'td1', text: '繳交本月屋苑管理費及水電煤', priority: 'high', note: '本月 28 日前', done: false },
-        { id: 'td2', text: '預約下週六汽車定期保養', priority: 'normal', note: '沙田車房', done: false },
-        { id: 'td3', text: '整理小朋友學校通告與簽名', priority: 'high', note: '今晚完成', done: true }
-      ],
-      shopping: {
-        home: [
-          { id: 's1', text: '鮮奶（家庭裝 2L）', category: '生鮮蔬果', qty: '1 支', done: false },
-          { id: 's2', text: '三層衛生紙（10卷裝）', category: '日用品', qty: '1 條', done: false },
-          { id: 's3', text: '富士蘋果 / 香蕉', category: '生鮮蔬果', qty: '各 4 個', done: true }
-        ],
-        work: [
-          { id: 'w1', text: 'A4 打印白紙 (80gsm)', category: '文具耗材', qty: '2 包', done: false },
-          { id: 'w2', text: 'USB-C 桌面快充線', category: '電腦配件', qty: '1 條', done: false }
-        ]
-      }
+      favRoutes: ['A41', '89X', '49X', '80K', '182', '811', '65A']
     };
 
     try {
@@ -663,8 +542,6 @@
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed.favRoutes) appState.favRoutes = parsed.favRoutes;
-        if (parsed.todos) appState.todos = parsed.todos;
-        if (parsed.shopping) appState.shopping = parsed.shopping;
       }
     } catch (e) {
       console.warn('本地紀錄讀取失敗:', e);
@@ -674,21 +551,31 @@
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
       } catch (e) {
-        console.warn('本地儲存失敗:', e);
+        console.warn('儲存失敗:', e);
       }
     }
 
-    function showToast(msg) {
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    window.showToast = (msg) => {
       const box = document.getElementById('toastBox');
-      const txt = document.getElementById('toastMsg');
-      if (!box || !txt) return;
-      txt.textContent = msg;
-      box.classList.remove('opacity-0');
+      const text = document.getElementById('toastMsg');
+      if (!box || !text) return;
+      text.textContent = msg;
+      box.classList.remove('hidden');
       clearTimeout(window._toastTimer);
       window._toastTimer = setTimeout(() => {
-        box.classList.add('opacity-0');
-      }, 2400);
-    }
+        box.classList.add('hidden');
+      }, 2200);
+    };
 
     function updateHeaderDate() {
       const now = new Date();
@@ -697,22 +584,22 @@
       const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
       const subEl = document.getElementById('headerSubtitleText');
       const clkEl = document.getElementById('headerClock');
-      if (subEl) subEl.textContent = `${dateStr} · 報站 · 路線 · 港鐵 · 自駕 · 待辦 · 購物 · 天氣`;
+      if (subEl) subEl.textContent = `${dateStr} · 報站 · 路線 · 港鐵 · 自駕 · 天氣`;
       if (clkEl) clkEl.textContent = timeStr;
     }
 
-    // ==================== 2. 分頁導航切換（7個分頁：報站、路線、港鐵、自駕、待辦、購物、天氣） ====================
+    // ==================== 2. 分頁導航切換（5個分頁：報站、路線、港鐵、自駕、天氣） ====================
     window.switchTab = (tabName) => {
-      ['transport', 'route', 'mtr', 'drive', 'todo', 'shopping', 'weather'].forEach(t => {
+      ['transport', 'route', 'mtr', 'drive', 'weather'].forEach(t => {
         const sec = document.getElementById(`tab-${t}`);
         if (sec) sec.classList.toggle('hidden', t !== tabName);
       });
       document.querySelectorAll('.nav-tab').forEach(btn => {
         const isActive = btn.dataset.tab === tabName;
         if (isActive) {
-          btn.className = 'nav-tab flex flex-col items-center justify-center py-1 rounded-xl font-black text-[#2C2A29] bg-[#F3C65F] border-2 border-[#2C2A29] shadow-[1.5px_1.5px_0px_#2C2A29]';
+          btn.className = 'nav-tab flex flex-col items-center justify-center py-1.5 rounded-xl font-black text-[#2C2A29] bg-[#F3C65F] border-2 border-[#2C2A29] shadow-[1.5px_1.5px_0px_#2C2A29]';
         } else {
-          btn.className = 'nav-tab flex flex-col items-center justify-center py-1 rounded-xl font-bold text-[#6B665F] border-2 border-transparent';
+          btn.className = 'nav-tab flex flex-col items-center justify-center py-1.5 rounded-xl font-bold text-[#6B665F] border-2 border-transparent';
         }
       });
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -721,199 +608,245 @@
     // ==================== 3. 第一頁：沙田愉翠苑 巴士 & 小巴報站器 ====================
     const YU_CHUI_BUS_ROUTES = [
       {
-        id: 'A41', route: 'A41', operator: 'LWB', dir: 'outbound',
+        id: 'A41-O',
+        type: 'bus',
+        operator: '龍運機場線',
+        route: 'A41',
         dest: '機場（地面運輸中心）',
         stopName: '愉翠苑巴士總站',
-        stopKeywords: ['愉翠苑'],
-        kmbDir: 'O',
-        fare: '$23.4',
-        note: '✈️ 機場快線 · 經沙田市中心、青嶼幹線、一號客運大樓'
+        direction: 'outbound',
+        kmbBound: 'O',
+        kmbServiceType: '1',
+        stopKeywords: ['愉翠苑', 'YU CHUI COURT'],
+        via: '經沙田市中心、青嶼幹線、一號客運大樓、港珠澳大橋口岸',
+        fare: '$23.4'
       },
       {
-        id: '89X-O', route: '89X', operator: 'KMB', dir: 'outbound',
-        dest: '觀塘站（經大老山隧道）',
-        stopName: '愉翠苑 / 插桅杆街',
-        stopKeywords: ['愉翠苑', '插桅杆街', '第一城'],
-        kmbDir: 'O',
-        fare: '$8.1',
-        note: '特快往九龍灣、牛頭角、觀塘'
+        id: '89X-O',
+        type: 'bus',
+        operator: '九巴',
+        route: '89X',
+        dest: '觀塘（翠屏道）',
+        stopName: '愉翠苑（插桅杆街）',
+        direction: 'outbound',
+        kmbBound: 'O',
+        kmbServiceType: '1',
+        stopKeywords: ['愉翠苑', 'YU CHUI COURT'],
+        via: '經大老山隧道、彩虹、九龍灣、牛頭角',
+        fare: '$7.8'
       },
       {
-        id: '49X-O', route: '49X', operator: 'KMB', dir: 'outbound',
-        dest: '青衣碼頭（經城門隧道）',
-        stopName: '愉翠苑 / 插桅杆街',
-        stopKeywords: ['愉翠苑', '插桅杆街', '威爾斯'],
-        kmbDir: 'O',
-        fare: '$9.1',
-        note: '經沙田市中心、荃灣眾安街、青衣'
+        id: '89X-I',
+        type: 'bus',
+        operator: '九巴',
+        route: '89X',
+        dest: '沙田站',
+        stopName: '愉翠苑（插桅杆街）',
+        direction: 'shatin',
+        kmbBound: 'I',
+        kmbServiceType: '1',
+        stopKeywords: ['愉翠苑', 'YU CHUI COURT'],
+        via: '經第一城、沙角邨、沙田市中心',
+        fare: '$5.0'
       },
       {
-        id: '80K-O', route: '80K', operator: 'KMB', dir: 'outbound',
-        dest: '新翠（經沙田市中心 / 大圍）',
+        id: '49X-O',
+        type: 'bus',
+        operator: '九巴',
+        route: '49X',
+        dest: '青衣碼頭',
+        stopName: '愉翠苑（牛皮沙街）',
+        direction: 'outbound',
+        kmbBound: 'O',
+        kmbServiceType: '1',
+        stopKeywords: ['愉翠苑', 'YU CHUI COURT', '牛皮沙街'],
+        via: '經城門隧道、荃灣市中心、青衣邨',
+        fare: '$9.1'
+      },
+      {
+        id: '80K-O',
+        type: 'bus',
+        operator: '九巴',
+        route: '80K',
+        dest: '新翠（經沙田市中心）',
         stopName: '愉翠苑巴士總站',
-        stopKeywords: ['愉翠苑'],
-        kmbDir: 'O',
-        fare: '$5.4',
-        note: '總站開出 · 往沙田站、大圍站'
+        direction: 'shatin',
+        kmbBound: 'O',
+        kmbServiceType: '1',
+        stopKeywords: ['愉翠苑', 'YU CHUI COURT'],
+        via: '經第一城、富豪花園、沙田市中心、大圍',
+        fare: '$5.8'
       },
       {
-        id: '82K-O', route: '82K', operator: 'KMB', dir: 'outbound',
-        dest: '美田（經威爾斯醫院 / 大圍）',
-        stopName: '愉翠苑 / 插桅杆街',
-        stopKeywords: ['愉翠苑', '插桅杆街', '威爾斯'],
-        kmbDir: 'O',
-        fare: '$5.8',
-        note: '途經第一城、威爾斯醫院、大圍'
+        id: '82K-O',
+        type: 'bus',
+        operator: '九巴',
+        route: '82K',
+        dest: '美田（經威爾斯醫院）',
+        stopName: '愉翠苑（插桅杆街）',
+        direction: 'shatin',
+        kmbBound: 'O',
+        kmbServiceType: '1',
+        stopKeywords: ['愉翠苑', 'YU CHUI COURT'],
+        via: '經威爾斯親王醫院、沙田圍、大圍站',
+        fare: '$5.8'
       },
       {
-        id: '83K-O', route: '83K', operator: 'KMB', dir: 'outbound',
+        id: '83K-O',
+        type: 'bus',
+        operator: '九巴',
+        route: '83K',
         dest: '沙田市中心（循環線）',
-        stopName: '愉翠苑 / 牛皮沙街',
-        stopKeywords: ['愉翠苑', '牛皮沙街', '插桅杆街'],
-        kmbDir: 'O',
-        fare: '$5.0',
-        note: '往沙田大會堂、新城市廣場'
+        stopName: '愉翠苑（牛皮沙街）',
+        direction: 'shatin',
+        kmbBound: 'O',
+        kmbServiceType: '1',
+        stopKeywords: ['愉翠苑', 'YU CHUI COURT', '牛皮沙街'],
+        via: '經廣源、第一城、富豪花園、新城市廣場',
+        fare: '$4.8'
       },
       {
-        id: '85A-O', route: '85A', operator: 'KMB', dir: 'outbound',
-        dest: '九龍城碼頭（經獅子山隧道）',
-        stopName: '愉翠苑 / 插桅杆街',
-        stopKeywords: ['愉翠苑', '插桅杆街', '第一城'],
-        kmbDir: 'O',
-        fare: '$7.5',
-        note: '經九龍塘、樂富、九龍城、土瓜灣'
-      },
-      {
-        id: '86-O', route: '86', operator: 'KMB', dir: 'outbound',
-        dest: '美孚（經獅子山隧道）',
-        stopName: '愉翠苑 / 插桅杆街',
-        stopKeywords: ['愉翠苑', '插桅杆街', '威爾斯'],
-        kmbDir: 'O',
-        fare: '$7.5',
-        note: '經石硤尾、深水埗、長沙灣'
-      },
-      {
-        id: '182-O', route: '182', operator: 'KMB/CTB', dir: 'outbound',
+        id: '182-O',
+        type: 'bus',
+        operator: '九巴/城巴',
+        route: '182',
         dest: '中環（港澳碼頭）',
         stopName: '愉翠苑巴士總站',
-        stopKeywords: ['愉翠苑'],
-        kmbDir: 'O',
-        fare: '$19.2',
-        note: '過海隧巴 · 經紅隧、灣仔、金鐘、中環'
+        direction: 'outbound',
+        kmbBound: 'O',
+        kmbServiceType: '1',
+        stopKeywords: ['愉翠苑', 'YU CHUI COURT'],
+        via: '經獅子山隧道、紅隧、灣仔、金鐘、中環',
+        fare: '$18.4'
       },
       {
-        id: '73A-I', route: '73A', operator: 'KMB', dir: 'inbound',
-        dest: '華明（經大埔 / 粉嶺）',
-        stopName: '插桅杆街（愉翠苑）',
-        stopKeywords: ['愉翠苑', '插桅杆街', '第一城'],
-        kmbDir: 'I',
-        fare: '$11.4',
-        note: '往大埔廣福、太和、粉嶺華明'
+        id: '682B-O',
+        type: 'bus',
+        operator: '城巴',
+        route: '682B',
+        dest: '柴灣（東）',
+        stopName: '愉翠苑（插桅杆街）',
+        direction: 'outbound',
+        kmbBound: 'O',
+        kmbServiceType: '1',
+        stopKeywords: ['愉翠苑', 'YU CHUI COURT'],
+        via: '經大老山隧道、東隧、北角、鰂魚涌、太古',
+        fare: '$21.8'
       },
       {
-        id: '682B-O', route: '682B', operator: 'CTB', dir: 'outbound',
-        dest: '柴灣（東）（平日繁忙時間）',
-        stopName: '插桅杆街（愉翠苑）',
-        stopKeywords: ['愉翠苑', '插桅杆街'],
-        kmbDir: 'O',
-        fare: '$22.7',
-        note: '經東隧特快往北角、太古、西灣河、柴灣'
-      },
-      {
-        id: '982X-O', route: '982X', operator: 'KMB/CTB', dir: 'outbound',
-        dest: '灣仔（菲林明道）（平日早繁）',
-        stopName: '愉翠苑總站 / 插桅杆街',
-        stopKeywords: ['愉翠苑', '插桅杆街'],
-        kmbDir: 'O',
-        fare: '$20.8',
-        note: '經青沙公路及西隧特快往中環、金鐘、灣仔'
+        id: '73A-I',
+        type: 'bus',
+        operator: '九巴',
+        route: '73A',
+        dest: '粉嶺（華明）',
+        stopName: '愉翠苑巴士總站',
+        direction: 'shatin',
+        kmbBound: 'I',
+        kmbServiceType: '1',
+        stopKeywords: ['愉翠苑', 'YU CHUI COURT'],
+        via: '經火炭、中文大學、大埔墟、太和',
+        fare: '$11.4'
       }
     ];
 
     const YU_CHUI_MINIBUS_ROUTES = [
       {
-        id: 'GMB-811', route: '811', operator: 'GMB', dir: 'outbound',
-        dest: '穗禾苑（經沙田市中心 / 火炭）',
-        stopName: '愉翠苑小巴總站 / 牛皮沙街',
-        fare: '$6.8',
-        note: '班次頻密（約 6-10 分鐘一班）',
-        gmbRouteId: 2004628,
-        fallbackFreq: [4, 12, 20]
+        id: 'GMB-811',
+        type: 'minibus',
+        operator: '專線小巴',
+        route: '811',
+        dest: '穗禾苑（經火炭站）',
+        stopName: '愉翠苑小巴總站',
+        direction: 'shatin',
+        gmbRegion: 'NT',
+        gmbCode: '811',
+        via: '經第一城、源禾路、火炭站',
+        fare: '$6.2'
       },
       {
-        id: 'GMB-811A', route: '811A', operator: 'GMB', dir: 'outbound',
-        dest: '華翠園（經第一城站 / 火炭站）',
-        stopName: '愉翠苑 / 插桅杆街',
-        fare: '$6.8',
-        note: '直達港鐵第一城站及火炭站',
-        gmbRouteId: 2004630,
-        fallbackFreq: [5, 14, 24]
+        id: 'GMB-811A',
+        type: 'minibus',
+        operator: '專線小巴',
+        route: '811A',
+        dest: '華翠園（經沙田市中心）',
+        stopName: '愉翠苑（插桅杆街）',
+        direction: 'shatin',
+        gmbRegion: 'NT',
+        gmbCode: '811A',
+        via: '經第一城站、瀝源邨、沙田站',
+        fare: '$6.2'
       },
       {
-        id: 'GMB-808', route: '808', operator: 'GMB', dir: 'inbound',
-        dest: '錦英苑（經馬鞍山市中心 / 耀安）',
-        stopName: '插桅杆街（愉翠苑對面）',
-        fare: '$7.5',
-        note: '往馬鞍山、威爾斯親王醫院',
-        gmbRouteId: 2004620,
-        fallbackFreq: [3, 11, 19]
+        id: 'GMB-65A',
+        type: 'minibus',
+        operator: '專線小巴',
+        route: '65A',
+        dest: '沙田市中心（循環線）',
+        stopName: '愉翠苑（牛皮沙街）',
+        direction: 'shatin',
+        gmbRegion: 'NT',
+        gmbCode: '65A',
+        via: '經威爾斯醫院、沙田圍、新城市廣場',
+        fare: '$5.8'
       },
       {
-        id: 'GMB-65A', route: '65A', operator: 'GMB', dir: 'outbound',
-        dest: '沙田市中心（經圓洲角 / 沙角）',
-        stopName: '愉翠苑 / 牛皮沙街',
-        fare: '$5.6',
-        note: '特快往新城市廣場、沙田大會堂',
-        gmbRouteId: 2004590,
-        fallbackFreq: [2, 9, 17]
+        id: 'GMB-808',
+        type: 'minibus',
+        operator: '專線小巴',
+        route: '808',
+        dest: '錦英苑（馬鞍山）',
+        stopName: '愉翠苑（插桅杆街）',
+        direction: 'shatin',
+        gmbRegion: 'NT',
+        gmbCode: '808',
+        via: '經石門、亞公角、恆安、馬鞍山市中心',
+        fare: '$7.5'
       },
       {
-        id: 'GMB-65K', route: '65K', operator: 'GMB', dir: 'inbound',
-        dest: '火炭站（經石門 / 亞公角）',
-        stopName: '插桅杆街（愉翠苑）',
-        fare: '$6.2',
-        note: '往石門商貿區、火炭工業區',
-        gmbRouteId: 2004595,
-        fallbackFreq: [6, 15, 25]
-      },
-      {
-        id: 'GMB-813', route: '813', operator: 'GMB', dir: 'outbound',
-        dest: '水泉澳（經沙田圍站 / 博康）',
-        stopName: '愉翠苑 / 牛皮沙街',
-        fare: '$5.8',
-        note: '連接沙田圍站及水泉澳邨',
-        gmbRouteId: 2004635,
-        fallbackFreq: [7, 16, 26]
+        id: 'GMB-813',
+        type: 'minibus',
+        operator: '專線小巴',
+        route: '813',
+        dest: '水泉澳（經沙田圍）',
+        stopName: '愉翠苑（插桅杆街）',
+        direction: 'shatin',
+        gmbRegion: 'NT',
+        gmbCode: '813',
+        via: '經威爾斯醫院、博康邨、水泉澳邨',
+        fare: '$5.4'
       }
     ];
 
-    let currentTransportMode = 'bus';
-    let currentDirFilter = 'all';
+    let transportFilter = 'all';
+    let directionFilter = 'all';
     let etaCache = {};
-    let kmbStopsMap = null;
-    let countdownSec = 30;
+    let kmbStopNameMap = null;
+    let routeStopCache = {};
+    let etaCountdown = 30;
+    let etaTimerId = null;
 
-    window.switchTransportMode = (mode) => {
-      currentTransportMode = mode;
-      const btnBus = document.getElementById('btnModeBus');
-      const btnMini = document.getElementById('btnModeMinibus');
-      if (mode === 'bus') {
-        btnBus.className = 'sketch-btn py-2.5 px-3 font-black text-sm bg-[#3B6998] text-white flex items-center justify-center gap-2';
-        btnMini.className = 'sketch-btn py-2.5 px-3 font-black text-sm bg-white text-[#2C2A29] flex items-center justify-center gap-2';
-      } else {
-        btnMini.className = 'sketch-btn py-2.5 px-3 font-black text-sm bg-[#6A997E] text-white flex items-center justify-center gap-2';
-        btnBus.className = 'sketch-btn py-2.5 px-3 font-black text-sm bg-white text-[#2C2A29] flex items-center justify-center gap-2';
-      }
+    window.setTransportFilter = (type) => {
+      transportFilter = type;
+      ['all', 'bus', 'minibus'].forEach(k => {
+        const el = document.getElementById(`filter-${k}`);
+        if (!el) return;
+        if (k === type) {
+          el.className = 'sketch-btn py-1.5 text-xs font-black bg-[#2C2A29] text-white';
+        } else {
+          el.className = 'sketch-btn py-1.5 text-xs font-bold bg-white text-[#2C2A29]';
+        }
+      });
       renderTransportList();
     };
 
     window.setDirectionFilter = (dir) => {
-      currentDirFilter = dir;
-      document.querySelectorAll('.dir-chip').forEach(btn => {
-        const active = btn.dataset.dir === dir;
-        btn.className = active
-          ? 'dir-chip sketch-pill px-3 py-1 text-xs font-bold bg-[#F3C65F] text-[#2C2A29] whitespace-nowrap'
-          : 'dir-chip sketch-pill px-3 py-1 text-xs font-bold bg-white text-[#2C2A29] whitespace-nowrap';
+      directionFilter = dir;
+      ['all', 'outbound', 'shatin', 'fav'].forEach(k => {
+        const el = document.getElementById(`dir-${k}`);
+        if (!el) return;
+        el.className = k === dir
+          ? 'px-3 py-1 rounded-full text-xs font-bold border-2 border-[#2C2A29] bg-[#F3C65F] shrink-0'
+          : 'px-3 py-1 rounded-full text-xs font-bold border-2 border-[#2C2A29] bg-white shrink-0';
       });
       renderTransportList();
     };
@@ -931,130 +864,169 @@
       renderTransportList();
     };
 
-    async function ensureKmbStopsLoaded() {
-      if (kmbStopsMap) return kmbStopsMap;
+    function formatMinutesDiff(isoTimestamp) {
+      if (!isoTimestamp) return null;
+      const target = new Date(isoTimestamp).getTime();
+      const now = Date.now();
+      const diffMins = Math.round((target - now) / 60000);
+      if (diffMins <= 0) return '即將到達';
+      if (diffMins === 1) return '1 分鐘';
+      return `${diffMins} 分鐘`;
+    }
+
+    async function ensureKmbStopMap() {
+      if (kmbStopNameMap) return kmbStopNameMap;
       try {
         const res = await fetch('https://data.etabus.gov.hk/v1/transport/kmb/stop');
         const json = await res.json();
         const map = {};
-        (json.data || []).forEach(s => {
-          if (s.name_tc && (s.name_tc.includes('愉翠苑') || s.name_tc.includes('插桅杆街') || s.name_tc.includes('牛皮沙街'))) {
-            map[s.stop] = s.name_tc;
-          }
-        });
-        kmbStopsMap = map;
+        if (json && Array.isArray(json.data)) {
+          json.data.forEach(s => {
+            map[s.stop] = { tc: s.name_tc || '', en: s.name_en || '' };
+          });
+        }
+        kmbStopNameMap = map;
         return map;
       } catch (e) {
         return {};
       }
     }
 
-    async function fetchSingleBusETA(item) {
+    async function fetchSingleKmbRouteETA(item) {
       try {
-        const stopsMap = await ensureKmbStopsLoaded();
-        const res = await fetch(`https://data.etabus.gov.hk/v1/transport/kmb/route-eta/${item.route}/1`);
-        const json = await res.json();
-        const now = Date.now();
-        let matched = (json.data || []).filter(e => {
-          const stopName = stopsMap[e.stop] || '';
-          return e.dir === item.kmbDir && stopName && item.stopKeywords.some(kw => stopName.includes(kw));
-        });
+        const stopMap = await ensureKmbStopMap();
+        const boundWord = item.kmbBound === 'I' ? 'inbound' : 'outbound';
+        const cacheKey = `${item.route}-${boundWord}-${item.kmbServiceType}`;
+        let stops = routeStopCache[cacheKey];
 
-        if (matched.length === 0) {
-          matched = (json.data || []).filter(e => e.dir === item.kmbDir && e.seq <= 4 && e.eta);
+        if (!stops) {
+          const rsRes = await fetch(`https://data.etabus.gov.hk/v1/transport/kmb/route-stop/${item.route}/${boundWord}/${item.kmbServiceType}`);
+          const rsJson = await rsRes.json();
+          stops = (rsJson && rsJson.data) ? rsJson.data : [];
+          routeStopCache[cacheKey] = stops;
         }
 
-        const validEtas = matched
-          .filter(e => e.eta)
+        let matchedStop = null;
+        for (const st of stops) {
+          const info = stopMap[st.stop];
+          if (!info) continue;
+          const fullText = `${info.tc} ${info.en}`.toUpperCase();
+          if (item.stopKeywords.some(kw => fullText.includes(kw.toUpperCase()))) {
+            matchedStop = st;
+            break;
+          }
+        }
+
+        if (!matchedStop) {
+          return { status: 'schedule', list: ['請留意車站時間表'], source: '時間表' };
+        }
+
+        const etaRes = await fetch(`https://data.etabus.gov.hk/v1/transport/kmb/eta/${matchedStop.stop}/${item.route}/${item.kmbServiceType}`);
+        const etaJson = await etaRes.json();
+        const validEtas = (etaJson && etaJson.data ? etaJson.data : [])
+          .filter(e => e.dir === item.kmbBound && e.eta)
+          .slice(0, 3)
           .map(e => {
-            const diffMin = Math.max(0, Math.round((new Date(e.eta).getTime() - now) / 60000));
-            return {
-              min: diffMin,
-              rmk: e.rmk_tc || '實時班次',
-              stopName: stopsMap[e.stop] || item.stopName
-            };
+            const m = formatMinutesDiff(e.eta);
+            const rmk = e.rmk_tc ? ` (${e.rmk_tc})` : '';
+            return m ? `${m}${rmk}` : null;
           })
-          .slice(0, 3);
+          .filter(Boolean);
 
         if (validEtas.length > 0) {
-          etaCache[item.id] = { list: validEtas, live: true };
-          return;
+          return { status: 'live', list: validEtas, source: '九巴/龍運實時' };
         }
-      } catch (e) {
-        // Fallback below
+        return { status: 'empty', list: ['暫無班次資料 / 尾班車已過'], source: '九巴/龍運' };
+      } catch (err) {
+        return { status: 'fallback', list: ['約 8 - 15 分鐘一班'], source: '參考班次' };
       }
-
-      const base = (parseInt(item.route.replace(/\D/g, ''), 10) % 7) + 3;
-      etaCache[item.id] = {
-        live: false,
-        list: [
-          { min: base, rmk: '預計班次', stopName: item.stopName },
-          { min: base + 12, rmk: '預計班次', stopName: item.stopName },
-          { min: base + 24, rmk: '預計班次', stopName: item.stopName }
-        ]
-      };
     }
 
     async function fetchSingleMinibusETA(item) {
       try {
-        const res = await fetch(`https://data.etagamb.gov.hk/eta/route-stop/${item.gmbRouteId}/1`);
-        if (res.ok) {
-          const json = await res.json();
-          const stopList = json.data || [];
-          for (const st of stopList) {
-            if (st.eta && st.eta.length > 0) {
-              const valid = st.eta.slice(0, 3).map(e => ({
-                min: Math.max(0, e.diff || 0),
-                rmk: e.remarks_tc || '專線小巴',
-                stopName: item.stopName
-              }));
-              etaCache[item.id] = { list: valid, live: true };
-              return;
-            }
+        const routeRes = await fetch(`https://data.etagamb.gov.hk/route/${item.gmbRegion}/${item.gmbCode}`);
+        const routeJson = await routeRes.json();
+        const routeObj = routeJson && routeJson.data && routeJson.data[0];
+        if (!routeObj) throw new Error('No route');
+
+        const routeId = routeObj.route_id;
+        const stopsRes = await fetch(`https://data.etagamb.gov.hk/route-stop/${routeId}/1`);
+        const stopsJson = await stopsRes.json();
+        const routeStops = (stopsJson && stopsJson.data && stopsJson.data.route_stops) ? stopsJson.data.route_stops : [];
+
+        let targetSeq = 1;
+        let stopId = routeStops[0] ? routeStops[0].stop_id : null;
+        for (const rs of routeStops) {
+          if (rs.name_tc && rs.name_tc.includes('愉翠')) {
+            targetSeq = rs.stop_seq;
+            stopId = rs.stop_id;
+            break;
           }
         }
-      } catch (e) {
-        // Fallback below
-      }
 
-      const offset = new Date().getMinutes() % 4;
-      etaCache[item.id] = {
-        live: false,
-        list: item.fallbackFreq.map(m => ({
-          min: Math.max(1, m - offset),
-          rmk: '參考班次',
-          stopName: item.stopName
-        }))
-      };
+        if (!stopId) throw new Error('No stop');
+        const etaRes = await fetch(`https://data.etagamb.gov.hk/eta/route-stop/${routeId}/1/${targetSeq}`);
+        const etaJson = await etaRes.json();
+        const etaList = (etaJson && etaJson.data && etaJson.data.eta) ? etaJson.data.eta : [];
+
+        const formatted = etaList.slice(0, 3).map(e => {
+          if (typeof e.diff === 'number') {
+            return e.diff <= 0 ? '即將到達' : `${e.diff} 分鐘`;
+          }
+          return null;
+        }).filter(Boolean);
+
+        if (formatted.length > 0) {
+          return { status: 'live', list: formatted, source: '小巴實時' };
+        }
+        return { status: 'fallback', list: ['約 6 - 10 分鐘一班'], source: '小巴參考' };
+      } catch (e) {
+        return { status: 'fallback', list: ['約 6 - 12 分鐘一班'], source: '小巴參考' };
+      }
     }
 
     window.refreshAllETA = async (manual = false) => {
-      countdownSec = 30;
-      const icon = document.getElementById('etaRefreshIcon');
-      if (icon && manual) {
-        icon.classList.remove('spin-once');
-        void icon.offsetWidth;
-        icon.classList.add('spin-once');
-      }
+      etaCountdown = 30;
+      if (manual) showToast('正在更新愉翠苑實時到站...');
+      const allRoutes = [...YU_CHUI_BUS_ROUTES, ...YU_CHUI_MINIBUS_ROUTES];
 
-      await Promise.all([
-        ...YU_CHUI_BUS_ROUTES.map(fetchSingleBusETA),
-        ...YU_CHUI_MINIBUS_ROUTES.map(fetchSingleMinibusETA)
-      ]);
+      await Promise.all(allRoutes.map(async (item) => {
+        if (item.type === 'bus') {
+          etaCache[item.id] = await fetchSingleKmbRouteETA(item);
+        } else {
+          etaCache[item.id] = await fetchSingleMinibusETA(item);
+        }
+      }));
+
       renderTransportList();
-      if (manual) showToast('🚌 愉翠苑巴士及小巴到站時間已更新');
     };
 
+    function startEtaCountdown() {
+      if (etaTimerId) clearInterval(etaTimerId);
+      etaTimerId = setInterval(() => {
+        etaCountdown--;
+        const el = document.getElementById('etaCountdownText');
+        if (el) el.textContent = `${etaCountdown}s`;
+        if (etaCountdown <= 0) {
+          refreshAllETA(false);
+        }
+      }, 1000);
+    }
+
     function renderTransportList() {
-      const container = document.getElementById('etaCardsContainer');
+      const container = document.getElementById('transportList');
       if (!container) return;
 
-      let list = currentTransportMode === 'bus' ? [...YU_CHUI_BUS_ROUTES] : [...YU_CHUI_MINIBUS_ROUTES];
+      let list = [...YU_CHUI_BUS_ROUTES, ...YU_CHUI_MINIBUS_ROUTES];
 
-      if (currentDirFilter === 'fav') {
+      if (transportFilter !== 'all') {
+        list = list.filter(r => r.type === transportFilter);
+      }
+
+      if (directionFilter === 'fav') {
         list = list.filter(r => appState.favRoutes.includes(r.route));
-      } else if (currentDirFilter !== 'all') {
-        list = list.filter(r => r.dir === currentDirFilter);
+      } else if (directionFilter !== 'all') {
+        list = list.filter(r => r.direction === directionFilter);
       }
 
       list.sort((a, b) => {
@@ -1065,8 +1037,10 @@
 
       if (list.length === 0) {
         container.innerHTML = `
-          <div class="sketch-card p-6 text-center text-xs text-[#6B665F]">
-            此篩選條件下暫無路線，請切換其他方向或點選「全部方向」🚌
+          <div class="sketch-card bg-white p-6 text-center space-y-2">
+            <div class="text-3xl">🚏</div>
+            <p class="text-sm font-bold text-[#6B665F]">目前篩選條件下沒有路線</p>
+            <button onclick="setTransportFilter('all'); setDirectionFilter('all');" class="sketch-btn bg-[#F3C65F] px-4 py-1.5 text-xs font-black">顯示全部路線</button>
           </div>
         `;
         return;
@@ -1075,1093 +1049,899 @@
       container.innerHTML = list.map(item => {
         const isFav = appState.favRoutes.includes(item.route);
         const isAirport = item.route === 'A41';
-        const isMinibus = currentTransportMode === 'minibus';
-        const badgeBg = isAirport
-          ? 'bg-[#E06D53] text-white'
-          : isMinibus
-            ? 'bg-[#6A997E] text-white'
-            : 'bg-[#3B6998] text-white';
+        const badgeBg = item.type === 'minibus'
+          ? 'bg-[#7BA07B] text-white'
+          : (isAirport ? 'bg-[#E06D53] text-white' : 'bg-[#3B6998] text-white');
+        const etaData = etaCache[item.id];
 
-        const etaObj = etaCache[item.id] || {
-          live: false,
-          list: [{ min: '--', rmk: '讀取中', stopName: item.stopName }]
-        };
-
-        const etaBadges = etaObj.list.map((e, idx) => {
-          const isSoon = typeof e.min === 'number' && e.min <= 3;
-          const timeLabel = e.min === 0 ? '即將抵達' : `${e.min} 分鐘`;
-          if (idx === 0) {
-            return `
-              <div class="flex items-baseline gap-1.5 bg-[#F3C65F]/45 border-2 border-[#2C2A29] rounded-xl px-2.5 py-1">
-                <span class="text-base font-black ${isSoon ? 'text-[#E06D53]' : 'text-[#2C2A29]'}">${timeLabel}</span>
-                <span class="text-[10px] font-bold text-[#6B665F]">${e.rmk}</span>
-              </div>
-            `;
-          }
-          return `
-            <div class="flex items-baseline gap-1 bg-[#FBF8F1] border border-[#2C2A29] rounded-lg px-2 py-1">
-              <span class="text-xs font-black text-[#2C2A29]">${timeLabel}</span>
-            </div>
-          `;
-        }).join('');
+        let etaHtml = `<span class="text-xs text-[#6B665F] font-bold">查詢到站時間中...</span>`;
+        if (etaData && etaData.list && etaData.list.length > 0) {
+          etaHtml = etaData.list.map((t, idx) => {
+            if (idx === 0) {
+              const isArriving = t.includes('即將') || t.startsWith('1 ') || t.startsWith('2 ');
+              return `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-black border border-[#2C2A29] ${isArriving ? 'bg-[#E06D53] text-white' : 'bg-[#F3C65F] text-[#2C2A29]'}">🚌 ${escapeHtml(t)}</span>`;
+            }
+            return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#FBF8F1] border border-[#2C2A29]/40 text-[#4A4744]">${escapeHtml(t)}</span>`;
+          }).join(' ');
+        }
 
         return `
-          <div class="sketch-card p-3.5 space-y-2.5 ${isAirport ? 'bg-[#FFFDF6]' : ''}">
+          <div class="sketch-card ${isAirport ? 'bg-[#FFF9F5]' : 'bg-white'} p-3.5 relative">
             <div class="flex items-start justify-between gap-2">
-              <div class="flex items-center gap-2.5 min-w-0">
-                <div class="${badgeBg} font-hand text-xl font-black px-2.5 py-1 rounded-xl border-2 border-[#2C2A29] shadow-[1.5px_1.5px_0px_#2C2A29] shrink-0">
-                  ${item.route}
+              <div class="flex items-center gap-2.5">
+                <div class="min-w-[60px] px-2 py-1.5 rounded-xl border-2 border-[#2C2A29] ${badgeBg} text-center shadow-[1.5px_1.5px_0px_#2C2A29]">
+                  <div class="text-[9px] font-bold opacity-90 leading-none">${isAirport ? '✈️ 機場線' : escapeHtml(item.operator)}</div>
+                  <div class="text-base font-black tracking-tight mt-0.5 leading-none">${escapeHtml(item.route)}</div>
                 </div>
-                <div class="min-w-0">
-                  <div class="flex items-center gap-1.5">
-                    <span class="text-[11px] font-bold text-[#6B665F]">往</span>
-                    <h3 class="text-sm font-black text-[#2C2A29] truncate">${item.dest}</h3>
+                <div>
+                  <div class="text-sm font-black text-[#2C2A29] flex items-center gap-1">
+                    <span>往 ${escapeHtml(item.dest)}</span>
                   </div>
-                  <p class="text-[11px] text-[#6B665F] truncate mt-0.5">📍 ${item.stopName} · 車費 ${item.fare}</p>
+                  <div class="text-[11px] text-[#6B665F] font-bold mt-0.5">
+                    🚏 ${escapeHtml(item.stopName)} · <span class="text-[#3B6998]">${escapeHtml(item.fare)}</span>
+                  </div>
                 </div>
               </div>
 
-              <button onclick="toggleFavRoute('${item.route}')" class="p-1.5 rounded-xl border border-[#2C2A29] ${isFav ? 'bg-[#F3C65F]' : 'bg-white'} shrink-0" title="置頂常用路線">
-                <span class="text-xs">${isFav ? '⭐' : '☆'}</span>
+              <button onclick="toggleFavRoute('${escapeHtml(item.route)}')" class="text-lg leading-none p-1" title="置頂常用">
+                ${isFav ? '⭐' : '☆'}
               </button>
             </div>
 
-            <div class="flex flex-wrap items-center gap-2 pt-1">
-              ${etaBadges}
+            <div class="mt-2.5 pt-2 border-t border-dashed border-[#D6CFC2] flex flex-wrap items-center justify-between gap-2">
+              <div class="flex flex-wrap items-center gap-1.5">
+                ${etaHtml}
+              </div>
+              <span class="text-[10px] text-[#6B665F] font-bold">${etaData ? escapeHtml(etaData.source) : ''}</span>
             </div>
-
-            <div class="flex items-center justify-between text-[11px] text-[#6B665F] pt-1 border-t border-dashed border-[#2C2A29]/20">
-              <span class="truncate">${item.note}</span>
-              <span class="shrink-0 font-bold ${etaObj.live ? 'text-[#6A997E]' : 'text-[#6B665F]'}">
-                ${etaObj.live ? '● 實時GPS' : '○ 班次表'}
-              </span>
-            </div>
+            <div class="text-[10px] text-[#6B665F] mt-1.5 truncate">${escapeHtml(item.via)}</div>
           </div>
         `;
       }).join('');
     }
 
-    function startEtaCountdown() {
-      setInterval(() => {
-        countdownSec--;
-        if (countdownSec <= 0) {
-          countdownSec = 30;
-          refreshAllETA(false);
-        }
-        const el = document.getElementById('etaCountdown');
-        if (el) el.textContent = countdownSec;
-      }, 1000);
-    }
-
-    // ==================== 3.5 第二頁：點對點最佳乘車路線推介 ====================
+    // ==================== 4. 第二頁：點對點最佳乘車路線推介 ====================
     const POINT_TO_POINT_ROUTES = [
       {
-        fromKeys: ['愉翠', '第一城', '沙田圍'],
-        toKeys: ['中環', '金鐘', '上環', '灣仔'],
-        options: [
-          {
-            badge: '🏆 綜合最快 · 推薦首選',
-            modeIcon: '🚇',
-            title: '步行至第一城站 ➔ 屯馬綫轉東鐵綫（大圍轉車）',
-            duration: '約 36 分鐘',
-            fare: '$14.8',
-            steps: '愉翠苑步行 6 分鐘至第一城站 ➔ 搭 3 站至大圍轉乘東鐵綫過海段直達金鐘 / 步行或轉港島綫往中環',
-            pros: '班次極密（2-3 分鐘一班）、不受紅隧塞車影響、時間最準確'
-          },
-          {
-            badge: '🚌 一程直達 · 免轉車最舒適',
-            modeIcon: '🚌',
-            title: '九巴 / 城巴 182（愉翠苑總站上車）',
-            duration: '約 48 - 60 分鐘',
-            fare: '$19.2',
-            steps: '愉翠苑巴士總站直接上車（有位坐）➔ 經獅子山隧道、紅磡海底隧道直達灣仔、金鐘及中環',
-            pros: '總站上車保證有座位、適合攜帶重物或不想行樓梯轉車的家人'
-          }
-        ]
+        keywords: ['中環', '金鐘', '灣仔', '上環', '中環 / 金鐘'],
+        destTitle: '中環 / 金鐘 / 灣仔',
+        bestOption: {
+          badge: '⚡ 最快首選',
+          mode: '小巴 811A + 港鐵屯馬綫轉東鐵綫',
+          duration: '約 36 分鐘',
+          fare: '$18.6',
+          steps: [
+            '1. 愉翠苑乘專線小巴 811A（或步行 6 分鐘）往第一城站（約 5 分鐘）',
+            '2. 屯馬綫由第一城站乘 1 站至大圍站（約 4 分鐘）',
+            '3. 大圍站轉乘東鐵綫直達金鐘 / 灣仔會展站（約 18 分鐘）'
+          ]
+        },
+        altOption: {
+          badge: '💺 一程直達免轉車',
+          mode: '過海巴士 182（愉翠苑總站上車）',
+          duration: '約 52 - 65 分鐘',
+          fare: '$18.4',
+          steps: [
+            '1. 愉翠苑巴士總站直接上車（總站上車保證有位坐）',
+            '2. 經獅子山隧道及紅隧直達灣仔、金鐘及中環'
+          ]
+        }
       },
       {
-        fromKeys: ['愉翠', '第一城'],
-        toKeys: ['尖沙咀', '尖東', '佐敦', '紅磡'],
-        options: [
-          {
-            badge: '🏆 最快直達 · 免轉車',
-            modeIcon: '🚇',
-            title: '步行至第一城站 ➔ 屯馬綫直達尖東 / 紅磡',
-            duration: '約 26 分鐘',
-            fare: '$10.4',
-            steps: '愉翠苑步行 6 分鐘至第一城站 ➔ 乘搭屯馬綫（往屯門方向）約 20 分鐘直達紅磡站或尖東站',
-            pros: '全程屯馬綫一程直達無需轉車，比搭巴士快約 15-20 分鐘'
-          },
-          {
-            badge: '🚌 地面直達 · 少步行',
-            modeIcon: '🚌',
-            title: '九巴 85A / 86 轉乘或小巴轉東鐵綫',
-            duration: '約 42 - 50 分鐘',
-            fare: '$7.5 - $11.5',
-            steps: '插桅杆街乘搭 85A 往九龍城或小巴 811A 至第一城站轉乘港鐵',
-            pros: '車費較便宜，適合不趕時間的行程'
-          }
-        ]
+        keywords: ['尖沙咀', '尖東', '佐敦', '油麻地', '旺角'],
+        destTitle: '尖沙咀 / 旺角 / 油尖旺',
+        bestOption: {
+          badge: '⚡ 最快首選',
+          mode: '港鐵屯馬綫直達（第一城站上車）',
+          duration: '約 28 分鐘',
+          fare: '$10.6',
+          steps: [
+            '1. 愉翠苑步行 6 分鐘（或乘小巴 811A）到第一城站',
+            '2. 乘搭屯馬綫（往屯門方向）全程無需轉車，直達尖東站（約 21 分鐘）',
+            '3. 經站內行人隧道步行 3 分鐘即達尖沙咀核心區'
+          ]
+        },
+        altOption: {
+          badge: '🚌 地面直達之選',
+          mode: '九巴 81C / 281A（第一城 / 富豪花園上車）',
+          duration: '約 42 - 55 分鐘',
+          fare: '$9.1',
+          steps: [
+            '1. 步行至第一城銀城街巴士站上車',
+            '2. 經獅子山隧道沿彌敦道直達旺角、油麻地及尖沙咀'
+          ]
+        }
       },
       {
-        fromKeys: ['愉翠', '第一城'],
-        toKeys: ['觀塘', '九龍灣', '牛頭角', '藍田'],
-        options: [
-          {
-            badge: '🏆 巴士特快 · 點對點首選',
-            modeIcon: '🚌',
-            title: '九巴 89X（愉翠苑 / 插桅杆街直達觀塘站）',
-            duration: '約 28 - 35 分鐘',
-            fare: '$8.1',
-            steps: '愉翠苑或插桅杆街巴士站上車 ➔ 經大老山隧道特快直達九龍灣、牛頭角及觀塘站總站',
-            pros: '大老山隧道直達觀塘道，車費僅 $8.1，比搭港鐵更便宜且少步行'
-          },
-          {
-            badge: '🚇 鐵路穩定 · 鑽石山轉車',
-            modeIcon: '🚇',
-            title: '第一城站 ➔ 屯馬綫至鑽石山轉觀塘綫',
-            duration: '約 32 分鐘',
-            fare: '$10.4',
-            steps: '步行至第一城站 ➔ 搭 5 站至鑽石山站轉乘觀塘綫往九龍灣 / 觀塘',
-            pros: '遇上大老山隧道塞車時的可靠替代方案'
-          }
-        ]
+        keywords: ['觀塘', '九龍灣', '牛頭角', '彩虹', '藍田'],
+        destTitle: '觀塘 / 九龍灣（東九龍）',
+        bestOption: {
+          badge: '💺 門到門最快直達',
+          mode: '九巴 89X（愉翠苑插桅杆街上車）',
+          duration: '約 26 - 35 分鐘',
+          fare: '$7.8',
+          steps: [
+            '1. 愉翠苑（插桅杆街）直接乘搭九巴 89X',
+            '2. 經大老山隧道直達彩虹、九龍灣（德福）及觀塘市中心'
+          ]
+        },
+        altOption: {
+          badge: '🚇 鐵路穩定之選',
+          mode: '港鐵屯馬綫轉觀塘綫（鑽石山轉車）',
+          duration: '約 30 分鐘',
+          fare: '$10.6',
+          steps: [
+            '1. 第一城站乘屯馬綫至鑽石山站（約 12 分鐘）',
+            '2. 鑽石山站轉乘觀塘綫往九龍灣 / 觀塘（約 9 分鐘）'
+          ]
+        }
       },
       {
-        fromKeys: ['愉翠', '第一城'],
-        toKeys: ['機場', '博覽館', '東涌', '赤鱲角'],
-        options: [
-          {
-            badge: '🏆 機場巴士 · 行李首選',
-            modeIcon: '✈️',
-            title: '龍運巴士 A41（愉翠苑總站直達一號客運大樓）',
-            duration: '約 55 - 65 分鐘',
-            fare: '$23.4',
-            steps: '愉翠苑巴士總站上車（設大型行李架）➔ 經沙田市中心、青嶼幹線直達香港國際機場及港珠澳口岸',
-            pros: '樓下總站上車不用搬行李轉車，性價比最高（僅需機場快綫約 1/5 價錢）'
-          },
-          {
-            badge: '⚡ 趕時間極速 · 港鐵轉機鐵',
-            modeIcon: '🚄',
-            title: '第一城站 ➔ 南昌站轉東涌綫至青衣轉機場快綫',
-            duration: '約 52 分鐘',
-            fare: '$73.0 - $105.0',
-            steps: '第一城站搭屯馬綫至南昌站 ➔ 轉東涌綫至青衣站 ➔ 轉乘機場快綫直達機場',
-            pros: '完全不受路面交通影響，適合航班時間緊迫時使用'
-          }
-        ]
+        keywords: ['機場', '香港國際機場', '博覽館', '港珠澳'],
+        destTitle: '香港國際機場 / 港珠澳口岸',
+        bestOption: {
+          badge: '✈️ 行李首選直達',
+          mode: '龍運機場巴士 A41（愉翠苑總站上車）',
+          duration: '約 55 - 65 分鐘',
+          fare: '$23.4',
+          steps: [
+            '1. 愉翠苑巴士總站直接上車，設有大型行李架且保證有座位',
+            '2. 經沙田市中心、青嶼幹線直達一號客運大樓及港珠澳口岸'
+          ]
+        },
+        altOption: {
+          badge: '⚡ 趕時間極速組合',
+          mode: '港鐵屯馬綫轉東涌綫及機場快綫',
+          duration: '約 52 分鐘',
+          fare: '$112.0',
+          steps: [
+            '1. 第一城站乘屯馬綫至南昌站（約 26 分鐘）',
+            '2. 南昌站轉東涌綫至青衣站，再轉乘機場快綫直達機場（約 18 分鐘）'
+          ]
+        }
       },
       {
-        fromKeys: ['愉翠', '第一城'],
-        toKeys: ['銅鑼灣', '天后', '炮台山', '北角', '太古'],
-        options: [
-          {
-            badge: '🏆 過海隧巴 · 一程直達',
-            modeIcon: '🚌',
-            title: '隧巴 682B / 982X（繁忙時段）或 182 轉電車/港鐵',
-            duration: '約 45 - 55 分鐘',
-            fare: '$19.2 - $22.7',
-            steps: '平日早繁可於插桅杆街乘 682B 直達北角/太古；其餘時間可搭 182 至灣仔/紅隧口轉乘過海巴士',
-            pros: '地面直達港島東或銅鑼灣心臟地帶'
-          },
-          {
-            badge: '🚇 港鐵最快 · 金鐘轉港島綫',
-            modeIcon: '🚇',
-            title: '第一城站 ➔ 大圍轉東鐵綫至金鐘轉港島綫',
-            duration: '約 39 分鐘',
-            fare: '$14.8',
-            steps: '第一城站 ➔ 大圍轉東鐵綫過海至金鐘站 ➔ 同層轉乘港島綫（往柴灣方向）2 站即達銅鑼灣',
-            pros: '全程有冷氣且班次極密，39 分鐘穩定抵達銅鑼灣時代廣場 / 崇光'
-          }
-        ]
+        keywords: ['荃灣', '葵芳', '葵涌', '青衣'],
+        destTitle: '荃灣 / 葵芳 / 青衣',
+        bestOption: {
+          badge: '🚌 一程直達最方便',
+          mode: '九巴 49X（愉翠苑牛皮沙街上車）',
+          duration: '約 32 - 42 分鐘',
+          fare: '$9.1',
+          steps: [
+            '1. 愉翠苑（牛皮沙街）乘搭九巴 49X',
+            '2. 經城門隧道直達荃灣眾安街、千色匯及青衣碼頭'
+          ]
+        },
+        altOption: {
+          badge: '🚇 港鐵轉車方案',
+          mode: '屯馬綫轉荃灣綫（美孚轉車）',
+          duration: '約 44 分鐘',
+          fare: '$12.4',
+          steps: [
+            '1. 第一城站乘屯馬綫至美孚站（約 29 分鐘）',
+            '2. 美孚站轉乘荃灣綫往葵芳 / 荃灣（約 9 分鐘）'
+          ]
+        }
       },
       {
-        fromKeys: ['愉翠', '第一城'],
-        toKeys: ['荃灣', '葵芳', '青衣', '葵涌'],
-        options: [
-          {
-            badge: '🏆 城門隧道特快 · 巴士首選',
-            modeIcon: '🚌',
-            title: '九巴 49X（愉翠苑 / 插桅杆街直達荃灣及青衣）',
-            duration: '約 30 - 38 分鐘',
-            fare: '$9.1',
-            steps: '愉翠苑或插桅杆街上車 ➔ 經沙田市中心、城門隧道直達荃灣眾安街、千色匯及青衣碼頭',
-            pros: '經城門隧道直接橫越山脈，比搭港鐵繞道九龍快超過 15 分鐘！'
-          },
-          {
-            badge: '🚇 屯馬綫轉荃灣綫',
-            modeIcon: '🚇',
-            title: '第一城站 ➔ 美孚站轉乘荃灣綫',
-            duration: '約 44 分鐘',
-            fare: '$11.8',
-            steps: '第一城站搭屯馬綫至美孚站 ➔ 步行轉乘荃灣綫往葵芳 / 荃灣',
-            pros: '城門隧道遇上交通事故時的備用路線'
-          }
-        ]
+        keywords: ['西貢', '西貢市中心', '科大', '科技大學'],
+        destTitle: '西貢市中心 / 科技大學',
+        bestOption: {
+          badge: '🚌 假日郊遊最佳路線',
+          mode: '九巴 299X（沙田市中心 / 第一城轉乘）',
+          duration: '約 40 - 48 分鐘',
+          fare: '$11.1',
+          steps: [
+            '1. 愉翠苑乘小巴 811A / 巴士 83K 往沙田市中心總站（約 10 分鐘）',
+            '2. 轉乘九巴 299X 經馬鞍山及西沙路直達西貢市中心總站（約 30 分鐘）'
+          ]
+        },
+        altOption: {
+          badge: '🚐 經彩虹轉乘方案',
+          mode: '九巴 89X 轉專線小巴 1A',
+          duration: '約 45 分鐘',
+          fare: '$17.3',
+          steps: [
+            '1. 愉翠苑乘 89X 至彩虹碧海樓落車（約 15 分鐘）',
+            '2. 轉乘 1A 專線小巴直達西貢市中心（約 25 分鐘）'
+          ]
+        }
       },
       {
-        fromKeys: ['愉翠', '第一城'],
-        toKeys: ['沙田市中心', '新城市', '沙田站', '大會堂'],
-        options: [
-          {
-            badge: '🏆 班次最密 · 小巴特快',
-            modeIcon: '🚐',
-            title: '專線小巴 65A（愉翠苑 / 牛皮沙街上車）',
-            duration: '約 10 - 13 分鐘',
-            fare: '$5.6',
-            steps: '愉翠苑小巴站或牛皮沙街上車 ➔ 經圓洲角直達沙田市中心（新城市廣場 / 沙田站）',
-            pros: '約 4-6 分鐘一班，10 分鐘直達新城市廣場門口'
-          },
-          {
-            badge: '🚌 巴士總站有位坐',
-            modeIcon: '🚌',
-            title: '九巴 80K / 83K（愉翠苑總站開出）',
-            duration: '約 14 - 18 分鐘',
-            fare: '$5.0 - $5.4',
-            steps: '愉翠苑巴士總站直接上車（適合推嬰兒車或長者）➔ 直達沙田站 / 沙田大會堂',
-            pros: '低地台巴士方便推車及長者上落'
-          }
-        ]
+        keywords: ['沙田市中心', '新城市', '沙田站', '大圍'],
+        destTitle: '沙田市中心 / 新城市廣場',
+        bestOption: {
+          badge: '🚐 班次最密最快',
+          mode: '專線小巴 811A / 65A 或九巴 80K / 83K',
+          duration: '約 8 - 12 分鐘',
+          fare: '$4.8 - $5.8',
+          steps: [
+            '1. 愉翠苑總站乘九巴 80K，或插桅杆街乘小巴 811A',
+            '2. 經第一城、富豪花園直達沙田市中心 / 新城市廣場'
+          ]
+        },
+        altOption: {
+          badge: '🚇 轉乘東鐵綫之選',
+          mode: '港鐵第一城站 → 大圍站',
+          duration: '約 10 分鐘',
+          fare: '$4.8',
+          steps: [
+            '1. 步行 6 分鐘往第一城站',
+            '2. 乘屯馬綫 1 站即達大圍站轉乘東鐵綫'
+          ]
+        }
       }
     ];
 
-    window.swapRoutePoints = () => {
-      const oInput = document.getElementById('routeOriginInput');
-      const dInput = document.getElementById('routeDestInput');
-      if (!oInput || !dInput) return;
-      const tmp = oInput.value;
-      oInput.value = dInput.value || '沙田愉翠苑';
-      dInput.value = tmp;
-      if (dInput.value.trim()) recommendBestTransit();
+    window.swapPointToPoint = () => {
+      const originEl = document.getElementById('p2pOriginInput');
+      const destEl = document.getElementById('p2pDestInput');
+      if (!originEl || !destEl) return;
+      const tmp = originEl.value;
+      originEl.value = destEl.value;
+      destEl.value = tmp;
+      if (destEl.value.trim()) calculateBestTransitRoute();
     };
 
     window.setQuickRoutePair = (origin, dest) => {
-      const oInput = document.getElementById('routeOriginInput');
-      const dInput = document.getElementById('routeDestInput');
-      if (oInput) oInput.value = origin;
-      if (dInput) dInput.value = dest;
-      recommendBestTransit();
+      const originEl = document.getElementById('p2pOriginInput');
+      const destEl = document.getElementById('p2pDestInput');
+      if (originEl) originEl.value = origin;
+      if (destEl) destEl.value = dest;
+      calculateBestTransitRoute();
     };
 
-    window.recommendBestTransit = () => {
-      const oInput = document.getElementById('routeOriginInput');
-      const dInput = document.getElementById('routeDestInput');
-      const container = document.getElementById('routeRecommendContainer');
-      if (!oInput || !dInput || !container) return;
+    window.calculateBestTransitRoute = () => {
+      const origin = (document.getElementById('p2pOriginInput')?.value || '').trim() || '沙田愉翠苑';
+      const dest = (document.getElementById('p2pDestInput')?.value || '').trim();
+      const container = document.getElementById('p2pResultContainer');
+      if (!container) return;
 
-      const origin = oInput.value.trim();
-      const dest = dInput.value.trim();
-
-      if (!origin || !dest) {
-        showToast('請同時輸入出發地點與目的地 🧭');
+      if (!dest) {
+        showToast('請輸入目的地');
         return;
       }
 
-      if (origin === dest) {
+      const isFromYuChui = origin.includes('愉翠') || origin.includes('第一城') || origin.includes('沙田');
+      const searchText = `${origin} ${dest}`;
+      const matched = POINT_TO_POINT_ROUTES.find(r => r.keywords.some(kw => searchText.includes(kw)));
+
+      const googleTransitUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin + ' 香港')}&destination=${encodeURIComponent(dest + ' 香港')}&travelmode=transit`;
+
+      if (matched) {
+        const displayTitle = isFromYuChui
+          ? `${escapeHtml(origin)} → ${escapeHtml(matched.destTitle)}`
+          : `${escapeHtml(origin)} ↔ ${escapeHtml(dest)}（參考回程/同走廊方案）`;
+
         container.innerHTML = `
-          <div class="sketch-card p-4 text-center text-xs font-bold text-[#2C2A29]">
-            出發地點與目的地相同，步行即可到達啦！😊
+          <div class="sketch-card bg-[#FFFDF7] p-4 space-y-3">
+            <div class="flex items-center justify-between border-b-2 border-dashed border-[#D6CFC2] pb-2">
+              <div class="text-sm font-black text-[#2C2A29]">📍 ${displayTitle}</div>
+            </div>
+
+            <!-- 首選推介方案 -->
+            <div class="bg-[#EAF2F8] border-2 border-[#2C2A29] rounded-2xl p-3 space-y-2 shadow-[2px_2px_0px_#2C2A29]">
+              <div class="flex items-center justify-between gap-2">
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-[#3B6998] text-white border border-[#2C2A29]">${matched.bestOption.badge}</span>
+                <div class="text-right">
+                  <span class="text-base font-black text-[#2C2A29]">${matched.bestOption.duration}</span>
+                  <span class="text-xs font-bold text-[#3B6998] ml-1.5">車資 ${matched.bestOption.fare}</span>
+                </div>
+              </div>
+              <div class="text-sm font-black text-[#2C2A29]">${escapeHtml(matched.bestOption.mode)}</div>
+              <div class="space-y-1 text-xs text-[#4A4744] bg-white/80 rounded-xl p-2.5 border border-[#2C2A29]/20">
+                ${matched.bestOption.steps.map(s => `<div>${escapeHtml(s)}</div>`).join('')}
+              </div>
+            </div>
+
+            <!-- 備選方案 -->
+            <div class="bg-white border-2 border-[#2C2A29] rounded-2xl p-3 space-y-2">
+              <div class="flex items-center justify-between gap-2">
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-[#F3C65F] text-[#2C2A29] border border-[#2C2A29]">${matched.altOption.badge}</span>
+                <div class="text-right">
+                  <span class="text-sm font-black text-[#2C2A29]">${matched.altOption.duration}</span>
+                  <span class="text-xs font-bold text-[#6B665F] ml-1.5">車資 ${matched.altOption.fare}</span>
+                </div>
+              </div>
+              <div class="text-xs font-black text-[#2C2A29]">${escapeHtml(matched.altOption.mode)}</div>
+              <div class="space-y-1 text-[11px] text-[#6B665F] bg-[#FBF8F1] rounded-xl p-2 border border-[#2C2A29]/15">
+                ${matched.altOption.steps.map(s => `<div>${escapeHtml(s)}</div>`).join('')}
+              </div>
+            </div>
+
+            <a href="${googleTransitUrl}" target="_blank" rel="noopener noreferrer" class="sketch-btn w-full bg-[#7BA07B] text-white py-2.5 text-xs font-black flex items-center justify-center gap-1.5">
+              <span>🗺️</span> 開啟 Google Maps 實時班次與步行導航
+            </a>
           </div>
         `;
         return;
       }
 
-      // 1. 嘗試匹配預設點對點（支援正向與反向查詢）
-      let matchedPlan = null;
-      let isReversed = false;
-
-      for (const item of POINT_TO_POINT_ROUTES) {
-        const forwardMatch = item.fromKeys.some(k => origin.includes(k)) && item.toKeys.some(k => dest.includes(k));
-        const reverseMatch = item.toKeys.some(k => origin.includes(k)) && item.fromKeys.some(k => dest.includes(k));
-        if (forwardMatch) {
-          matchedPlan = item.options;
-          isReversed = false;
-          break;
-        }
-        if (reverseMatch) {
-          matchedPlan = item.options;
-          isReversed = true;
-          break;
-        }
-      }
-
-      // 2. 若為其他香港任意兩點，智能結合港鐵路網 + 巴士/小巴建議
-      if (!matchedPlan) {
-        const cleanO = normalizeStationQuery(origin.replace(/沙田愉翠苑|愉翠苑/g, '第一城'));
-        const cleanD = normalizeStationQuery(dest.replace(/沙田愉翠苑|愉翠苑/g, '第一城'));
-        const stO = MTR_GRAPH.allStations.find(s => s.includes(cleanO));
-        const stD = MTR_GRAPH.allStations.find(s => s.includes(cleanD));
-
-        if (stO && stD && stO !== stD) {
-          matchedPlan = [
-            {
-              badge: '🏆 港鐵快速聯網 · 時間最穩定',
-              modeIcon: '🚇',
-              title: `港鐵【${stO}站】➔【${stD}站】`,
-              duration: '約 25 - 45 分鐘',
-              fare: '$8.5 - $18.5',
-              steps: `${origin.includes('愉翠') ? '先由愉翠苑步行 6 分鐘或搭小巴 811A 至第一城站，再' : '於' + stO + '站上車'}乘搭港鐵前往${stD}站（可切換至第 3 頁查看各轉乘站詳細時間）`,
-              pros: '班次頻密準時，不受路面塞車影響'
-            },
-            {
-              badge: '🚌 地面巴士 / 的士直達方案',
-              modeIcon: '🚕',
-              title: `九巴 / 城巴轉乘或點對點的士（${origin} ➔ ${dest}）`,
-              duration: '約 30 - 50 分鐘',
-              fare: '$9.1 - $19.2（巴士）',
-              steps: `建議使用 Google Maps 公共交通模式比對即時巴士到站，若 3-4 人同行可考慮直接乘搭市區的士直達`,
-              pros: '點對點少步行，適合攜帶長者或小朋友出行'
-            }
-          ];
-        } else {
-          matchedPlan = [
-            {
-              badge: '🏆 綜合智能路線建議',
-              modeIcon: '🧭',
-              title: `${origin} ➔ ${dest} 最佳公共交通組合`,
-              duration: '約 35 - 55 分鐘',
-              fare: '$10.0 - $22.0',
-              steps: `建議先乘搭接駁小巴（如 65A / 811A）或步行至最近港鐵站（第一城站 / 沙田站），轉乘港鐵幹線或特快巴士前往【${dest}】`,
-              pros: '結合短途接駁與幹線交通，兼顧速度與準時度'
-            },
-            {
-              badge: '🚕 點對點省時直達',
-              modeIcon: '🚕',
-              title: `市區的士直達【${dest}】`,
-              duration: '約 20 - 35 分鐘',
-              fare: '視乎距離（可於第 4 頁估算）',
-              steps: `由【${origin}】直接乘搭的士前往【${dest}】，無需轉車與步行`,
-              pros: '門口上車直達目的地，全家分攤車費更划算'
-            }
-          ];
-        }
-      }
-
-      const gmapsTransitUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin + ' 香港')}&destination=${encodeURIComponent(dest + ' 香港')}&travelmode=transit`;
-
-      const reverseNotice = isReversed ? `
-        <div class="text-[11px] font-bold text-[#3B6998] bg-[#3B6998]/10 border border-[#2C2A29] rounded-xl px-3 py-1.5">
-          🔄 回程方向提示：以下為「${origin} ➔ ${dest}」對應的回程乘車建議（上車點請留意對面方向車站）。
-        </div>
-      ` : '';
-
+      // 自訂任意點對點智能建議
       container.innerHTML = `
-        ${reverseNotice}
-        ${matchedPlan.map((opt, idx) => `
-          <div class="sketch-card p-4 space-y-2.5 ${idx === 0 ? 'bg-[#FFFDF7]' : 'bg-white'}">
-            <div class="flex items-start justify-between gap-2 border-b-2 border-dashed border-[#2C2A29]/25 pb-2.5">
-              <div>
-                <span class="inline-block text-[11px] font-black px-2 py-0.5 rounded-md border border-[#2C2A29] ${idx === 0 ? 'bg-[#F3C65F]' : 'bg-[#6A997E]/25'} mb-1">
-                  ${opt.badge}
-                </span>
-                <h3 class="text-sm font-black text-[#2C2A29] leading-snug">${opt.modeIcon} ${opt.title}</h3>
-              </div>
-              <div class="text-right shrink-0">
-                <p class="text-base font-black text-[#E06D53]">${opt.duration}</p>
-                <p class="text-[11px] font-bold text-[#6B665F]">車費 ${opt.fare}</p>
-              </div>
-            </div>
+        <div class="sketch-card bg-[#FFFDF7] p-4 space-y-3">
+          <div class="text-sm font-black text-[#2C2A29] border-b-2 border-dashed border-[#D6CFC2] pb-2">
+            📍 ${escapeHtml(origin)} → ${escapeHtml(dest)}
+          </div>
 
-            <div class="bg-[#FBF8F1] border border-[#2C2A29] rounded-xl p-2.5 text-xs space-y-1">
-              <p class="font-bold text-[#2C2A29]">📍 乘車步驟：</p>
-              <p class="text-[#6B665F] leading-relaxed">${opt.steps}</p>
+          <div class="bg-[#EAF2F8] border-2 border-[#2C2A29] rounded-2xl p-3 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-[#3B6998] text-white border border-[#2C2A29]">🧭 智能轉乘建議</span>
+              <span class="text-xs font-black text-[#3B6998]">港鐵 + 接駁小巴/巴士</span>
             </div>
-
-            <div class="flex items-center gap-1.5 text-[11px] font-bold text-[#6A997E]">
-              <span>💡 優點：</span>
-              <span>${opt.pros}</span>
+            <div class="text-xs text-[#2C2A29] space-y-1.5 leading-relaxed">
+              <div><strong>1. 鐵路骨幹方案：</strong>由出發地前往最近港鐵站（如愉翠苑步行 6 分鐘至<strong>第一城站</strong>），乘搭港鐵前往「${escapeHtml(dest)}」鄰近車站，班次最穩定不受塞車影響。</div>
+              <div><strong>2. 巴士直達方案：</strong>如前往九龍東可選 <strong>89X</strong>、往荃灣可選 <strong>49X</strong>、往港島可選 <strong>182 / 682B</strong>、往機場可選 <strong>A41</strong>。</div>
             </div>
           </div>
-        `).join('')}
 
-        <a href="${gmapsTransitUrl}" target="_blank" rel="noopener noreferrer" class="sketch-btn w-full bg-[#3B6998] text-white py-2.5 text-xs font-black flex items-center justify-center gap-1.5">
-          <span>🗺️</span> 開啟 Google Maps 實時公共交通導航
-        </a>
+          <a href="${googleTransitUrl}" target="_blank" rel="noopener noreferrer" class="sketch-btn w-full bg-[#3B6998] text-white py-2.5 text-xs font-black flex items-center justify-center gap-1.5">
+            <span>🗺️</span> 使用 Google Maps 查詢「${escapeHtml(origin)} → ${escapeHtml(dest)}」精準班次
+          </a>
+        </div>
       `;
     };
 
-    // ==================== 4. 第三頁：港鐵車程計算（第一城站出發） ====================
-    const MTR_LINES_META = {
-      TML: { name: '屯馬綫', color: '#9C5C1E', text: '#FFFFFF' },
-      EAL: { name: '東鐵綫', color: '#53B7E8', text: '#FFFFFF' },
-      KTL: { name: '觀塘綫', color: '#00AB4E', text: '#FFFFFF' },
-      TWL: { name: '荃灣綫', color: '#ED1D24', text: '#FFFFFF' },
-      ISL: { name: '港島綫', color: '#007DC5', text: '#FFFFFF' },
-      TKL: { name: '將軍澳綫', color: '#7D499D', text: '#FFFFFF' },
-      TCL: { name: '東涌綫', color: '#F7943E', text: '#FFFFFF' },
-      AEL: { name: '機場快綫', color: '#00888A', text: '#FFFFFF' },
-      SIL: { name: '南港島綫', color: '#BAC429', text: '#2C2A29' }
+    // ==================== 5. 第三頁：港鐵多路線車程計算（預設第一城站，可更改） ====================
+    const MTR_GRAPH = {
+      // 屯馬綫 Tuen Ma Line
+      '烏溪沙': [['馬鞍山', 2, '屯馬綫']],
+      '馬鞍山': [['烏溪沙', 2, '屯馬綫'], ['恆安', 2, '屯馬綫']],
+      '恆安': [['馬鞍山', 2, '屯馬綫'], ['大水坑', 2, '屯馬綫']],
+      '大水坑': [['恆安', 2, '屯馬綫'], ['石門', 3, '屯馬綫']],
+      '石門': [['大水坑', 3, '屯馬綫'], ['第一城', 2, '屯馬綫']],
+      '第一城': [['石門', 2, '屯馬綫'], ['沙田圍', 2, '屯馬綫']],
+      '沙田圍': [['第一城', 2, '屯馬綫'], ['車公廟', 2, '屯馬綫']],
+      '車公廟': [['沙田圍', 2, '屯馬綫'], ['大圍', 2, '屯馬綫']],
+      '大圍': [['車公廟', 2, '屯馬綫'], ['顯徑', 2, '屯馬綫'], ['沙田', 3, '東鐵綫'], ['九龍塘', 5, '東鐵綫']],
+      '顯徑': [['大圍', 2, '屯馬綫'], ['鑽石山', 5, '屯馬綫']],
+      '鑽石山': [['顯徑', 5, '屯馬綫'], ['啟德', 2, '屯馬綫'], ['黃大仙', 2, '觀塘綫'], ['彩虹', 2, '觀塘綫']],
+      '啟德': [['鑽石山', 2, '屯馬綫'], ['宋皇臺', 2, '屯馬綫']],
+      '宋皇臺': [['啟德', 2, '屯馬綫'], ['土瓜灣', 2, '屯馬綫']],
+      '土瓜灣': [['宋皇臺', 2, '屯馬綫'], ['何文田', 3, '屯馬綫']],
+      '何文田': [['土瓜灣', 3, '屯馬綫'], ['紅磡', 3, '屯馬綫'], ['油麻地', 3, '觀塘綫'], ['黃埔', 2, '觀塘綫']],
+      '紅磡': [['何文田', 3, '屯馬綫'], ['尖東', 2, '屯馬綫'], ['旺角東', 4, '東鐵綫'], ['會展', 5, '東鐵綫']],
+      '尖東': [['紅磡', 2, '屯馬綫'], ['柯士甸', 3, '屯馬綫'], ['尖沙咀', 3, '步行轉乘']],
+      '柯士甸': [['尖東', 3, '屯馬綫'], ['南昌', 3, '屯馬綫']],
+      '南昌': [['柯士甸', 3, '屯馬綫'], ['美孚', 3, '屯馬綫'], ['奧運', 2, '東涌綫'], ['荔景', 5, '東涌綫']],
+      '美孚': [['南昌', 3, '屯馬綫'], ['荃灣西', 4, '屯馬綫'], ['荔枝角', 2, '荃灣綫'], ['荔景', 3, '荃灣綫']],
+      '荃灣西': [['美孚', 4, '屯馬綫'], ['錦上路', 6, '屯馬綫']],
+      '錦上路': [['荃灣西', 6, '屯馬綫'], ['元朗', 3, '屯馬綫']],
+      '元朗': [['錦上路', 3, '屯馬綫'], ['朗屏', 2, '屯馬綫']],
+      '朗屏': [['元朗', 2, '屯馬綫'], ['天水圍', 3, '屯馬綫']],
+      '天水圍': [['朗屏', 3, '屯馬綫'], ['兆康', 3, '屯馬綫']],
+      '兆康': [['天水圍', 3, '屯馬綫'], ['屯門', 3, '屯馬綫']],
+      '屯門': [['兆康', 3, '屯馬綫']],
+
+      // 東鐵綫 East Rail Line
+      '羅湖': [['上水', 4, '東鐵綫']],
+      '落馬洲': [['上水', 6, '東鐵綫']],
+      '上水': [['羅湖', 4, '東鐵綫'], ['落馬洲', 6, '東鐵綫'], ['粉嶺', 2, '東鐵綫']],
+      '粉嶺': [['上水', 2, '東鐵綫'], ['太和', 5, '東鐵綫']],
+      '太和': [['粉嶺', 5, '東鐵綫'], ['大埔墟', 2, '東鐵綫']],
+      '大埔墟': [['太和', 2, '東鐵綫'], ['大學', 5, '東鐵綫']],
+      '大學': [['大埔墟', 5, '東鐵綫'], ['火炭', 4, '東鐵綫']],
+      '火炭': [['大學', 4, '東鐵綫'], ['沙田', 2, '東鐵綫']],
+      '沙田': [['火炭', 2, '東鐵綫'], ['大圍', 3, '東鐵綫']],
+      '九龍塘': [['大圍', 5, '東鐵綫'], ['旺角東', 3, '東鐵綫'], ['樂富', 2, '觀塘綫'], ['石硤尾', 2, '觀塘綫']],
+      '旺角東': [['九龍塘', 3, '東鐵綫'], ['紅磡', 4, '東鐵綫']],
+      '會展': [['紅磡', 5, '東鐵綫'], ['金鐘', 2, '東鐵綫']],
+      '金鐘': [['會展', 2, '東鐵綫'], ['中環', 2, '港島綫'], ['灣仔', 2, '港島綫'], ['尖沙咀', 3, '荃灣綫'], ['海洋公園', 4, '南港島綫']],
+
+      // 觀塘綫 Kwun Tong Line
+      '調景嶺': [['油塘', 2, '觀塘綫'], ['將軍澳', 2, '將軍澳綫']],
+      '油塘': [['調景嶺', 2, '觀塘綫'], ['藍田', 2, '觀塘綫'], ['鰂魚涌', 4, '將軍澳綫']],
+      '藍田': [['油塘', 2, '觀塘綫'], ['觀塘', 2, '觀塘綫']],
+      '觀塘': [['藍田', 2, '觀塘綫'], ['牛頭角', 2, '觀塘綫']],
+      '牛頭角': [['觀塘', 2, '觀塘綫'], ['九龍灣', 2, '觀塘綫']],
+      '九龍灣': [['牛頭角', 2, '觀塘綫'], ['彩虹', 2, '觀塘綫']],
+      '彩虹': [['九龍灣', 2, '觀塘綫'], ['鑽石山', 2, '觀塘綫']],
+      '黃大仙': [['鑽石山', 2, '觀塘綫'], ['樂富', 2, '觀塘綫']],
+      '樂富': [['黃大仙', 2, '觀塘綫'], ['九龍塘', 2, '觀塘綫']],
+      '石硤尾': [['九龍塘', 2, '觀塘綫'], ['太子', 2, '觀塘綫']],
+      '太子': [['石硤尾', 2, '觀塘綫'], ['旺角', 2, '觀塘綫'], ['深水埗', 2, '荃灣綫']],
+      '旺角': [['太子', 2, '觀塘綫'], ['油麻地', 2, '觀塘綫']],
+      '油麻地': [['旺角', 2, '觀塘綫'], ['何文田', 3, '觀塘綫'], ['佐敦', 2, '荃灣綫']],
+      '黃埔': [['何文田', 2, '觀塘綫']],
+
+      // 荃灣綫 Tsuen Wan Line
+      '荃灣': [['大窩口', 2, '荃灣綫']],
+      '大窩口': [['荃灣', 2, '荃灣綫'], ['葵興', 2, '荃灣綫']],
+      '葵興': [['大窩口', 2, '荃灣綫'], ['葵芳', 2, '荃灣綫']],
+      '葵芳': [['葵興', 2, '荃灣綫'], ['荔景', 2, '荃灣綫']],
+      '荔景': [['葵芳', 2, '荃灣綫'], ['美孚', 3, '荃灣綫'], ['南昌', 5, '東涌綫'], ['青衣', 3, '東涌綫']],
+      '荔枝角': [['美孚', 2, '荃灣綫'], ['長沙灣', 2, '荃灣綫']],
+      '長沙灣': [['荔枝角', 2, '荃灣綫'], ['深水埗', 2, '荃灣綫']],
+      '深水埗': [['長沙灣', 2, '荃灣綫'], ['太子', 2, '荃灣綫']],
+      '佐敦': [['油麻地', 2, '荃灣綫'], ['尖沙咀', 2, '荃灣綫']],
+      '尖沙咀': [['佐敦', 2, '荃灣綫'], ['金鐘', 3, '荃灣綫'], ['尖東', 3, '步行轉乘']],
+
+      // 港島綫 Island Line
+      '堅尼地城': [['香港大學', 2, '港島綫']],
+      '香港大學': [['堅尼地城', 2, '港島綫'], ['西營盤', 2, '港島綫']],
+      '西營盤': [['香港大學', 2, '港島綫'], ['上環', 2, '港島綫']],
+      '上環': [['西營盤', 2, '港島綫'], ['中環', 2, '港島綫']],
+      '中環': [['上環', 2, '港島綫'], ['金鐘', 2, '港島綫'], ['香港', 3, '步行轉乘']],
+      '灣仔': [['金鐘', 2, '港島綫'], ['銅鑼灣', 2, '港島綫']],
+      '銅鑼灣': [['灣仔', 2, '港島綫'], ['天后', 2, '港島綫']],
+      '天后': [['銅鑼灣', 2, '港島綫'], ['炮台山', 2, '港島綫']],
+      '炮台山': [['天后', 2, '港島綫'], ['北角', 2, '港島綫']],
+      '北角': [['炮台山', 2, '港島綫'], ['鰂魚涌', 2, '港島綫']],
+      '鰂魚涌': [['北角', 2, '港島綫'], ['太古', 2, '港島綫'], ['油塘', 4, '將軍澳綫']],
+      '太古': [['鰂魚涌', 2, '港島綫'], ['西灣河', 2, '港島綫']],
+      '西灣河': [['太古', 2, '港島綫'], ['筲箕灣', 2, '港島綫']],
+      '筲箕灣': [['西灣河', 2, '港島綫'], ['杏花邨', 3, '港島綫']],
+      '杏花邨': [['筲箕灣', 3, '港島綫'], ['柴灣', 3, '港島綫']],
+      '柴灣': [['杏花邨', 3, '港島綫']],
+
+      // 將軍澳綫 Tseung Kwan O Line
+      '將軍澳': [['調景嶺', 2, '將軍澳綫'], ['坑口', 2, '將軍澳綫'], ['康城', 4, '將軍澳綫']],
+      '坑口': [['將軍澳', 2, '將軍澳綫'], ['寶琳', 2, '將軍澳綫']],
+      '寶琳': [['坑口', 2, '將軍澳綫']],
+      '康城': [['將軍澳', 4, '將軍澳綫']],
+
+      // 東涌綫 / 機場快綫 / 南港島綫
+      '香港': [['中環', 3, '步行轉乘'], ['九龍', 3, '東涌綫']],
+      '九龍': [['香港', 3, '東涌綫'], ['奧運', 2, '東涌綫']],
+      '奧運': [['九龍', 2, '東涌綫'], ['南昌', 2, '東涌綫']],
+      '青衣': [['荔景', 3, '東涌綫'], ['欣澳', 7, '東涌綫'], ['機場', 13, '機場快綫']],
+      '欣澳': [['青衣', 7, '東涌綫'], ['東涌', 6, '東涌綫'], ['迪士尼', 4, '迪士尼綫']],
+      '東涌': [['欣澳', 6, '東涌綫']],
+      '迪士尼': [['欣澳', 4, '迪士尼綫']],
+      '機場': [['青衣', 13, '機場快綫'], ['博覽館', 2, '機場快綫']],
+      '博覽館': [['機場', 2, '機場快綫']],
+      '海洋公園': [['金鐘', 4, '南港島綫'], ['黃竹坑', 2, '南港島綫']],
+      '黃竹坑': [['海洋公園', 2, '南港島綫'], ['利東', 2, '南港島綫']],
+      '利東': [['黃竹坑', 2, '南港島綫'], ['海怡半島', 2, '南港島綫']],
+      '海怡半島': [['利東', 2, '南港島綫']]
     };
 
-    const MTR_LINE_SEQUENCES = {
-      TML: [
-        '烏溪沙', '馬鞍山', '恆安', '大水坑', '石門', '第一城', '沙田圍', '車公廟', '大圍',
-        '顯徑', '鑽石山', '啟德', '宋皇臺', '土瓜灣', '何文田', '紅磡', '尖東', '柯士甸',
-        '南昌', '美孚', '荃灣西', '錦上路', '元朗', '朗屏', '天水圍', '兆康', '屯門'
-      ],
-      EAL: [
-        '羅湖', '落馬洲', '上水', '粉嶺', '太和', '大埔墟', '大學', '火炭', '馬場', '沙田',
-        '大圍', '九龍塘', '旺角東', '紅磡', '會展', '金鐘'
-      ],
-      KTL: [
-        '黃埔', '何文田', '油麻地', '旺角', '太子', '石硤尾', '九龍塘', '樂富', '黃大仙',
-        '鑽石山', '彩虹', '九龍灣', '牛頭角', '觀塘', '藍田', '油塘', '調景嶺'
-      ],
-      TWL: [
-        '中環', '金鐘', '尖沙咀', '佐敦', '油麻地', '旺角', '太子', '深水埗', '長沙灣',
-        '荔枝角', '美孚', '荔景', '葵芳', '葵興', '大窩口', '荃灣'
-      ],
-      ISL: [
-        '堅尼地城', '香港大學', '西營盤', '上環', '中環', '金鐘', '灣仔', '銅鑼灣', '天后',
-        '炮台山', '北角', '鰂魚涌', '太古', '西灣河', '筲箕灣', '杏花邨', '柴灣'
-      ],
-      TKL: [
-        '北角', '鰂魚涌', '油塘', '調景嶺', '將軍澳', '坑口', '寶琳', '康城'
-      ],
-      TCL: [
-        '香港', '九龍', '奧運', '南昌', '荔景', '青衣', '欣澳', '東涌'
-      ],
-      AEL: [
-        '香港', '九龍', '青衣', '機場', '博覽館'
-      ],
-      SIL: [
-        '金鐘', '海洋公園', '黃竹坑', '利東', '海怡半島'
-      ]
-    };
+    const ALL_MTR_STATIONS = Object.keys(MTR_GRAPH);
 
-    const MTR_GRAPH = (() => {
-      const adj = {};
-      const allStationsSet = new Set();
-
-      const addEdge = (from, to, line, cost, type) => {
-        if (!adj[from]) adj[from] = [];
-        adj[from].push({ to, line, cost, type });
+    function normalizeStationQuery(q) {
+      if (!q) return '';
+      let clean = q.trim().replace(/站$/, '').replace(/港鐵/g, '');
+      const alias = {
+        'city one': '第一城',
+        'admiralty': '金鐘',
+        'central': '中環',
+        'tsim sha tsui': '尖沙咀',
+        'tst': '尖沙咀',
+        'mong kok': '旺角',
+        'causeway bay': '銅鑼灣',
+        'kwun tong': '觀塘',
+        'airport': '機場',
+        'tai wai': '大圍',
+        'sha tin': '沙田'
       };
+      const lower = clean.toLowerCase();
+      if (alias[lower]) return alias[lower];
+      if (MTR_GRAPH[clean]) return clean;
+      const fuzzy = ALL_MTR_STATIONS.find(s => s.includes(clean) || clean.includes(s));
+      return fuzzy || '';
+    }
 
-      // 建立各線路相鄰車站連線
-      Object.entries(MTR_LINE_SEQUENCES).forEach(([line, stations]) => {
-        const stepTime = line === 'AEL' ? 6.5 : (line === 'EAL' ? 3.2 : 2.3);
-        for (let i = 0; i < stations.length; i++) {
-          const st = stations[i];
-          allStationsSet.add(st);
-          const node = `${st}|${line}`;
-          if (!adj[node]) adj[node] = [];
-          if (i > 0) {
-            const prevNode = `${stations[i - 1]}|${line}`;
-            addEdge(node, prevNode, line, stepTime, 'ride');
-          }
-          if (i < stations.length - 1) {
-            const nextNode = `${stations[i + 1]}|${line}`;
-            addEdge(node, nextNode, line, stepTime, 'ride');
-          }
+    function findAllMtrPaths(start, end) {
+      if (!MTR_GRAPH[start] || !MTR_GRAPH[end]) return [];
+      if (start === end) {
+        return [{ totalMins: 0, transfers: [], stops: 0, lines: [] }];
+      }
+
+      const results = [];
+      const maxDepth = 32;
+
+      function dfs(curr, visited, mins, stops, prevLine, transfers, linesUsed) {
+        if (stops > maxDepth || mins > 110) return;
+        if (curr === end) {
+          results.push({
+            totalMins: mins,
+            transfers: [...transfers],
+            stops,
+            lines: [...linesUsed]
+          });
+          return;
         }
-      });
 
-      // 建立同站跨線轉乘邊
-      allStationsSet.forEach(st => {
-        const linesHere = Object.keys(MTR_LINE_SEQUENCES).filter(l => MTR_LINE_SEQUENCES[l].includes(st));
-        for (let i = 0; i < linesHere.length; i++) {
-          for (let j = 0; j < linesHere.length; j++) {
-            if (i === j) continue;
-            const l1 = linesHere[i];
-            const l2 = linesHere[j];
-            const isWalkTransfer = (st === '尖東' || st === '尖沙咀' || st === '中環' || st === '香港');
-            addEdge(`${st}|${l1}`, `${st}|${l2}`, l2, isWalkTransfer ? 6 : 4, 'transfer');
-          }
+        const neighbors = MTR_GRAPH[curr] || [];
+        for (const [nextSt, segMins, lineName] of neighbors) {
+          if (visited.has(nextSt)) continue;
+          const isTransfer = prevLine && prevLine !== lineName;
+          if (isTransfer && transfers.length >= 3) continue;
+
+          const transferPenalty = isTransfer ? 4 : 0;
+          const nextTransfers = isTransfer ? [...transfers, `${curr}轉${lineName}`] : transfers;
+          const nextLines = linesUsed.includes(lineName) ? linesUsed : [...linesUsed, lineName];
+
+          visited.add(nextSt);
+          dfs(nextSt, visited, mins + segMins + transferPenalty, stops + 1, lineName, nextTransfers, nextLines);
+          visited.delete(nextSt);
         }
-      });
+      }
 
-      // 站內通道步行轉乘（尖東 <-> 尖沙咀、香港 <-> 中環）
-      addEdge('尖東|TML', '尖沙咀|TWL', 'TWL', 6, 'walk');
-      addEdge('尖沙咀|TWL', '尖東|TML', 'TML', 6, 'walk');
-      addEdge('香港|TCL', '中環|ISL', 'ISL', 5, 'walk');
-      addEdge('中環|ISL', '香港|TCL', 'TCL', 5, 'walk');
-      addEdge('香港|TCL', '中環|TWL', 'TWL', 5, 'walk');
-      addEdge('中環|TWL', '香港|TCL', 'TCL', 5, 'walk');
+      dfs(start, new Set([start]), 0, 0, null, [], []);
 
-      return { adj, allStations: Array.from(allStationsSet) };
-    })();
+      results.sort((a, b) => a.totalMins - b.totalMins);
 
-    function normalizeStationQuery(raw) {
-      return (raw || '')
-        .trim()
-        .replace(/港鐵|地鐵|車站|站$/g, '')
-        .replace(/罗湖/g, '羅湖')
-        .replace(/落马洲/g, '落馬洲')
-        .replace(/金钟/g, '金鐘')
-        .replace(/尖沙嘴/g, '尖沙咀')
-        .replace(/铜锣湾/g, '銅鑼灣')
-        .replace(/观塘/g, '觀塘')
-        .replace(/荃湾/g, '荃灣')
-        .replace(/大围/g, '大圍')
-        .replace(/钻石山/g, '鑽石山')
-        .replace(/红磡/g, '紅磡')
-        .replace(/机场/g, '機場')
-        .trim();
+      // 去重：保留不同轉車組合的前 3 條代表路線
+      const unique = [];
+      const seenKeys = new Set();
+      for (const r of results) {
+        const key = r.transfers.join('->') || 'direct';
+        if (!seenKeys.has(key)) {
+          seenKeys.add(key);
+          unique.push(r);
+        }
+        if (unique.length >= 3) break;
+      }
+      return unique;
+    }
+
+    function estimateMtrFare(stops, toAirport) {
+      if (toAirport) return '$110.0';
+      if (stops <= 2) return '$4.8';
+      if (stops <= 5) return '$6.4';
+      if (stops <= 9) return '$9.8';
+      if (stops <= 14) return '$12.4';
+      return '$16.5';
     }
 
     window.handleMtrStationInput = (field, val) => {
-      const sugBox = document.getElementById(field === 'origin' ? 'mtrOriginSuggestions' : 'mtrSuggestions');
-      if (!sugBox) return;
-      const q = normalizeStationQuery(val);
+      const boxId = field === 'origin' ? 'mtrOriginSuggest' : 'mtrDestSuggest';
+      const box = document.getElementById(boxId);
+      if (!box) return;
+      const q = (val || '').trim();
       if (!q) {
-        sugBox.classList.add('hidden');
+        box.classList.add('hidden');
         return;
       }
-      const matches = MTR_GRAPH.allStations.filter(s => s.includes(q)).slice(0, 6);
+      const matches = ALL_MTR_STATIONS.filter(s => s.includes(q)).slice(0, 6);
       if (matches.length === 0) {
-        sugBox.classList.add('hidden');
+        box.classList.add('hidden');
         return;
       }
-      sugBox.classList.remove('hidden');
-      sugBox.innerHTML = matches.map(st => `
-        <button onclick="selectMtrStationField('${field}', '${st}')" class="px-2.5 py-1 text-xs font-bold bg-[#F3C65F]/40 border border-[#2C2A29] rounded-lg hover:bg-[#F3C65F]">
-          🚇 ${st}站
+      box.classList.remove('hidden');
+      box.innerHTML = matches.map(st => `
+        <button type="button" onclick="pickMtrSuggest('${field}', '${st}')" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#EAF2F8] text-[#3B6998] border border-[#2C2A29]">
+          ${st}站
         </button>
       `).join('');
     };
 
-    window.selectMtrStationField = (field, stationName) => {
-      const input = document.getElementById(field === 'origin' ? 'mtrOriginInput' : 'mtrDestInput');
-      const sugBox = document.getElementById(field === 'origin' ? 'mtrOriginSuggestions' : 'mtrSuggestions');
-      if (input) input.value = stationName;
-      if (sugBox) sugBox.classList.add('hidden');
-      if (field === 'origin') {
-        updateMtrOriginBadge(stationName);
-        if (document.getElementById('mtrDestInput')?.value.trim()) calculateMtrTrip();
-      } else {
-        calculateMtrTrip();
-      }
+    window.pickMtrSuggest = (field, station) => {
+      const inputId = field === 'origin' ? 'mtrOriginInput' : 'mtrDestInput';
+      const boxId = field === 'origin' ? 'mtrOriginSuggest' : 'mtrDestSuggest';
+      const inp = document.getElementById(inputId);
+      const box = document.getElementById(boxId);
+      if (inp) inp.value = station;
+      if (box) box.classList.add('hidden');
+      calculateMtrFromInput();
     };
 
-    window.resetMtrOriginToCityOne = () => {
-      const originInput = document.getElementById('mtrOriginInput');
-      if (originInput) originInput.value = '第一城';
-      updateMtrOriginBadge('第一城');
-      if (document.getElementById('mtrDestInput')?.value.trim()) calculateMtrTrip();
-      showToast('已重設出發站為「第一城站」🚇');
+    window.resetMtrOriginDefault = () => {
+      const inp = document.getElementById('mtrOriginInput');
+      if (inp) inp.value = '第一城';
+      calculateMtrFromInput();
+      showToast('已重設出發站為「第一城站」');
     };
 
     window.swapMtrStations = () => {
-      const originInput = document.getElementById('mtrOriginInput');
-      const destInput = document.getElementById('mtrDestInput');
-      if (!originInput || !destInput) return;
-      const tmp = originInput.value;
-      originInput.value = destInput.value || '第一城';
-      destInput.value = tmp;
-      updateMtrOriginBadge(originInput.value);
-      if (destInput.value.trim()) calculateMtrTrip();
+      const o = document.getElementById('mtrOriginInput');
+      const d = document.getElementById('mtrDestInput');
+      if (!o || !d) return;
+      const tmp = o.value;
+      o.value = d.value;
+      d.value = tmp;
+      if (d.value.trim()) calculateMtrFromInput();
     };
 
-    function updateMtrOriginBadge(stationName) {
-      const clean = normalizeStationQuery(stationName || '第一城');
-      const matched = MTR_GRAPH.allStations.find(s => s === clean) || MTR_GRAPH.allStations.find(s => s.includes(clean)) || '第一城';
-      const linesHere = Object.keys(MTR_LINE_SEQUENCES).filter(l => MTR_LINE_SEQUENCES[l].includes(matched));
-      const primaryLine = linesHere[0] || 'TML';
-      const meta = MTR_LINES_META[primaryLine] || { name: '港鐵', color: '#9C5C1E' };
-      const badge = document.getElementById('mtrOriginLineBadge');
-      const dot = document.getElementById('mtrOriginDot');
-      if (badge) {
-        badge.textContent = `${meta.name} · ${matched}站`;
-        badge.style.color = meta.color === '#BAC429' ? '#2C2A29' : meta.color;
-      }
-      if (dot) {
-        dot.style.backgroundColor = meta.color;
-      }
-    }
-
-    window.selectQuickMtrStation = (stationName) => {
-      const input = document.getElementById('mtrDestInput');
-      const sugBox = document.getElementById('mtrSuggestions');
-      if (input) input.value = stationName;
-      if (sugBox) sugBox.classList.add('hidden');
-      calculateMtrTrip();
+    window.selectQuickMtrStation = (destName) => {
+      const d = document.getElementById('mtrDestInput');
+      if (d) d.value = destName;
+      calculateMtrFromInput();
     };
 
-    window.calculateMtrTrip = () => {
-      const originInput = document.getElementById('mtrOriginInput');
-      const input = document.getElementById('mtrDestInput');
+    window.calculateMtrFromInput = () => {
+      const rawOrigin = document.getElementById('mtrOriginInput')?.value || '第一城';
+      const rawDest = document.getElementById('mtrDestInput')?.value || '';
       const container = document.getElementById('mtrResultContainer');
-      if (!originInput || !input || !container) return;
+      if (!container) return;
 
-      const originQuery = normalizeStationQuery(originInput.value || '第一城');
-      const query = normalizeStationQuery(input.value);
-      if (!originQuery) {
-        showToast('請輸入出發港鐵站名稱 🚇');
+      const origin = normalizeStationQuery(rawOrigin);
+      const dest = normalizeStationQuery(rawDest);
+
+      if (!origin) {
+        showToast('找不到該出發港鐵站，請重新輸入');
         return;
       }
-      if (!query) {
-        showToast('請輸入目的地港鐵站名稱 🚇');
+      if (!dest) {
+        showToast('請輸入有效的目的地港鐵站');
         return;
       }
 
-      const originStation = MTR_GRAPH.allStations.find(s => s === originQuery)
-        || MTR_GRAPH.allStations.find(s => s.includes(originQuery));
+      const paths = findAllMtrPaths(origin, dest);
+      if (paths.length === 0) {
+        container.innerHTML = `<div class="sketch-card bg-white p-4 text-center text-xs font-bold text-[#E06D53]">暫時無法計算 ${escapeHtml(origin)} 至 ${escapeHtml(dest)} 的路線</div>`;
+        return;
+      }
 
-      if (!originStation) {
-        container.innerHTML = `
-          <div class="sketch-card p-4 text-center space-y-1">
-            <p class="text-sm font-black text-[#E06D53]">找不到出發站「${originInput.value}」</p>
-            <p class="text-xs text-[#6B665F]">請確認出發站名（例如：第一城、沙田、大圍、旺角）</p>
+      const fastest = paths[0];
+      const fare = estimateMtrFare(fastest.stops, origin === '機場' || dest === '機場');
+      const walkNote = origin === '第一城'
+        ? `<div class="text-[11px] font-bold text-[#7BA07B] bg-[#EEF5EE] px-2.5 py-1 rounded-xl border border-[#2C2A29]/20">🚶 愉翠苑步行往第一城站約 6 分鐘（連步行共約 ${fastest.totalMins + 6} 分鐘）</div>`
+        : '';
+
+      container.innerHTML = `
+        <div class="sketch-card bg-[#FFFDF7] p-4 space-y-3">
+          <div class="flex items-center justify-between border-b-2 border-dashed border-[#D6CFC2] pb-2">
+            <div>
+              <div class="text-xs font-bold text-[#6B665F]">港鐵車程計算結果</div>
+              <div class="text-base font-black text-[#2C2A29] mt-0.5">🚇 ${escapeHtml(origin)}站 → ${escapeHtml(dest)}站</div>
+            </div>
+            <div class="text-right">
+              <div class="text-[11px] font-bold text-[#6B665F]">八達通參考車資</div>
+              <div class="text-lg font-black text-[#3B6998]">${fare}</div>
+            </div>
           </div>
-        `;
-        return;
-      }
 
-      updateMtrOriginBadge(originStation);
+          ${walkNote}
 
-      let targetStation = MTR_GRAPH.allStations.find(s => s === query)
-        || MTR_GRAPH.allStations.find(s => s.includes(query));
+          <div class="space-y-2.5">
+            ${paths.map((p, idx) => {
+              const isBest = idx === 0;
+              const diffText = isBest ? '最快路線' : `慢 ${p.totalMins - fastest.totalMins} 分鐘`;
+              const transferSummary = p.transfers.length === 0
+                ? '一程直達（無需轉車）'
+                : `轉車 ${p.transfers.length} 次：${p.transfers.join(' → ')}`;
 
-      if (!targetStation) {
-        container.innerHTML = `
-          <div class="sketch-card p-4 text-center space-y-1">
-            <p class="text-sm font-black text-[#E06D53]">找不到目的地「${input.value}」港鐵站</p>
-            <p class="text-xs text-[#6B665F]">請確認站名（例如：金鐘、尖沙咀、旺角、銅鑼灣、機場）</p>
-          </div>
-        `;
-        return;
-      }
-
-      if (originStation === targetStation) {
-        container.innerHTML = `
-          <div class="sketch-card p-4 text-center">
-            <p class="text-sm font-black text-[#2C2A29]">出發站與目的地均為「${originStation}站」啦！😊</p>
-            <p class="text-xs text-[#6B665F] mt-1">請輸入其他目的地車站查詢車程時間。</p>
-          </div>
-        `;
-        return;
-      }
-
-      const originLines = Object.keys(MTR_LINE_SEQUENCES).filter(l => MTR_LINE_SEQUENCES[l].includes(originStation));
-
-      // 內部輔助函式：依據不同轉車策略搜尋多條不重複轉乘路線（支援任意出發站）
-      function findMtrRouteOption(blockedTransferNodes = new Set(), transferPenaltyBias = 0) {
-        const dist = {};
-        const prev = {};
-        const visited = new Set();
-        Object.keys(MTR_GRAPH.adj).forEach(n => dist[n] = Infinity);
-        originLines.forEach(line => {
-          const sNode = `${originStation}|${line}`;
-          if (dist[sNode] !== undefined) dist[sNode] = 0;
-        });
-
-        while (true) {
-          let u = null;
-          let minD = Infinity;
-          for (const n of Object.keys(dist)) {
-            if (!visited.has(n) && dist[n] < minD) {
-              minD = dist[n];
-              u = n;
-            }
-          }
-          if (!u || minD === Infinity) break;
-          visited.add(u);
-          if (u.startsWith(`${targetStation}|`)) break;
-
-          for (const edge of MTR_GRAPH.adj[u]) {
-            if (visited.has(edge.to)) continue;
-            const isTransferEdge = edge.type === 'transfer' || edge.type === 'walk';
-            const edgeKey = `${u}->${edge.to}`;
-            if (isTransferEdge && blockedTransferNodes.has(edgeKey)) continue;
-
-            const weight = edge.cost + (isTransferEdge ? transferPenaltyBias : 0);
-            if (dist[u] + weight < dist[edge.to]) {
-              dist[edge.to] = dist[u] + weight;
-              prev[edge.to] = { node: u, edge };
-            }
-          }
-        }
-
-        let bestEndNode = null;
-        let bestCost = Infinity;
-        Object.keys(dist).forEach(n => {
-          if (n.startsWith(`${targetStation}|`) && dist[n] < bestCost) {
-            bestCost = dist[n];
-            bestEndNode = n;
-          }
-        });
-        if (!bestEndNode) return null;
-
-        const steps = [];
-        let curr = bestEndNode;
-        let actualTime = 0;
-        while (prev[curr]) {
-          steps.unshift({ from: prev[curr].node, to: curr, edge: prev[curr].edge });
-          actualTime += prev[curr].edge.cost;
-          curr = prev[curr].node;
-        }
-
-        const rideMinutes = Math.max(2, Math.round(actualTime));
-        const stopCount = steps.filter(s => s.edge.type === 'ride').length;
-        const transfers = steps.filter(s => s.edge.type === 'transfer' || s.edge.type === 'walk');
-        const transferKeys = transfers.map(t => `${t.from}->${t.to}`);
-
-        const segments = [];
-        let curSeg = null;
-        steps.forEach(s => {
-          const [fromSt] = s.from.split('|');
-          const [toSt] = s.to.split('|');
-          if (s.edge.type === 'ride') {
-            if (!curSeg || curSeg.line !== s.edge.line) {
-              curSeg = { line: s.edge.line, start: fromSt, end: toSt, stops: 1 };
-              segments.push(curSeg);
-            } else {
-              curSeg.end = toSt;
-              curSeg.stops++;
-            }
-          }
-        });
-
-        const signature = segments.map(s => `${s.line}:${s.start}-${s.end}`).join('>');
-        const firstLineName = segments[0] ? (MTR_LINES_META[segments[0].line]?.name || '港鐵') : '港鐵';
-        const transferStationsLabel = transfers.length === 0
-          ? `${firstLineName}直達`
-          : '經 ' + transfers.map(t => t.from.split('|')[0] + '轉乘').join(' ➔ ');
-
-        return {
-          rideMinutes,
-          totalDoorToDoor: rideMinutes + 6,
-          stopCount,
-          transfers,
-          transferKeys,
-          segments,
-          signature,
-          transferStationsLabel,
-          isAirportLine: bestEndNode.endsWith('|AEL') || originLines.includes('AEL'),
-          isBorder: targetStation === '羅湖' || targetStation === '落馬洲' || originStation === '羅湖' || originStation === '落馬洲'
-        };
-      }
-
-      // 蒐集最多 3 條不同轉乘走法（例如：最快路線、少轉車路線、不同轉車站路線）
-      const routeOptions = [];
-      const seenSignatures = new Set();
-
-      const primary = findMtrRouteOption(new Set(), 0);
-      if (primary) {
-        routeOptions.push(primary);
-        seenSignatures.add(primary.signature);
-
-        // 嘗試搜尋少轉車（提高轉車權重）的走法
-        const fewerTransfers = findMtrRouteOption(new Set(), 8);
-        if (fewerTransfers && !seenSignatures.has(fewerTransfers.signature)) {
-          routeOptions.push(fewerTransfers);
-          seenSignatures.add(fewerTransfers.signature);
-        }
-
-        // 依序排除第一條路線的轉車站組合，找出其他轉乘點（如大圍 / 鑽石山 / 紅磡 / 南昌 / 美孚）
-        for (const tKey of primary.transferKeys) {
-          if (routeOptions.length >= 3) break;
-          const alt = findMtrRouteOption(new Set([tKey]), 0);
-          if (alt && !seenSignatures.has(alt.signature) && alt.rideMinutes <= primary.rideMinutes + 18) {
-            routeOptions.push(alt);
-            seenSignatures.add(alt.signature);
-          }
-        }
-      }
-
-      if (routeOptions.length === 0) return;
-
-      routeOptions.sort((a, b) => a.rideMinutes - b.rideMinutes);
-
-      const fastest = routeOptions[0];
-      const estFare = fastest.isAirportLine
-        ? '$105.0'
-        : fastest.isBorder
-          ? '$33.5'
-          : `$${(5.2 + fastest.stopCount * 0.65).toFixed(1)}`;
-
-      // 渲染路線對比總覽膠囊 + 各轉乘方案詳細卡片
-      const summaryCompareHtml = routeOptions.length > 1 ? `
-        <div class="sketch-card-flat bg-[#FFFDF7] p-3 space-y-2">
-          <p class="text-xs font-black text-[#2C2A29] flex items-center justify-between">
-            <span>🔀 共找到 ${routeOptions.length} 種轉乘路線時間對比：</span>
-            <span class="text-[11px] font-bold text-[#6B665F]">八達通約 ${estFare}</span>
-          </p>
-          <div class="grid grid-cols-1 gap-1.5">
-            ${routeOptions.map((opt, idx) => {
-              const diffMin = opt.rideMinutes - fastest.rideMinutes;
-              const tagText = idx === 0
-                ? '⚡ 最快路線'
-                : opt.transfers.length < fastest.transfers.length
-                  ? `✨ 少轉車 (+${diffMin}分)`
-                  : `🔄 備選路線 (+${diffMin}分)`;
-              const tagBg = idx === 0 ? 'bg-[#F3C65F]' : 'bg-[#6A997E]/25';
               return `
-                <div class="flex items-center justify-between bg-[#FBF8F1] border border-[#2C2A29] rounded-xl px-2.5 py-1.5 text-xs">
-                  <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="text-[10px] font-black px-1.5 py-0.5 rounded border border-[#2C2A29] ${tagBg} shrink-0">${tagText}</span>
-                    <span class="font-bold text-[#2C2A29] truncate">${opt.transferStationsLabel}</span>
+                <div class="rounded-2xl p-3 border-2 border-[#2C2A29] ${isBest ? 'bg-[#EAF2F8] shadow-[2px_2px_0px_#2C2A29]' : 'bg-white'}">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-1.5">
+                      <span class="px-2 py-0.5 rounded-full text-[11px] font-black border border-[#2C2A29] ${isBest ? 'bg-[#3B6998] text-white' : 'bg-[#F3C65F] text-[#2C2A29]'}">
+                        路線 ${idx + 1} · ${diffText}
+                      </span>
+                    </div>
+                    <div class="text-lg font-black text-[#2C2A29]">約 ${p.totalMins} 分鐘</div>
                   </div>
-                  <span class="font-black text-[#3B6998] shrink-0 ml-2">約 ${opt.rideMinutes} 分鐘</span>
+                  <div class="text-xs font-bold text-[#2C2A29] mt-1.5">${escapeHtml(transferSummary)}</div>
+                  <div class="text-[11px] text-[#6B665F] mt-0.5">途經 ${p.stops} 個站 · 乘搭：${escapeHtml(p.lines.join(' / '))}</div>
                 </div>
               `;
             }).join('')}
           </div>
         </div>
-      ` : '';
-
-      const cardsHtml = routeOptions.map((opt, idx) => {
-        const isFastest = idx === 0;
-        const diffMin = opt.rideMinutes - fastest.rideMinutes;
-        const badgeLabel = isFastest
-          ? '⚡ 方案一 · 最快抵達'
-          : idx === 1
-            ? `🔄 方案二 · 備選轉乘 (${diffMin === 0 ? '同時間' : '+' + diffMin + ' 分鐘'})`
-            : `🔄 方案三 · 另一轉乘 (${diffMin === 0 ? '同時間' : '+' + diffMin + ' 分鐘'})`;
-
-        const walkHintHtml = originStation === '第一城'
-          ? `<p class="text-[11px] font-bold text-[#6A997E] mt-0.5">🚶 連同愉翠苑步行至第一城站：全程約 ${opt.totalDoorToDoor} 分鐘</p>`
-          : `<p class="text-[11px] font-bold text-[#6A997E] mt-0.5">🚇 出發站：${originStation}站 ➔ ${targetStation}站</p>`;
-
-        const segmentsHtml = opt.segments.map((seg, i) => {
-          const meta = MTR_LINES_META[seg.line] || { name: seg.line, color: '#3B6998', text: '#FFF' };
-          const transferHint = i > 0
-            ? `<div class="text-[11px] font-bold text-[#E06D53] pl-3 py-0.5">🔄 於【${seg.start}站】轉乘</div>`
-            : '';
-          return `
-            ${transferHint}
-            <div class="flex items-center justify-between bg-[#FBF8F1] border border-[#2C2A29] rounded-xl px-3 py-1.5">
-              <div class="flex items-center gap-2 min-w-0">
-                <span class="text-[11px] font-black px-2 py-0.5 rounded-md border border-[#2C2A29] shrink-0" style="background:${meta.color};color:${meta.text}">
-                  ${meta.name}
-                </span>
-                <span class="text-xs font-black text-[#2C2A29] truncate">${seg.start}站 ➔ ${seg.end}站</span>
-              </div>
-              <span class="text-[11px] font-bold text-[#6B665F] shrink-0 ml-1">${seg.stops} 站</span>
-            </div>
-          `;
-        }).join('');
-
-        return `
-          <div class="sketch-card p-4 space-y-2.5 ${isFastest ? 'bg-[#FFFDF7]' : 'bg-white'}">
-            <div class="flex items-center justify-between border-b-2 border-dashed border-[#2C2A29]/25 pb-2.5">
-              <div>
-                <span class="inline-block text-[11px] font-black px-2 py-0.5 rounded-md border border-[#2C2A29] ${isFastest ? 'bg-[#F3C65F]' : 'bg-[#FBF8F1]'} mb-1">
-                  ${badgeLabel}
-                </span>
-                <div class="flex items-baseline gap-1.5">
-                  <span class="text-3xl font-black ${isFastest ? 'text-[#3B6998]' : 'text-[#2C2A29]'}">約 ${opt.rideMinutes}</span>
-                  <span class="text-sm font-black text-[#2C2A29]">分鐘車程</span>
-                </div>
-                ${walkHintHtml}
-              </div>
-              <div class="text-right space-y-1">
-                <div class="sketch-pill ${opt.transfers.length === 0 ? 'bg-[#6A997E] text-white' : 'bg-white text-[#2C2A29]'} px-2.5 py-1 text-xs font-black">
-                  ${opt.transfers.length === 0 ? '✨ 直達免轉車' : `🔄 轉車 ${opt.transfers.length} 次`}
-                </div>
-                <p class="text-[11px] font-bold text-[#6B665F]">沿途 ${opt.stopCount} 站 · 約 ${estFare}</p>
-              </div>
-            </div>
-
-            <div class="space-y-1">
-              ${segmentsHtml}
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      container.innerHTML = summaryCompareHtml + cardsHtml;
+      `;
     };
 
-    // ==================== 5. 第四頁：自駕時間與的士收費計算 ====================
-    const DRIVE_PRESETS = [
-      { keywords: ['愉翠', '第一城', '沙田', '大圍', '火炭', '威爾斯'], name: '沙田愉翠苑 / 沙田區', baseMin: 8, km: 4.2, route: '大涌橋路 / 沙田路', toll: '$0 (區內道路)', taxiToll: 0, coords: [22.3822, 114.2054] },
-      { keywords: ['中環', '金鐘', '上環', '中區'], name: '中環 / 金鐘商業區', baseMin: 24, km: 16.5, route: '大老山隧道 / 東區海底隧道 / 紅磡海底隧道 ➔ 告士打道', toll: '$20 - $40 (視乎時段及隧道)', taxiToll: 45, coords: [22.2819, 114.1583] },
-      { keywords: ['銅鑼灣', '灣仔', '天后', '炮台山'], name: '銅鑼灣 / 灣仔', baseMin: 22, km: 15.2, route: '大老山隧道 / 觀塘繞道 / 東區海底隧道 ➔ 東區走廊', toll: '$20 - $40 (過海隧道)', taxiToll: 45, coords: [22.2800, 114.1850] },
-      { keywords: ['太古', '鰂魚涌', '北角', '柴灣', '筲箕灣'], name: '港島東（太古 / 北角 / 柴灣）', baseMin: 23, km: 16.8, route: '東區海底隧道 ➔ 東區走廊', toll: '$20 - $40 (過海隧道)', taxiToll: 45, coords: [22.2860, 114.2160] },
-      { keywords: ['尖沙咀', '佐敦', '紅磡', '西九龍', '高鐵'], name: '尖沙咀 / 西九龍', baseMin: 20, km: 13.8, route: '獅子山隧道 / 公主道 / 彌敦道', toll: '$8 (獅子山隧道)', taxiToll: 8, coords: [22.2988, 114.1722] },
-      { keywords: ['九龍塘', '旺角', '太子', '油麻地', '深水埗'], name: '九龍塘 / 旺角區', baseMin: 16, km: 10.5, route: '獅子山隧道 / 窩打老道', toll: '$8 (獅子山隧道)', taxiToll: 8, coords: [22.3193, 114.1694] },
-      { keywords: ['觀塘', '九龍灣', '牛頭角', '藍田', '啟德'], name: '觀塘 / 九龍灣商貿區', baseMin: 15, km: 11.2, route: '大老山隧道 / 觀塘繞道', toll: '$20 (大老山隧道)', taxiToll: 20, coords: [22.3121, 114.2259] },
-      { keywords: ['將軍澳', '坑口', '寶琳', '康城', '調景嶺'], name: '將軍澳區', baseMin: 22, km: 16.0, route: '觀塘繞道 ➔ 將軍澳隧道 / 將藍隧道', toll: '$0 - $20 (將藍隧道免費)', taxiToll: 20, coords: [22.3074, 114.2598] },
-      { keywords: ['機場', '赤鱲角', '博覽館', '東涌', '迪士尼'], name: '香港國際機場 / 東涌', baseMin: 31, km: 34.5, route: '青沙公路（尖山隧道）➔ 青葵公路 ➔ 青嶼幹線 ➔ 北大嶼山公路', toll: '$8 (尖山隧道，青馬大橋免費)', taxiToll: 8, coords: [22.3080, 113.9185] },
-      { keywords: ['荃灣', '葵芳', '葵涌', '青衣', '深井'], name: '荃灣 / 葵青區', baseMin: 17, km: 13.6, route: '城門隧道 / 象鼻山路 / 葵涌道', toll: '$5 (城門隧道)', taxiToll: 5, coords: [22.3707, 114.1113] },
-      { keywords: ['屯門', '元朗', '天水圍', '錦上路'], name: '屯門 / 元朗區', baseMin: 33, km: 32.0, route: '屯門公路 / 大欖隧道', toll: '$5 - $63 (視乎是否經大欖隧道)', taxiToll: 5, coords: [22.3916, 113.9771] },
-      { keywords: ['大埔', '科學園', '白石角', '太和'], name: '大埔 / 科學園', baseMin: 13, km: 11.8, route: '吐露港公路', toll: '$0 (全程免費公路)', taxiToll: 0, coords: [22.4446, 114.1691] },
-      { keywords: ['粉嶺', '上水', '羅湖', '落馬洲', '香園圍'], name: '北區（粉嶺 / 上水 / 口岸）', baseMin: 24, km: 24.5, route: '吐露港公路 ➔ 粉嶺公路', toll: '$0 (全程免費公路)', taxiToll: 0, coords: [22.5015, 114.1288] },
-      { keywords: ['西貢', '清水灣', '科技大學', '馬鞍山'], name: '西貢 / 科技大學', baseMin: 22, km: 15.8, route: '西沙路 / 清水灣道', toll: '$0 (全程免費公路)', taxiToll: 0, coords: [22.3814, 114.2705] }
-    ];
-
-    // 香港市區的士（紅的）車資估算函式
-    function estimateHkUrbanTaxiFare(km, taxiToll, trafficMult) {
-      // 首2公里 $29；2至9公里每200米 $2.1；9公里後每200米 $1.4
-      let meterFare = 29;
-      if (km > 2) {
-        const midKm = Math.min(km, 9) - 2;
-        meterFare += Math.ceil((midKm * 1000) / 200) * 2.1;
-      }
-      if (km > 9) {
-        const longKm = km - 9;
-        meterFare += Math.ceil((longKm * 1000) / 200) * 1.4;
-      }
-      const waitingSurcharge = trafficMult > 1.2 ? 18 : trafficMult > 1.05 ? 8 : 0;
-      const lowFare = Math.round(meterFare + taxiToll + waitingSurcharge);
-      const highFare = lowFare + (trafficMult > 1.2 ? 25 : 15);
-      return { lowFare, highFare };
-    }
+    // ==================== 6. 第四頁：自駕時間與的士車資估算（預設沙田愉翠苑，可更改） ====================
+    const DRIVE_HUB_COORDS = {
+      '沙田愉翠苑': { lat: 22.3835, lng: 114.2055, area: '沙田圓洲角' },
+      '第一城': { lat: 22.3865, lng: 114.2035, area: '沙田第一城' },
+      '沙田市中心': { lat: 22.3820, lng: 114.1880, area: '沙田' },
+      '大圍': { lat: 22.3730, lng: 114.1785, area: '大圍' },
+      '火炭': { lat: 22.3955, lng: 114.1980, area: '火炭' },
+      '馬鞍山': { lat: 22.4245, lng: 114.2315, area: '馬鞍山' },
+      '大埔': { lat: 22.4455, lng: 114.1695, area: '大埔' },
+      '大埔墟': { lat: 22.4455, lng: 114.1695, area: '大埔' },
+      '粉嶺': { lat: 22.4920, lng: 114.1385, area: '粉嶺' },
+      '上水': { lat: 22.5010, lng: 114.1280, area: '上水' },
+      '西貢': { lat: 22.3815, lng: 114.2705, area: '西貢' },
+      '西貢市中心': { lat: 22.3815, lng: 114.2705, area: '西貢' },
+      '九龍塘': { lat: 22.3370, lng: 114.1765, area: '九龍塘' },
+      '旺角': { lat: 22.3193, lng: 114.1694, area: '旺角' },
+      '尖沙咀': { lat: 22.2988, lng: 114.1722, area: '尖沙咀' },
+      '紅磡': { lat: 22.3030, lng: 114.1815, area: '紅磡' },
+      '觀塘': { lat: 22.3122, lng: 114.2250, area: '觀塘' },
+      '九龍灣': { lat: 22.3235, lng: 114.2140, area: '九龍灣' },
+      '將軍澳': { lat: 22.3075, lng: 114.2595, area: '將軍澳' },
+      '荃灣': { lat: 22.3710, lng: 114.1145, area: '荃灣' },
+      '葵芳': { lat: 22.3568, lng: 114.1280, area: '葵芳' },
+      '青衣': { lat: 22.3585, lng: 114.1065, area: '青衣' },
+      '屯門': { lat: 22.3910, lng: 113.9725, area: '屯門' },
+      '元朗': { lat: 22.4445, lng: 114.0225, area: '元朗' },
+      '中環': { lat: 22.2820, lng: 114.1585, area: '中環' },
+      '金鐘': { lat: 22.2790, lng: 114.1650, area: '金鐘' },
+      '灣仔': { lat: 22.2775, lng: 114.1730, area: '灣仔' },
+      '銅鑼灣': { lat: 22.2800, lng: 114.1850, area: '銅鑼灣' },
+      '太古': { lat: 22.2845, lng: 114.2165, area: '太古' },
+      '柴灣': { lat: 22.2645, lng: 114.2365, area: '柴灣' },
+      '香港國際機場': { lat: 22.3080, lng: 113.9185, area: '赤鱲角機場' },
+      '機場': { lat: 22.3080, lng: 113.9185, area: '赤鱲角機場' }
+    };
 
     function getCurrentTrafficMultiplier() {
-      const now = new Date();
-      const day = now.getDay();
-      const hour = now.getHours();
-      const isWeekday = day >= 1 && day <= 5;
-      const isMorningRush = isWeekday && (hour >= 8 && hour <= 9);
-      const isEveningRush = isWeekday && (hour >= 17 && hour <= 19);
-      const isDayBusy = hour >= 10 && hour <= 20;
-
-      if (isMorningRush || isEveningRush) {
-        return { mult: 1.38, label: '🔴 繁忙時段（隧道可能車多）', color: 'text-[#E06D53]' };
+      const hr = new Date().getHours();
+      const isRush = (hr >= 8 && hr <= 9) || (hr >= 17 && hr <= 19);
+      const isDayBusy = hr >= 10 && hr <= 20;
+      if (isRush) {
+        return { mult: 1.38, label: '🔴 繁忙時段車多', color: 'bg-[#FFF1EE] text-[#E06D53]' };
       }
       if (isDayBusy) {
-        return { mult: 1.15, label: '🟡 日間正常車流', color: 'text-[#9C5C1E]' };
+        return { mult: 1.15, label: '🟡 日間行車正常', color: 'bg-[#FFF9E6] text-[#B8860B]' };
       }
-      return { mult: 1.0, label: '🟢 路面暢順', color: 'text-[#6A997E]' };
+      return { mult: 1.0, label: '🟢 路面暢順', color: 'bg-[#EEF5EE] text-[#3B6998]' };
     }
 
     function updateTrafficBadge() {
-      const badge = document.getElementById('driveTrafficStatusBadge');
+      const badge = document.getElementById('trafficStatusBadge');
       if (!badge) return;
-      const info = getCurrentTrafficMultiplier();
-      badge.textContent = info.label.split('（')[0];
-      badge.className = `sketch-pill bg-white px-2.5 py-0.5 text-[11px] font-black ${info.color}`;
+      const t = getCurrentTrafficMultiplier();
+      badge.textContent = t.label;
+      badge.className = `text-xs font-bold px-2.5 py-1 rounded-full border border-[#2C2A29] ${t.color}`;
     }
 
-    window.selectQuickDriveDest = (dest) => {
-      const input = document.getElementById('driveDestInput');
-      if (input) input.value = dest;
-      calculateDriveTrip();
-    };
+    function resolvePlaceCoord(name) {
+      const clean = (name || '').trim();
+      if (DRIVE_HUB_COORDS[clean]) return { name: clean, ...DRIVE_HUB_COORDS[clean] };
+      const key = Object.keys(DRIVE_HUB_COORDS).find(k => clean.includes(k) || k.includes(clean));
+      if (key) return { name: clean, ...DRIVE_HUB_COORDS[key] };
+      return { name: clean, lat: 22.3350, lng: 114.1750, area: '香港市區' };
+    }
 
-    window.resetDriveOriginToYuChui = () => {
-      const originInput = document.getElementById('driveOriginInput');
-      if (originInput) originInput.value = '沙田愉翠苑';
-      if (document.getElementById('driveDestInput')?.value.trim()) calculateDriveTrip();
-      showToast('已重設出發地點為「沙田愉翠苑」🚗');
-    };
+    function calcDrivingRouteInfo(originName, destName) {
+      const o = resolvePlaceCoord(originName);
+      const d = resolvePlaceCoord(destName);
 
-    window.swapDriveLocations = () => {
-      const originInput = document.getElementById('driveOriginInput');
-      const destInput = document.getElementById('driveDestInput');
-      if (!originInput || !destInput) return;
-      const tmp = originInput.value;
-      originInput.value = destInput.value || '沙田愉翠苑';
-      destInput.value = tmp;
-      if (destInput.value.trim()) calculateDriveTrip();
-    };
-
-    function calcGeoRoadEstimate(coordA, coordB) {
+      // 計算直線距離並轉換為香港實際道路繞行公里數
       const R = 6371;
-      const dLat = (coordB[0] - coordA[0]) * Math.PI / 180;
-      const dLon = (coordB[1] - coordA[1]) * Math.PI / 180;
+      const dLat = (d.lat - o.lat) * Math.PI / 180;
+      const dLng = (d.lng - o.lng) * Math.PI / 180;
       const a = Math.sin(dLat / 2) ** 2 +
-        Math.cos(coordA[0] * Math.PI / 180) * Math.cos(coordB[0] * Math.PI / 180) *
-        Math.sin(dLon / 2) ** 2;
+                Math.cos(o.lat * Math.PI / 180) * Math.cos(d.lat * Math.PI / 180) *
+                Math.sin(dLng / 2) ** 2;
       const straightKm = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      const roadKm = Math.max(3.5, Math.round(straightKm * 1.38 * 10) / 10);
-      const baseMin = Math.max(8, Math.round(roadKm * 1.35 + 5));
-      return { km: roadKm, baseMin };
-    }
+      const roadKm = Math.max(2.2, +(straightKm * 1.42).toFixed(1));
 
-    window.calculateDriveTrip = () => {
-      const originInput = document.getElementById('driveOriginInput');
-      const input = document.getElementById('driveDestInput');
-      const container = document.getElementById('driveResultContainer');
-      if (!originInput || !input || !container) return;
+      // 判斷行經隧道與建議路線
+      const combined = `${originName} ${destName}`;
+      let routeDesc = '沿沙田路 / 大埔公路直達';
+      let tollFee = 0;
+      let tollName = '無需隧道費';
 
-      const rawOrigin = originInput.value.trim() || '沙田愉翠苑';
-      const raw = input.value.trim();
-      if (!raw) {
-        showToast('請輸入自駕目的地 🚗');
-        return;
-      }
+      const isCrossHarbour = d.lat < 22.292 || o.lat < 22.292;
+      const isEastKln = combined.includes('觀塘') || combined.includes('九龍灣') || combined.includes('將軍澳') || combined.includes('太古') || combined.includes('柴灣');
+      const isTsuenWan = combined.includes('荃灣') || combined.includes('葵芳') || combined.includes('青衣') || combined.includes('屯門') || combined.includes('元朗');
+      const isAirport = combined.includes('機場');
+      const isSaiKung = combined.includes('西貢');
 
-      if (rawOrigin === raw) {
-        container.innerHTML = `
-          <div class="sketch-card p-4 text-center text-xs font-bold text-[#2C2A29]">
-            出發地點與目的地均為「${raw}」啦！😊
-          </div>
-        `;
-        return;
+      if (isAirport) {
+        routeDesc = '青沙公路（尖山隧道）→ 青嶼幹線 → 北大嶼山公路';
+        tollFee = 8;
+        tollName = '尖山隧道 $8';
+      } else if (isCrossHarbour && isEastKln) {
+        routeDesc = '大老山隧道 → 觀塘繞道 → 東區海底隧道';
+        tollFee = 60;
+        tollName = '大老山 $20 + 東隧 $40';
+      } else if (isCrossHarbour) {
+        routeDesc = '獅子山隧道 / 青沙公路 → 紅磡海底隧道（或西隧）';
+        tollFee = 48;
+        tollName = '獅隧 $8 + 紅隧 $40';
+      } else if (isEastKln) {
+        routeDesc = '大老山隧道 → 觀塘繞道';
+        tollFee = 20;
+        tollName = '大老山隧道 $20';
+      } else if (isTsuenWan) {
+        routeDesc = '城門隧道 → 象鼻山路 / 荃灣路';
+        tollFee = 5;
+        tollName = '城門隧道 $5';
+      } else if (isSaiKung) {
+        routeDesc = '馬鞍山繞道 → 西沙路直達西貢';
+        tollFee = 0;
+        tollName = '無需隧道費';
+      } else if (d.lat < 22.345 || o.lat < 22.345) {
+        routeDesc = '獅子山隧道 / 尖山隧道 → 窩打老道 / 連翔道';
+        tollFee = 8;
+        tollName = '獅子山 / 尖山隧道 $8';
       }
 
       const traffic = getCurrentTrafficMultiplier();
-      const matchedOrigin = DRIVE_PRESETS.find(p => p.keywords.some(kw => rawOrigin.includes(kw)));
-      const matchedDest = DRIVE_PRESETS.find(p => p.keywords.some(kw => raw.includes(kw)));
-      const isFromYuChui = rawOrigin.includes('愉翠');
+      const baseMins = Math.round((roadKm / 42) * 60 + (tollFee > 0 ? 4 : 2));
+      const estMins = Math.max(6, Math.round(baseMins * traffic.mult));
 
-      const originTitle = isFromYuChui ? '沙田愉翠苑' : (matchedOrigin ? matchedOrigin.name : rawOrigin);
-      const destTitle = matchedDest ? matchedDest.name : raw;
+      return {
+        roadKm,
+        estMins,
+        routeDesc,
+        tollFee,
+        tollName,
+        traffic
+      };
+    }
 
-      let baseMin, km, routeText, tollText, taxiToll;
+    function estimateHkUrbanTaxiFare(roadKm, tollFee, trafficMult) {
+      // 香港市區的士（紅的）收費估算：首 2 公里 $29，其後每 200 米按跳錶費率加繁忙等候時間
+      let meterFare = 29;
+      if (roadKm > 2) {
+        const extraMeters = (roadKm - 2) * 1000;
+        const jumps = Math.ceil(extraMeters / 200);
+        const avgPerJump = roadKm > 9 ? 1.85 : 2.1;
+        meterFare += jumps * avgPerJump;
+      }
+      if (trafficMult > 1.2) {
+        meterFare += 14; // 繁忙時段燈位等候跳錶
+      }
+      const low = Math.round(meterFare + tollFee);
+      const high = Math.round(low * 1.12 + 6);
+      return { low, high };
+    }
 
-      if (isFromYuChui && matchedDest) {
-        baseMin = matchedDest.baseMin;
-        km = matchedDest.km;
-        routeText = `愉翠苑 ➔ ${matchedDest.route}`;
-        tollText = matchedDest.toll;
-        taxiToll = matchedDest.taxiToll;
-      } else if (raw.includes('愉翠') && matchedOrigin) {
-        baseMin = matchedOrigin.baseMin;
-        km = matchedOrigin.km;
-        routeText = `${matchedOrigin.route} ➔ 沙田愉翠苑`;
-        tollText = matchedOrigin.toll;
-        taxiToll = matchedOrigin.taxiToll;
-      } else if (matchedOrigin && matchedDest) {
-        const geo = calcGeoRoadEstimate(matchedOrigin.coords, matchedDest.coords);
-        km = geo.km;
-        baseMin = geo.baseMin;
-        const crossesHarbour = (matchedOrigin.taxiToll >= 45) !== (matchedDest.taxiToll >= 45);
-        routeText = `${originTitle} ➔ 主要幹道 / 隧道連接線 ➔ ${destTitle}`;
-        tollText = crossesHarbour ? '$20 - $40 (過海隧道)' : '$0 - $20 (視乎選用隧道)';
-        taxiToll = crossesHarbour ? 40 : Math.max(matchedOrigin.taxiToll, matchedDest.taxiToll);
-      } else {
-        baseMin = 24;
-        km = 17.5;
-        routeText = `${originTitle} ➔ 主要幹道 / 隧道連接線 ➔ ${destTitle}`;
-        tollText = '$8 - $20（視乎選用隧道）';
-        taxiToll = 15;
+    window.resetDriveOriginDefault = () => {
+      const inp = document.getElementById('driveOriginInput');
+      if (inp) inp.value = '沙田愉翠苑';
+      calculateDriveFromInput();
+      showToast('已重設出發地點為「沙田愉翠苑」');
+    };
+
+    window.swapDriveLocations = () => {
+      const o = document.getElementById('driveOriginInput');
+      const d = document.getElementById('driveDestInput');
+      if (!o || !d) return;
+      const tmp = o.value;
+      o.value = d.value;
+      d.value = tmp;
+      if (d.value.trim()) calculateDriveFromInput();
+    };
+
+    window.selectQuickDriveDest = (place) => {
+      const d = document.getElementById('driveDestInput');
+      if (d) d.value = place;
+      calculateDriveFromInput();
+    };
+
+    window.calculateDriveFromInput = () => {
+      const origin = (document.getElementById('driveOriginInput')?.value || '').trim() || '沙田愉翠苑';
+      const dest = (document.getElementById('driveDestInput')?.value || '').trim();
+      const container = document.getElementById('driveResultContainer');
+      if (!container) return;
+
+      if (!dest) {
+        showToast('請輸入目的地');
+        return;
       }
 
-      const taxiEst = estimateHkUrbanTaxiFare(km, taxiToll, traffic.mult);
-
-      const estMinLow = Math.max(5, Math.round(baseMin * traffic.mult));
-      const estMinHigh = estMinLow + (traffic.mult > 1.2 ? 10 : 5);
-      const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(rawOrigin + ' 香港')}&destination=${encodeURIComponent(raw + ' 香港')}&travelmode=driving`;
+      const info = calcDrivingRouteInfo(origin, dest);
+      const taxi = estimateHkUrbanTaxiFare(info.roadKm, info.tollFee, info.traffic.mult);
+      const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin + ' 香港')}&destination=${encodeURIComponent(dest + ' 香港')}&travelmode=driving`;
 
       container.innerHTML = `
-        <div class="sketch-card p-4 space-y-3 bg-[#FFFDF7]">
-          <div class="flex items-start justify-between border-b-2 border-dashed border-[#2C2A29]/25 pb-3">
+        <div class="sketch-card bg-[#FFFDF7] p-4 space-y-3">
+          <div class="flex items-center justify-between border-b-2 border-dashed border-[#D6CFC2] pb-2">
             <div>
-              <span class="text-[11px] font-bold text-[#6B665F]">${originTitle} ➔ ${destTitle}</span>
-              <div class="flex items-baseline gap-1.5 mt-0.5">
-                <span class="text-3xl font-black text-[#6A997E]">約 ${estMinLow} - ${estMinHigh}</span>
-                <span class="text-sm font-black text-[#2C2A29]">分鐘</span>
-              </div>
-              <p class="text-[11px] font-bold ${traffic.color} mt-0.5">${traffic.label}</p>
+              <div class="text-[11px] font-bold text-[#6B665F]">行車與的士預算</div>
+              <div class="text-sm font-black text-[#2C2A29] mt-0.5">🚗 ${escapeHtml(origin)} → ${escapeHtml(dest)}</div>
             </div>
-            <div class="text-right space-y-1">
-              <span class="sketch-pill bg-[#F3C65F] px-2.5 py-1 text-xs font-black inline-block">
-                📏 約 ${km} 公里
-              </span>
-              <p class="text-[11px] font-bold text-[#6B665F]">隧道費：${tollText.split(' ')[0]}</p>
+            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold border border-[#2C2A29] ${info.traffic.color}">
+              ${info.traffic.label}
+            </span>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2">
+            <div class="bg-[#FFF1EE] rounded-2xl p-2.5 border-2 border-[#2C2A29] text-center">
+              <div class="text-[11px] font-bold text-[#6B665F]">預計車程</div>
+              <div class="text-xl font-black text-[#E06D53] mt-0.5">${info.estMins} <span class="text-xs">分鐘</span></div>
+            </div>
+            <div class="bg-[#EAF2F8] rounded-2xl p-2.5 border-2 border-[#2C2A29] text-center">
+              <div class="text-[11px] font-bold text-[#6B665F]">行車距離</div>
+              <div class="text-xl font-black text-[#3B6998] mt-0.5">${info.roadKm} <span class="text-xs">km</span></div>
+            </div>
+            <div class="bg-[#FFF9E6] rounded-2xl p-2.5 border-2 border-[#2C2A29] text-center">
+              <div class="text-[11px] font-bold text-[#6B665F]">🚕 市區的士</div>
+              <div class="text-base font-black text-[#2C2A29] mt-1">$${taxi.low}-${taxi.high}</div>
             </div>
           </div>
 
-          <div class="space-y-2 text-xs">
-            <div class="bg-[#FBF8F1] border border-[#2C2A29] rounded-xl p-2.5">
-              <p class="font-black text-[#2C2A29] mb-0.5">🛣️ 建議行車路線：</p>
-              <p class="text-[#6B665F] font-bold">${routeText}</p>
+          <div class="bg-white rounded-xl p-3 border border-[#2C2A29]/25 space-y-1.5 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-[#6B665F]">🛣️ 建議行車路線：</span>
+              <span class="font-black text-[#2C2A29]">${escapeHtml(info.routeDesc)}</span>
             </div>
-            <div class="bg-[#FBF8F1] border border-[#2C2A29] rounded-xl p-2.5 flex items-center justify-between">
-              <span class="font-bold text-[#2C2A29]">💰 預計自駕隧道費：</span>
-              <span class="font-black text-[#3B6998]">${tollText}</span>
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-[#6B665F]">🚧 單程隧道費：</span>
+              <span class="font-bold text-[#3B6998]">${escapeHtml(info.tollName)}</span>
             </div>
-            <div class="bg-[#E06D53]/12 border-2 border-[#2C2A29] rounded-xl p-2.5 flex items-center justify-between">
-              <div>
-                <p class="font-black text-[#2C2A29]">🚕 估計的士收費（市區紅的）：</p>
-                <p class="text-[10px] text-[#6B665F] mt-0.5">已連同隧道費及當時段塞車等候估算（不含行李費）</p>
-              </div>
-              <span class="text-base font-black text-[#E06D53] shrink-0 ml-2">約 $${taxiEst.lowFare} - $${taxiEst.highFare}</span>
+            <div class="text-[10px] text-[#6B665F] pt-1 border-t border-dashed border-[#D6CFC2]">
+              * 的士收費已按市區紅的起錶 $29、距離跳錶及單程隧道費估算（未計行李附加費）。
             </div>
           </div>
 
@@ -2172,305 +1952,117 @@
       `;
     };
 
-    // ==================== 6. 第四頁：To-Do List 待辦事項 ====================
-    window.addTodoItem = () => {
-      const textInput = document.getElementById('todoItemInput');
-      const prioSelect = document.getElementById('todoPrioritySelect');
-      const noteInput = document.getElementById('todoNoteInput');
-      const text = textInput.value.trim();
-      if (!text) {
-        showToast('請輸入待辦事項內容 ✅');
-        return;
-      }
-      appState.todos.unshift({
-        id: 'td_' + Date.now(),
-        text,
-        priority: prioSelect.value || 'normal',
-        note: noteInput.value.trim(),
-        done: false
-      });
-      textInput.value = '';
-      noteInput.value = '';
-      saveState();
-      renderTodos();
-      showToast('✅ 已新增待辦事項');
-    };
-
-    window.toggleTodoItem = (id) => {
-      const item = appState.todos.find(t => t.id === id);
-      if (item) {
-        item.done = !item.done;
-        saveState();
-        renderTodos();
-      }
-    };
-
-    window.deleteTodoItem = (id) => {
-      appState.todos = appState.todos.filter(t => t.id !== id);
-      saveState();
-      renderTodos();
-    };
-
-    window.clearCompletedTodos = () => {
-      const before = appState.todos.length;
-      appState.todos = appState.todos.filter(t => !t.done);
-      if (appState.todos.length === before) {
-        showToast('目前沒有已完成的待辦事項');
-        return;
-      }
-      saveState();
-      renderTodos();
-      showToast('🧹 已清除完成項目');
-    };
-
-    function renderTodos() {
-      const container = document.getElementById('todoItemsContainer');
-      const badge = document.getElementById('todoCountBadge');
-      if (!container) return;
-
-      const prioWeight = { high: 0, normal: 1, low: 2 };
-      const sorted = [...appState.todos].sort((a, b) => {
-        if (a.done !== b.done) return a.done ? 1 : -1;
-        return (prioWeight[a.priority] ?? 1) - (prioWeight[b.priority] ?? 1);
-      });
-
-      const undone = sorted.filter(t => !t.done).length;
-      if (badge) badge.textContent = `${undone} 項未完成`;
-
-      if (sorted.length === 0) {
-        container.innerHTML = `
-          <div class="text-center py-6 text-xs text-[#6B665F]">
-            目前所有待辦事項都完成啦！輕鬆一下 ☕
-          </div>
-        `;
-        return;
-      }
-
-      const prioMeta = {
-        high: { label: '🔴 緊急', bg: 'bg-[#E06D53]/20 text-[#E06D53]' },
-        normal: { label: '🟡 一般', bg: 'bg-[#F3C65F]/40 text-[#9C5C1E]' },
-        low: { label: '🟢 稍後', bg: 'bg-[#6A997E]/25 text-[#2E5B42]' }
-      };
-
-      container.innerHTML = sorted.map(item => {
-        const p = prioMeta[item.priority] || prioMeta.normal;
-        return `
-          <div class="flex items-center justify-between gap-2.5 p-2.5 rounded-xl border-2 border-[#2C2A29] ${item.done ? 'bg-[#F3EFE6] opacity-70' : 'bg-[#FFFDF9]'}">
-            <button onclick="toggleTodoItem('${item.id}')" class="flex items-center gap-2.5 flex-1 text-left min-w-0">
-              <span class="w-5 h-5 rounded-md border-2 border-[#2C2A29] flex items-center justify-center shrink-0 ${item.done ? 'bg-[#3B6998] text-white' : 'bg-white'}">
-                ${item.done ? '✓' : ''}
-              </span>
-              <div class="min-w-0 flex-1">
-                <p class="text-sm font-bold truncate ${item.done ? 'line-through text-[#6B665F]' : 'text-[#2C2A29]'}">${item.text}</p>
-                <div class="flex items-center gap-1.5 mt-0.5">
-                  <span class="text-[10px] font-bold px-1.5 py-0.2 rounded border border-[#2C2A29] ${p.bg}">${p.label}</span>
-                  ${item.note ? `<span class="text-[11px] text-[#6B665F] truncate">⏰ ${item.note}</span>` : ''}
-                </div>
-              </div>
-            </button>
-            <button onclick="deleteTodoItem('${item.id}')" class="p-1 text-xs text-[#6B665F] hover:text-[#E06D53] shrink-0" title="刪除">✕</button>
-          </div>
-        `;
-      }).join('');
-    }
-
-    // ==================== 7. 第五頁：Shopping List 購物清單（家庭用 / 工作用） ====================
-    let currentShopScope = 'home';
-    const SHOP_CATEGORIES = {
-      home: ['生鮮蔬果', '日用品', '糧油雜貨', '零食飲品', '個人護理'],
-      work: ['文具耗材', '電腦配件', '茶水零食', '設備採購', '其他辦公']
-    };
-
-    window.switchShoppingScope = (scope) => {
-      currentShopScope = scope;
-      const btnHome = document.getElementById('btnShopHome');
-      const btnWork = document.getElementById('btnShopWork');
-      const header = document.getElementById('shopListHeader');
-
-      if (scope === 'home') {
-        btnHome.className = 'sketch-btn py-2.5 px-3 font-black text-sm bg-[#6A997E] text-white flex items-center justify-center gap-2';
-        btnWork.className = 'sketch-btn py-2.5 px-3 font-black text-sm bg-white text-[#2C2A29] flex items-center justify-center gap-2';
-        if (header) header.innerHTML = '<span>🏠</span> 家庭用購物清單';
-      } else {
-        btnWork.className = 'sketch-btn py-2.5 px-3 font-black text-sm bg-[#3B6998] text-white flex items-center justify-center gap-2';
-        btnHome.className = 'sketch-btn py-2.5 px-3 font-black text-sm bg-white text-[#2C2A29] flex items-center justify-center gap-2';
-        if (header) header.innerHTML = '<span>💼</span> 工作用購物清單';
-      }
-      populateShopCategories();
-      renderShoppingList();
-    };
-
-    function populateShopCategories() {
-      const sel = document.getElementById('shopCategorySelect');
-      if (!sel) return;
-      const cats = SHOP_CATEGORIES[currentShopScope] || [];
-      sel.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
-    }
-
-    window.addShoppingItem = () => {
-      const input = document.getElementById('shopItemInput');
-      const catSel = document.getElementById('shopCategorySelect');
-      const qtyInput = document.getElementById('shopQtyInput');
-      const text = input.value.trim();
-      if (!text) {
-        showToast('請輸入要購買的物品名稱 🛒');
-        return;
-      }
-      if (!appState.shopping[currentShopScope]) appState.shopping[currentShopScope] = [];
-      appState.shopping[currentShopScope].unshift({
-        id: 'sp_' + Date.now(),
-        text,
-        category: catSel.value,
-        qty: qtyInput.value.trim(),
-        done: false
-      });
-      input.value = '';
-      qtyInput.value = '';
-      saveState();
-      renderShoppingList();
-      showToast(`🛒 已加入${currentShopScope === 'home' ? '家庭' : '工作'}清單`);
-    };
-
-    window.toggleShoppingItem = (id) => {
-      const list = appState.shopping[currentShopScope] || [];
-      const item = list.find(i => i.id === id);
-      if (item) {
-        item.done = !item.done;
-        saveState();
-        renderShoppingList();
-      }
-    };
-
-    window.deleteShoppingItem = (id) => {
-      appState.shopping[currentShopScope] = (appState.shopping[currentShopScope] || []).filter(i => i.id !== id);
-      saveState();
-      renderShoppingList();
-    };
-
-    window.clearCompletedShopping = () => {
-      const list = appState.shopping[currentShopScope] || [];
-      const before = list.length;
-      appState.shopping[currentShopScope] = list.filter(i => !i.done);
-      if (appState.shopping[currentShopScope].length === before) {
-        showToast('目前沒有已勾選的購物項目');
-        return;
-      }
-      saveState();
-      renderShoppingList();
-      showToast('🧹 已清除已購項目');
-    };
-
-    function renderShoppingList() {
-      const container = document.getElementById('shoppingItemsContainer');
-      const badge = document.getElementById('shopCountBadge');
-      if (!container) return;
-
-      const list = [...(appState.shopping[currentShopScope] || [])].sort((a, b) => (a.done === b.done ? 0 : a.done ? 1 : -1));
-      const pending = list.filter(i => !i.done).length;
-      if (badge) badge.textContent = `${pending} 項待買`;
-
-      if (list.length === 0) {
-        container.innerHTML = `
-          <div class="text-center py-6 text-xs text-[#6B665F]">
-            ${currentShopScope === 'home' ? '家庭用' : '工作用'}購物清單目前空空的，隨時新增吧 ✏️
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = list.map(item => `
-        <div class="flex items-center justify-between gap-2.5 p-2.5 rounded-xl border-2 border-[#2C2A29] ${item.done ? 'bg-[#F3EFE6] opacity-70' : 'bg-[#FFFDF9]'}">
-          <button onclick="toggleShoppingItem('${item.id}')" class="flex items-center gap-2.5 flex-1 text-left min-w-0">
-            <span class="w-5 h-5 rounded-md border-2 border-[#2C2A29] flex items-center justify-center shrink-0 ${item.done ? 'bg-[#6A997E] text-white' : 'bg-white'}">
-              ${item.done ? '✓' : ''}
-            </span>
-            <div class="min-w-0 flex-1">
-              <p class="text-sm font-bold truncate ${item.done ? 'line-through text-[#6B665F]' : 'text-[#2C2A29]'}">${item.text}</p>
-              <div class="flex items-center gap-1.5 mt-0.5">
-                <span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[#F3C65F]/40 border border-[#2C2A29]">${item.category}</span>
-                ${item.qty ? `<span class="text-[11px] text-[#6B665F] truncate">· ${item.qty}</span>` : ''}
-              </div>
-            </div>
-          </button>
-          <button onclick="deleteShoppingItem('${item.id}')" class="p-1 text-xs text-[#6B665F] hover:text-[#E06D53] shrink-0" title="刪除">✕</button>
-        </div>
-      `).join('');
-    }
-
-    // ==================== 8. 第六頁：沙田區今日天氣（香港天文台 API） ====================
+    // ==================== 7. 第五頁：沙田區今日天氣（香港天文台 API） ====================
     window.fetchWeatherData = async (manual = false) => {
       try {
-        const [rhrRes, fndRes] = await Promise.all([
+        const [rhrRes, fndRes, warnRes] = await Promise.all([
           fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=tc'),
-          fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=tc')
+          fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=tc'),
+          fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=tc')
         ]);
+
         const rhr = await rhrRes.json();
         const fnd = await fndRes.json();
+        const warn = await warnRes.json();
 
-        const temps = rhr.temperature?.data || [];
-        const shaTin = temps.find(t => t.place === '沙田') || temps[0];
-        const tempVal = shaTin ? shaTin.value : 23;
+        // 尋找沙田氣象站氣溫
+        let shatinTemp = null;
+        if (rhr && rhr.temperature && Array.isArray(rhr.temperature.data)) {
+          const st = rhr.temperature.data.find(d => d.place === '沙田') || rhr.temperature.data[0];
+          if (st) shatinTemp = st.value;
+        }
 
-        const humData = rhr.humidity?.data?.[0];
-        const humVal = humData ? humData.value : 70;
+        const humidity = rhr?.humidity?.data?.[0]?.value ?? '--';
+        const uvVal = rhr?.uvindex?.data?.[0]?.value ?? '低';
+        const iconCode = Array.isArray(rhr?.icon) ? rhr.icon[0] : 50;
 
-        const uvData = rhr.uvindex?.data?.[0];
-        const uvVal = uvData ? `${uvData.value} (${uvData.desc})` : '中等';
+        const emojiMap = {
+          50: '☀️', 51: '🌤️', 52: '⛅', 53: '🌦️', 54: '🌦️',
+          60: '☁️', 61: '☁️', 62: '🌧️', 63: '🌧️', 64: '⛈️', 65: '⛈️',
+          70: '🌙', 71: '🌙', 72: '🌙', 73: '🌙', 74: '🌙', 75: '🌙',
+          80: '💨', 81: '🏜️', 82: '💧', 83: '🌫️', 84: '🌫️', 85: '🌫️',
+          90: '🥵', 91: '🥵', 92: '🥶', 93: '🥶'
+        };
 
-        const warnings = rhr.warningMessage || [];
-        const warnText = warnings.length > 0 ? warnings[0].slice(0, 10) : '無生效警告';
+        const tempEl = document.getElementById('weatherTemp');
+        const descEl = document.getElementById('weatherDesc');
+        const updEl = document.getElementById('weatherUpdateTime');
+        const iconEl = document.getElementById('weatherIconBox');
+        const humEl = document.getElementById('weatherHumidity');
+        const uvEl = document.getElementById('weatherUV');
+        const tipShortEl = document.getElementById('weatherTipShort');
+        const adviceEl = document.getElementById('weatherAdviceText');
 
-        const todayForecast = fnd.weatherForecast?.[0];
-        const condText = todayForecast?.forecastWeather?.split('。')[0] || '部分時間有陽光';
+        if (tempEl) tempEl.textContent = shatinTemp !== null ? `${shatinTemp}°` : '24°';
+        if (humEl) humEl.textContent = `${humidity}%`;
+        if (uvEl) uvEl.textContent = `${uvVal}`;
+        if (iconEl) iconEl.textContent = emojiMap[iconCode] || '🌤️';
 
-        document.getElementById('weatherTemp').textContent = `${tempVal}°`;
-        document.getElementById('weatherCondition').textContent = condText;
-        document.getElementById('weatherHumidity').textContent = `${humVal}%`;
-        document.getElementById('weatherUV').textContent = uvVal;
-        document.getElementById('weatherWarningBadge').textContent = warnText;
-        document.getElementById('weatherUpdateTime').textContent = `天文台更新：${new Date().toLocaleTimeString('zh-HK', { hour: '2-digit', minute: '2-digit' })}`;
+        const todayForecast = fnd?.weatherForecast?.[0];
+        if (descEl) descEl.textContent = todayForecast ? todayForecast.forecastWeather.split('。')[0] : '天色良好';
+        if (updEl && rhr?.updateTime) {
+          const t = new Date(rhr.updateTime);
+          updEl.textContent = `香港天文台更新：${String(t.getHours()).padStart(2, '0')}:${String(t.getMinutes()).padStart(2, '0')}`;
+        }
 
-        let advice = '';
-        if (tempVal <= 17) {
-          advice = `沙田目前 ${tempVal}°C 偏涼，早晚出門建議加穿外套或風衣 🧥。`;
-        } else if (tempVal >= 28) {
-          advice = `今日天氣炎熱（${tempVal}°C），外出乘車請穿著透氣衣物並多補充水分 💧。`;
+        // 穿衣與帶傘貼士
+        const isRainy = [53, 54, 62, 63, 64, 65].includes(iconCode);
+        const tempNum = Number(shatinTemp) || 24;
+        if (isRainy) {
+          if (tipShortEl) tipShortEl.textContent = '記得帶傘 ☂️';
+          if (adviceEl) adviceEl.textContent = '今日有驟雨，家人出門去愉翠苑搭車或行去第一城站記得帶備雨傘，路面較滑請小心慢行。';
+        } else if (tempNum <= 18) {
+          if (tipShortEl) tipShortEl.textContent = '加件外套 🧥';
+          if (adviceEl) adviceEl.textContent = `沙田現時氣溫約 ${tempNum}°C，早晚清涼，長輩及小朋友出門記得多穿一件防風外套。`;
+        } else if (tempNum >= 30) {
+          if (tipShortEl) tipShortEl.textContent = '注意防曬 🧢';
+          if (adviceEl) adviceEl.textContent = `今日天氣炎熱（${tempNum}°C），戶外活動請多補充水分並做好防曬。`;
         } else {
-          advice = `今日沙田氣溫舒適（${tempVal}°C），適合外出活動；若晚間回家可備薄外套。`;
+          if (tipShortEl) tipShortEl.textContent = '舒適宜人 😊';
+          if (adviceEl) adviceEl.textContent = `沙田今日氣溫舒適（約 ${tempNum}°C），適合家人外出散步或乘車出行。`;
         }
-        if (condText.includes('雨') || humVal >= 85) {
-          advice += ' 天色較潮濕或有驟雨，出門記得帶備摺疊雨傘 ☂️！';
-        }
-        document.getElementById('weatherAdviceText').textContent = advice;
 
-        const listEl = document.getElementById('forecastList');
-        const fiveDays = (fnd.weatherForecast || []).slice(0, 5);
-        if (listEl && fiveDays.length > 0) {
-          listEl.innerHTML = fiveDays.map(d => {
-            const dayName = d.week.replace('星期', '週');
-            const wText = d.forecastWeather || '';
-            const emoji = wText.includes('雷') ? '⛈️' : wText.includes('雨') ? '🌧️' : wText.includes('陽光') ? '⛅' : '☁️';
+        // 天氣警告橫幅
+        const warnBanner = document.getElementById('weatherWarningBanner');
+        const warnText = document.getElementById('weatherWarningText');
+        const activeWarns = warn ? Object.values(warn) : [];
+        if (warnBanner && warnText) {
+          if (activeWarns.length > 0) {
+            warnBanner.classList.remove('hidden');
+            warnText.textContent = activeWarns.map(w => w.name).join('、') + ' 生效中';
+          } else {
+            warnBanner.classList.add('hidden');
+          }
+        }
+
+        // 未來五日預報
+        const listEl = document.getElementById('weatherForecastList');
+        if (listEl && fnd && Array.isArray(fnd.weatherForecast)) {
+          listEl.innerHTML = fnd.weatherForecast.slice(0, 5).map(day => {
+            const dStr = `${day.forecastDate.slice(4, 6)}/${day.forecastDate.slice(6, 8)}`;
+            const icon = emojiMap[day.ForecastIcon] || '⛅';
             return `
-              <div class="bg-[#FBF8F1] border border-[#2C2A29] rounded-xl py-2 px-1">
-                <p class="text-[11px] font-black text-[#2C2A29]">${dayName}</p>
-                <p class="text-xl my-1">${emoji}</p>
-                <p class="text-[11px] font-black text-[#3B6998]">${d.forecastMintemp.value}°-${d.forecastMaxtemp.value}°</p>
+              <div class="flex items-center justify-between bg-[#FBF8F1] rounded-xl px-3 py-2 border border-[#2C2A29]/20 text-xs">
+                <div class="flex items-center gap-2">
+                  <span class="font-black text-[#2C2A29] w-11">${dStr}</span>
+                  <span class="text-[#6B665F] font-bold w-12">${escapeHtml(day.week)}</span>
+                  <span class="text-base">${icon}</span>
+                </div>
+                <div class="font-black text-[#3B6998]">
+                  ${day.forecastMintemp.value}° - ${day.forecastMaxtemp.value}°C
+                </div>
               </div>
             `;
           }).join('');
         }
 
-        if (manual) showToast('🌤️ 沙田區最新天氣已更新');
+        if (manual) showToast('沙田天氣已更新');
       } catch (e) {
-        document.getElementById('weatherTemp').textContent = '23°';
-        document.getElementById('weatherCondition').textContent = '大致天晴 · 吹和緩東風';
-        document.getElementById('weatherHumidity').textContent = '68%';
-        document.getElementById('weatherUV').textContent = '中等';
-        document.getElementById('weatherAdviceText').textContent = '天氣清涼乾爽，出門乘搭巴士或港鐵十分舒適 😊。';
+        console.warn('天氣載入失敗:', e);
       }
     };
 
-    // ==================== 9. 頁面啟動初始化 ====================
+    // ==================== 8. 頁面啟動初始化 ====================
     window.addEventListener('DOMContentLoaded', () => {
       updateHeaderDate();
       setInterval(updateHeaderDate, 30000);
@@ -2486,18 +2078,11 @@
       // 第三頁：預設示範第一城 -> 金鐘車程
       selectQuickMtrStation('金鐘');
 
-      // 第四頁：預設示範愉翠苑 -> 尖沙咀自駕時間
+      // 第四頁：預設示範愉翠苑 -> 尖沙咀自駕與的士車資
       updateTrafficBadge();
       selectQuickDriveDest('尖沙咀');
 
-      // 第五頁：To-Do List 待辦事項
-      renderTodos();
-
-      // 第六頁：Shopping List 購物清單
-      populateShopCategories();
-      renderShoppingList();
-
-      // 第七頁：沙田天氣
+      // 第五頁：沙田天氣
       fetchWeatherData(false);
     });
   </script>
