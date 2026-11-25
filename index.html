@@ -345,18 +345,18 @@
           </div>
         </div>
 
-        <!-- 港鐵計算結果顯示區 -->
+        <!-- 港鐵車程結果卡片 -->
         <div id="mtrResultContainer" class="space-y-3">
           <!-- JS 動態生成計算結果 -->
         </div>
       </section>
 
-      <!-- ==================== 第四頁：愉翠苑出發自駕時間計算 ==================== -->
+      <!-- ==================== 第四頁：自駕時間與的士收費估算 ==================== -->
       <section id="tab-drive" class="hidden space-y-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
             <span class="w-6 h-6 rounded-full bg-[#6A997E] text-white text-xs font-bold flex items-center justify-center border border-[#2C2A29]">4</span>
-            <h2 class="text-lg font-black hl-green">愉翠苑自駕時間估算</h2>
+            <h2 class="text-lg font-black hl-green">自駕時間與的士估算</h2>
           </div>
           <span id="driveTrafficStatusBadge" class="sketch-pill bg-white px-2.5 py-0.5 text-[11px] font-black text-[#6A997E]">
             🟢 交通暢順
@@ -365,11 +365,18 @@
 
         <!-- 自駕起訖點輸入卡片 -->
         <div class="sketch-card washi-tape p-4 space-y-3">
-          <div class="flex items-center gap-2.5 bg-[#FFFDF7] border-2 border-[#2C2A29] rounded-xl px-3 py-2">
-            <span class="text-base">🏠</span>
-            <div class="flex-1">
-              <p class="text-[10px] font-bold text-[#6B665F]">固定出發點</p>
-              <p class="text-sm font-black text-[#2C2A29]">沙田愉翠苑（牛皮沙街 / 插桅杆街）</p>
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-black text-[#2C2A29] flex items-center gap-1.5">
+                <span>🟢 出發地點（預設沙田愉翠苑，可更改）：</span>
+              </label>
+              <button onclick="resetDriveOriginToYuChui()" class="text-[11px] font-bold text-[#3B6998] underline">重設愉翠苑</button>
+            </div>
+            <div class="flex gap-1.5">
+              <input id="driveOriginInput" type="text" value="沙田愉翠苑" placeholder="預設：沙田愉翠苑（可輸入其他出發地）" onkeydown="if(event.key==='Enter') calculateDriveTrip()" class="sketch-input flex-1 px-3 py-2 text-sm font-bold" />
+              <button onclick="swapDriveLocations()" class="sketch-btn bg-[#FBF8F1] px-2.5 py-2 text-xs font-black shrink-0" title="對調出發地與目的地">
+                ⇅ 對調
+              </button>
             </div>
           </div>
 
@@ -796,21 +803,30 @@
       },
       {
         id: '73A-I', route: '73A', operator: 'KMB', dir: 'inbound',
-        dest: '粉嶺（華明）（經大埔）',
-        stopName: '愉翠苑巴士總站',
-        stopKeywords: ['愉翠苑'],
+        dest: '華明（經大埔 / 粉嶺）',
+        stopName: '插桅杆街（愉翠苑）',
+        stopKeywords: ['愉翠苑', '插桅杆街', '第一城'],
         kmbDir: 'I',
         fare: '$11.4',
-        note: '總站開出 · 往中文大學、大埔墟'
+        note: '往大埔廣福、太和、粉嶺華明'
       },
       {
-        id: '89X-I', route: '89X', operator: 'KMB', dir: 'inbound',
-        dest: '沙田站（經第一城）',
-        stopName: '愉翠苑 / 插桅杆街',
+        id: '682B-O', route: '682B', operator: 'CTB', dir: 'outbound',
+        dest: '柴灣（東）（平日繁忙時間）',
+        stopName: '插桅杆街（愉翠苑）',
         stopKeywords: ['愉翠苑', '插桅杆街'],
-        kmbDir: 'I',
-        fare: '$5.0',
-        note: '短途分段往沙田火車站總站'
+        kmbDir: 'O',
+        fare: '$22.7',
+        note: '經東隧特快往北角、太古、西灣河、柴灣'
+      },
+      {
+        id: '982X-O', route: '982X', operator: 'KMB/CTB', dir: 'outbound',
+        dest: '灣仔（菲林明道）（平日早繁）',
+        stopName: '愉翠苑總站 / 插桅杆街',
+        stopKeywords: ['愉翠苑', '插桅杆街'],
+        kmbDir: 'O',
+        fare: '$20.8',
+        note: '經青沙公路及西隧特快往中環、金鐘、灣仔'
       }
     ];
 
@@ -1948,22 +1964,22 @@
       container.innerHTML = summaryCompareHtml + cardsHtml;
     };
 
-    // ==================== 5. 第三頁：愉翠苑出發自駕時間計算 ====================
+    // ==================== 5. 第四頁：自駕時間與的士收費計算 ====================
     const DRIVE_PRESETS = [
-      { keywords: ['中環', '金鐘', '上環', '中區'], name: '中環 / 金鐘商業區', baseMin: 24, km: 16.5, route: '大老山隧道 ➔ 東區海底隧道 / 紅磡海底隧道 ➔ 告士打道', toll: '$20 - $40 (視乎時段及隧道)', taxiToll: 45 },
-      { keywords: ['銅鑼灣', '灣仔', '天后', '炮台山'], name: '銅鑼灣 / 灣仔', baseMin: 22, km: 15.2, route: '大老山隧道 ➔ 觀塘繞道 ➔ 東區海底隧道 ➔ 東區走廊', toll: '$20 - $40 (大老山+東隧)', taxiToll: 45 },
-      { keywords: ['太古', '鰂魚涌', '北角', '柴灣', '筲箕灣'], name: '港島東（太古 / 北角 / 柴灣）', baseMin: 23, km: 16.8, route: '大老山隧道 ➔ 觀塘繞道 ➔ 東區海底隧道', toll: '$20 - $40 (大老山+東隧)', taxiToll: 45 },
-      { keywords: ['尖沙咀', '佐敦', '紅磡', '西九龍', '高鐵'], name: '尖沙咀 / 西九龍', baseMin: 20, km: 13.8, route: '獅子山隧道 ➔ 窩打老道 ➔ 公主道 / 彌敦道', toll: '$8 (獅子山隧道)', taxiToll: 8 },
-      { keywords: ['九龍塘', '旺角', '太子', '油麻地', '深水埗'], name: '九龍塘 / 旺角區', baseMin: 16, km: 10.5, route: '獅子山隧道 ➔ 窩打老道', toll: '$8 (獅子山隧道)', taxiToll: 8 },
-      { keywords: ['觀塘', '九龍灣', '牛頭角', '藍田', '啟德'], name: '觀塘 / 九龍灣商貿區', baseMin: 15, km: 11.2, route: '大老山隧道 ➔ 觀塘繞道', toll: '$20 (大老山隧道)', taxiToll: 20 },
-      { keywords: ['將軍澳', '坑口', '寶琳', '康城', '調景嶺'], name: '將軍澳區', baseMin: 22, km: 16.0, route: '大老山隧道 ➔ 觀塘繞道 ➔ 將軍澳隧道 / 將藍隧道', toll: '$20 (將藍隧道免費)', taxiToll: 20 },
-      { keywords: ['機場', '赤鱲角', '博覽館', '東涌', '迪士尼'], name: '香港國際機場 / 東涌', baseMin: 31, km: 34.5, route: '青沙公路（尖山隧道）➔ 青葵公路 ➔ 青嶼幹線 ➔ 北大嶼山公路', toll: '$8 (尖山隧道，青馬大橋免費)', taxiToll: 8 },
-      { keywords: ['荃灣', '葵芳', '葵涌', '青衣', '深井'], name: '荃灣 / 葵青區', baseMin: 17, km: 13.6, route: '沙田鄉事會路 ➔ 城門隧道 ➔ 象鼻山路', toll: '$5 (城門隧道)', taxiToll: 5 },
-      { keywords: ['屯門', '元朗', '天水圍', '錦上路'], name: '屯門 / 元朗區', baseMin: 33, km: 32.0, route: '城門隧道 ➔ 屯門公路 / 大欖隧道', toll: '$5 - $63 (視乎是否經大欖隧道)', taxiToll: 5 },
-      { keywords: ['大埔', '科學園', '白石角', '太和'], name: '大埔 / 科學園', baseMin: 13, km: 11.8, route: '大涌橋路 ➔ 吐露港公路', toll: '$0 (全程免費公路)', taxiToll: 0 },
-      { keywords: ['粉嶺', '上水', '羅湖', '落馬洲', '香園圍'], name: '北區（粉嶺 / 上水 / 口岸）', baseMin: 24, km: 24.5, route: '大涌橋路 ➔ 吐露港公路 ➔ 粉嶺公路', toll: '$0 (全程免費公路)', taxiToll: 0 },
-      { keywords: ['西貢', '清水灣', '科技大學', '馬鞍山'], name: '西貢 / 科技大學', baseMin: 22, km: 15.8, route: '亞公角街 ➔ 西沙路 / 清水灣道', toll: '$0 (全程免費公路)', taxiToll: 0 },
-      { keywords: ['沙田市中心', '新城市', '大圍', '火炭', '威爾斯'], name: '沙田區內（市中心 / 大圍 / 火炭）', baseMin: 8, km: 4.2, route: '插桅杆街 ➔ 大涌橋路 / 沙田路', toll: '$0 (區內道路)', taxiToll: 0 }
+      { keywords: ['愉翠', '第一城', '沙田', '大圍', '火炭', '威爾斯'], name: '沙田愉翠苑 / 沙田區', baseMin: 8, km: 4.2, route: '大涌橋路 / 沙田路', toll: '$0 (區內道路)', taxiToll: 0, coords: [22.3822, 114.2054] },
+      { keywords: ['中環', '金鐘', '上環', '中區'], name: '中環 / 金鐘商業區', baseMin: 24, km: 16.5, route: '大老山隧道 / 東區海底隧道 / 紅磡海底隧道 ➔ 告士打道', toll: '$20 - $40 (視乎時段及隧道)', taxiToll: 45, coords: [22.2819, 114.1583] },
+      { keywords: ['銅鑼灣', '灣仔', '天后', '炮台山'], name: '銅鑼灣 / 灣仔', baseMin: 22, km: 15.2, route: '大老山隧道 / 觀塘繞道 / 東區海底隧道 ➔ 東區走廊', toll: '$20 - $40 (過海隧道)', taxiToll: 45, coords: [22.2800, 114.1850] },
+      { keywords: ['太古', '鰂魚涌', '北角', '柴灣', '筲箕灣'], name: '港島東（太古 / 北角 / 柴灣）', baseMin: 23, km: 16.8, route: '東區海底隧道 ➔ 東區走廊', toll: '$20 - $40 (過海隧道)', taxiToll: 45, coords: [22.2860, 114.2160] },
+      { keywords: ['尖沙咀', '佐敦', '紅磡', '西九龍', '高鐵'], name: '尖沙咀 / 西九龍', baseMin: 20, km: 13.8, route: '獅子山隧道 / 公主道 / 彌敦道', toll: '$8 (獅子山隧道)', taxiToll: 8, coords: [22.2988, 114.1722] },
+      { keywords: ['九龍塘', '旺角', '太子', '油麻地', '深水埗'], name: '九龍塘 / 旺角區', baseMin: 16, km: 10.5, route: '獅子山隧道 / 窩打老道', toll: '$8 (獅子山隧道)', taxiToll: 8, coords: [22.3193, 114.1694] },
+      { keywords: ['觀塘', '九龍灣', '牛頭角', '藍田', '啟德'], name: '觀塘 / 九龍灣商貿區', baseMin: 15, km: 11.2, route: '大老山隧道 / 觀塘繞道', toll: '$20 (大老山隧道)', taxiToll: 20, coords: [22.3121, 114.2259] },
+      { keywords: ['將軍澳', '坑口', '寶琳', '康城', '調景嶺'], name: '將軍澳區', baseMin: 22, km: 16.0, route: '觀塘繞道 ➔ 將軍澳隧道 / 將藍隧道', toll: '$0 - $20 (將藍隧道免費)', taxiToll: 20, coords: [22.3074, 114.2598] },
+      { keywords: ['機場', '赤鱲角', '博覽館', '東涌', '迪士尼'], name: '香港國際機場 / 東涌', baseMin: 31, km: 34.5, route: '青沙公路（尖山隧道）➔ 青葵公路 ➔ 青嶼幹線 ➔ 北大嶼山公路', toll: '$8 (尖山隧道，青馬大橋免費)', taxiToll: 8, coords: [22.3080, 113.9185] },
+      { keywords: ['荃灣', '葵芳', '葵涌', '青衣', '深井'], name: '荃灣 / 葵青區', baseMin: 17, km: 13.6, route: '城門隧道 / 象鼻山路 / 葵涌道', toll: '$5 (城門隧道)', taxiToll: 5, coords: [22.3707, 114.1113] },
+      { keywords: ['屯門', '元朗', '天水圍', '錦上路'], name: '屯門 / 元朗區', baseMin: 33, km: 32.0, route: '屯門公路 / 大欖隧道', toll: '$5 - $63 (視乎是否經大欖隧道)', taxiToll: 5, coords: [22.3916, 113.9771] },
+      { keywords: ['大埔', '科學園', '白石角', '太和'], name: '大埔 / 科學園', baseMin: 13, km: 11.8, route: '吐露港公路', toll: '$0 (全程免費公路)', taxiToll: 0, coords: [22.4446, 114.1691] },
+      { keywords: ['粉嶺', '上水', '羅湖', '落馬洲', '香園圍'], name: '北區（粉嶺 / 上水 / 口岸）', baseMin: 24, km: 24.5, route: '吐露港公路 ➔ 粉嶺公路', toll: '$0 (全程免費公路)', taxiToll: 0, coords: [22.5015, 114.1288] },
+      { keywords: ['西貢', '清水灣', '科技大學', '馬鞍山'], name: '西貢 / 科技大學', baseMin: 22, km: 15.8, route: '西沙路 / 清水灣道', toll: '$0 (全程免費公路)', taxiToll: 0, coords: [22.3814, 114.2705] }
     ];
 
     // 香港市區的士（紅的）車資估算函式
@@ -2016,37 +2032,107 @@
       calculateDriveTrip();
     };
 
+    window.resetDriveOriginToYuChui = () => {
+      const originInput = document.getElementById('driveOriginInput');
+      if (originInput) originInput.value = '沙田愉翠苑';
+      if (document.getElementById('driveDestInput')?.value.trim()) calculateDriveTrip();
+      showToast('已重設出發地點為「沙田愉翠苑」🚗');
+    };
+
+    window.swapDriveLocations = () => {
+      const originInput = document.getElementById('driveOriginInput');
+      const destInput = document.getElementById('driveDestInput');
+      if (!originInput || !destInput) return;
+      const tmp = originInput.value;
+      originInput.value = destInput.value || '沙田愉翠苑';
+      destInput.value = tmp;
+      if (destInput.value.trim()) calculateDriveTrip();
+    };
+
+    function calcGeoRoadEstimate(coordA, coordB) {
+      const R = 6371;
+      const dLat = (coordB[0] - coordA[0]) * Math.PI / 180;
+      const dLon = (coordB[1] - coordA[1]) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) ** 2 +
+        Math.cos(coordA[0] * Math.PI / 180) * Math.cos(coordB[0] * Math.PI / 180) *
+        Math.sin(dLon / 2) ** 2;
+      const straightKm = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const roadKm = Math.max(3.5, Math.round(straightKm * 1.38 * 10) / 10);
+      const baseMin = Math.max(8, Math.round(roadKm * 1.35 + 5));
+      return { km: roadKm, baseMin };
+    }
+
     window.calculateDriveTrip = () => {
+      const originInput = document.getElementById('driveOriginInput');
       const input = document.getElementById('driveDestInput');
       const container = document.getElementById('driveResultContainer');
-      if (!input || !container) return;
+      if (!originInput || !input || !container) return;
 
+      const rawOrigin = originInput.value.trim() || '沙田愉翠苑';
       const raw = input.value.trim();
       if (!raw) {
         showToast('請輸入自駕目的地 🚗');
         return;
       }
 
-      const traffic = getCurrentTrafficMultiplier();
-      const matched = DRIVE_PRESETS.find(p => p.keywords.some(kw => raw.includes(kw)));
+      if (rawOrigin === raw) {
+        container.innerHTML = `
+          <div class="sketch-card p-4 text-center text-xs font-bold text-[#2C2A29]">
+            出發地點與目的地均為「${raw}」啦！😊
+          </div>
+        `;
+        return;
+      }
 
-      const destTitle = matched ? matched.name : raw;
-      const baseMin = matched ? matched.baseMin : 24;
-      const km = matched ? matched.km : 17.5;
-      const routeText = matched ? matched.route : '愉翠苑 ➔ 大老山公路 / 獅子山隧道公路（視乎目的地方向）';
-      const tollText = matched ? matched.toll : '$8 - $20（視乎選用隧道）';
-      const taxiToll = matched ? matched.taxiToll : 15;
+      const traffic = getCurrentTrafficMultiplier();
+      const matchedOrigin = DRIVE_PRESETS.find(p => p.keywords.some(kw => rawOrigin.includes(kw)));
+      const matchedDest = DRIVE_PRESETS.find(p => p.keywords.some(kw => raw.includes(kw)));
+      const isFromYuChui = rawOrigin.includes('愉翠');
+
+      const originTitle = isFromYuChui ? '沙田愉翠苑' : (matchedOrigin ? matchedOrigin.name : rawOrigin);
+      const destTitle = matchedDest ? matchedDest.name : raw;
+
+      let baseMin, km, routeText, tollText, taxiToll;
+
+      if (isFromYuChui && matchedDest) {
+        baseMin = matchedDest.baseMin;
+        km = matchedDest.km;
+        routeText = `愉翠苑 ➔ ${matchedDest.route}`;
+        tollText = matchedDest.toll;
+        taxiToll = matchedDest.taxiToll;
+      } else if (raw.includes('愉翠') && matchedOrigin) {
+        baseMin = matchedOrigin.baseMin;
+        km = matchedOrigin.km;
+        routeText = `${matchedOrigin.route} ➔ 沙田愉翠苑`;
+        tollText = matchedOrigin.toll;
+        taxiToll = matchedOrigin.taxiToll;
+      } else if (matchedOrigin && matchedDest) {
+        const geo = calcGeoRoadEstimate(matchedOrigin.coords, matchedDest.coords);
+        km = geo.km;
+        baseMin = geo.baseMin;
+        const crossesHarbour = (matchedOrigin.taxiToll >= 45) !== (matchedDest.taxiToll >= 45);
+        routeText = `${originTitle} ➔ 主要幹道 / 隧道連接線 ➔ ${destTitle}`;
+        tollText = crossesHarbour ? '$20 - $40 (過海隧道)' : '$0 - $20 (視乎選用隧道)';
+        taxiToll = crossesHarbour ? 40 : Math.max(matchedOrigin.taxiToll, matchedDest.taxiToll);
+      } else {
+        baseMin = 24;
+        km = 17.5;
+        routeText = `${originTitle} ➔ 主要幹道 / 隧道連接線 ➔ ${destTitle}`;
+        tollText = '$8 - $20（視乎選用隧道）';
+        taxiToll = 15;
+      }
+
       const taxiEst = estimateHkUrbanTaxiFare(km, taxiToll, traffic.mult);
 
       const estMinLow = Math.max(5, Math.round(baseMin * traffic.mult));
       const estMinHigh = estMinLow + (traffic.mult > 1.2 ? 10 : 5);
-      const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent('沙田愉翠苑')}&destination=${encodeURIComponent(raw + ' 香港')}&travelmode=driving`;
+      const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(rawOrigin + ' 香港')}&destination=${encodeURIComponent(raw + ' 香港')}&travelmode=driving`;
 
       container.innerHTML = `
         <div class="sketch-card p-4 space-y-3 bg-[#FFFDF7]">
           <div class="flex items-start justify-between border-b-2 border-dashed border-[#2C2A29]/25 pb-3">
             <div>
-              <span class="text-[11px] font-bold text-[#6B665F]">沙田愉翠苑 ➔ ${destTitle}</span>
+              <span class="text-[11px] font-bold text-[#6B665F]">${originTitle} ➔ ${destTitle}</span>
               <div class="flex items-baseline gap-1.5 mt-0.5">
                 <span class="text-3xl font-black text-[#6A997E]">約 ${estMinLow} - ${estMinHigh}</span>
                 <span class="text-sm font-black text-[#2C2A29]">分鐘</span>
