@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-HK">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>家庭生活手帳</title>
+  <title>沙田愉翠苑 · 生活手帳</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,85 +11,98 @@
   <style>
     :root {
       --paper-bg: #FBF8F1;
-      --card-bg: #FFFFFF;
-      --ink: #2C2A29;
+      --paper-card: #FFFFFF;
+      --ink-dark: #2C2A29;
       --ink-muted: #6B665F;
       --sketch-blue: #3B6998;
       --sketch-green: #6A997E;
       --sketch-yellow: #F3C65F;
       --sketch-coral: #E06D53;
-      --sketch-orange: #E87A24;
-    }
-
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      font-family: 'Patrick Hand', 'Noto Sans TC', sans-serif;
-      background-color: var(--paper-bg);
-      color: var(--ink);
-      background-image:
-        radial-gradient(#dcd6c8 0.85px, transparent 0.85px),
-        radial-gradient(#e6e0d2 0.85px, var(--paper-bg) 0.85px);
-      background-size: 26px 26px;
-      background-position: 0 0, 13px 13px;
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
+      font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #EDE7DB;
+      color: var(--ink-dark);
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
     }
 
-    /* 手繪鉛筆描邊與卡片質感 */
+    .font-hand {
+      font-family: 'Patrick Hand', 'Noto Sans TC', cursive;
+    }
+
+    /* 手帳紙張點陣紋理 */
+    .notebook-canvas {
+      background-color: var(--paper-bg);
+      background-image: radial-gradient(#D5CEBF 1px, transparent 1px);
+      background-size: 18px 18px;
+      min-height: 100dvh;
+    }
+
+    /* 手繪炭灰描邊卡片 */
     .sketch-card {
-      background: var(--card-bg);
-      border: 2.2px solid var(--ink);
+      background-color: var(--paper-card);
+      border: 2px solid var(--ink-dark);
       border-radius: 18px 22px 19px 21px / 21px 18px 22px 19px;
-      box-shadow: 3.5px 4px 0px var(--ink);
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      box-shadow: 3px 3px 0px var(--ink-dark);
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
     }
 
     .sketch-card-flat {
-      background: var(--card-bg);
-      border: 2px solid var(--ink);
-      border-radius: 16px 19px 17px 18px / 18px 16px 19px 17px;
+      background-color: var(--paper-card);
+      border: 2px solid var(--ink-dark);
+      border-radius: 16px;
+      box-shadow: 2px 2px 0px var(--ink-dark);
     }
 
     .sketch-btn {
-      border: 2px solid var(--ink);
-      border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-      box-shadow: 2.5px 3px 0px var(--ink);
-      transition: all 0.12s ease;
-      cursor: pointer;
+      border: 2px solid var(--ink-dark);
+      border-radius: 14px 16px 15px 14px;
+      box-shadow: 2px 2px 0px var(--ink-dark);
+      transition: all 0.1s ease;
     }
-
     .sketch-btn:active {
       transform: translate(2px, 2px);
-      box-shadow: 0.5px 1px 0px var(--ink);
+      box-shadow: 0px 0px 0px var(--ink-dark);
     }
 
     .sketch-pill {
-      border: 1.8px solid var(--ink);
+      border: 1.8px solid var(--ink-dark);
       border-radius: 999px;
+      box-shadow: 1.5px 1.5px 0px var(--ink-dark);
     }
 
     .sketch-input {
-      background: #FFFDF9;
-      border: 2px solid var(--ink);
-      border-radius: 14px 17px 15px 16px;
+      background-color: #FFFDF9;
+      border: 2px solid var(--ink-dark);
+      border-radius: 14px;
       outline: none;
+      transition: box-shadow 0.15s ease;
     }
     .sketch-input:focus {
-      box-shadow: 2.5px 3px 0px var(--sketch-blue);
+      box-shadow: 2px 2px 0px var(--sketch-blue);
     }
 
-    /* 螢光筆底線裝飾 */
-    .hl-blue { background: linear-gradient(transparent 58%, rgba(59, 105, 152, 0.25) 58%); }
-    .hl-green { background: linear-gradient(transparent 58%, rgba(106, 153, 126, 0.3) 58%); }
-    .hl-yellow { background: linear-gradient(transparent 58%, rgba(243, 198, 95, 0.55) 58%); }
-    .hl-coral { background: linear-gradient(transparent 58%, rgba(224, 109, 83, 0.28) 58%); }
+    /* 螢光筆底線效果 */
+    .hl-yellow {
+      background: linear-gradient(180deg, transparent 58%, rgba(243, 198, 95, 0.65) 58%);
+      padding: 0 4px;
+    }
+    .hl-blue {
+      background: linear-gradient(180deg, transparent 58%, rgba(59, 105, 152, 0.25) 58%);
+      padding: 0 4px;
+    }
+    .hl-green {
+      background: linear-gradient(180deg, transparent 58%, rgba(106, 153, 126, 0.35) 58%);
+      padding: 0 4px;
+    }
+    .hl-coral {
+      background: linear-gradient(180deg, transparent 58%, rgba(224, 109, 83, 0.28) 58%);
+      padding: 0 4px;
+    }
 
-    /* 手繪紙膠帶 */
+    /* 紙膠帶裝飾 */
     .washi-tape {
       position: relative;
     }
@@ -98,76 +111,58 @@
       position: absolute;
       top: -9px;
       left: 50%;
-      transform: translateX(-50%) rotate(-2deg);
+      transform: translateX(-50%) rotate(-1.5deg);
       width: 68px;
       height: 16px;
       background-color: rgba(243, 198, 95, 0.72);
       border-left: 1px dashed rgba(44, 42, 41, 0.35);
       border-right: 1px dashed rgba(44, 42, 41, 0.35);
-      z-index: 5;
+      z-index: 10;
     }
 
-    /* 購物清單手繪劃線動畫 */
-    .strike-item {
-      position: relative;
-      color: #8E887E;
-    }
-    .strike-item::after {
-      content: '';
-      position: absolute;
-      left: -2px;
-      top: 52%;
-      width: 102%;
-      height: 2.5px;
-      background: var(--sketch-coral);
-      transform: rotate(-0.8deg);
-      border-radius: 2px;
-    }
-
-    /* 隱藏捲軸但可滑動 */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    @keyframes floatSlow {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-4px); }
+    @keyframes spinSlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
-    .float-anim { animation: floatSlow 3.5s ease-in-out infinite; }
+    .spin-once {
+      animation: spinSlow 0.6s ease-in-out;
+    }
   </style>
 </head>
-<body class="min-h-screen flex justify-center">
+<body class="flex justify-center">
 
-  <!-- 手機主容器 -->
-  <div class="w-full max-w-md min-h-screen flex flex-col relative pb-24">
+  <!-- 手機版置中主容器 -->
+  <div class="notebook-canvas w-full max-w-md relative flex flex-col pb-24 border-x-0 sm:border-x-2 border-[#2C2A29] shadow-xl">
 
-    <!-- 頂部手繪標題欄 -->
-    <header class="sticky top-0 z-30 bg-[#FBF8F1]/95 backdrop-blur-sm px-4 pt-3 pb-2.5 border-b-2 border-[#2C2A29] border-dashed">
+    <!-- 頂部手繪標題列 -->
+    <header class="sticky top-0 z-30 bg-[#FBF8F1]/95 backdrop-blur-sm border-b-2 border-[#2C2A29] px-4 py-3">
       <div class="flex items-center justify-between gap-2">
-        <div class="flex items-center gap-2 min-w-0">
-          <!-- 手繪笑臉徽章 -->
-          <div class="w-9 h-9 rounded-full border-2 border-[#2C2A29] bg-[#F3C65F] flex items-center justify-center shadow-[2px_2px_0px_#2C2A29] shrink-0">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2C2A29" stroke-width="2.3" stroke-linecap="round">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <!-- 手繪微笑徽章 -->
+          <div class="w-9 h-9 rounded-full bg-[#F3C65F] border-2 border-[#2C2A29] flex items-center justify-center shrink-0 shadow-[1.5px_1.5px_0px_#2C2A29]">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2C2A29" stroke-width="2.2" stroke-linecap="round">
               <circle cx="9" cy="10" r="1" fill="#2C2A29"/>
               <circle cx="15" cy="10" r="1" fill="#2C2A29"/>
-              <path d="M8.5 14.5C9.5 16.5 14.5 16.5 15.5 14.5"/>
+              <path d="M8.5 14.5c1.2 1.8 5.8 1.8 7 0"/>
             </svg>
           </div>
           <div class="truncate">
             <div class="flex items-center gap-1.5">
-              <h1 class="text-lg font-black tracking-tight leading-none">Me</h1>
+              <h1 class="text-lg font-black tracking-tight leading-none">沙田愉翠苑</h1>
               <span class="text-[11px] font-bold px-1.5 py-0.5 bg-[#E06D53] text-white rounded-md border border-[#2C2A29]">生活手帳</span>
             </div>
             <p id="headerSubtitleText" class="text-[11px] text-[#6B665F] mt-0.5 truncate">
-              天氣 · 巴士報站 · 有線新聞 · 購物 · 待辦
+              巴士報站 · 港鐵 · 自駕 · 待辦 · 購物 · 天氣
             </p>
           </div>
         </div>
 
-        <!-- 右上角今日日期徽章 -->
-        <div class="shrink-0">
-          <span id="headerTodayBadge" class="sketch-pill bg-white px-2.5 py-1 text-xs font-black text-[#3B6998]">
-            11月25日
-          </span>
+        <!-- 當前日期與時間膠囊 -->
+        <div class="sketch-pill bg-white px-2.5 py-1 text-[11px] font-black text-[#2C2A29] shrink-0">
+          <span id="headerClock">--:--</span>
         </div>
       </div>
     </header>
@@ -175,95 +170,11 @@
     <!-- 主內容區 -->
     <main class="flex-1 px-4 pt-4 space-y-4">
 
-      <!-- ==================== 第一頁：今日天氣資訊 ==================== -->
-      <section id="tab-weather" class="space-y-4">
+      <!-- ==================== 第一頁：沙田愉翠苑 巴士 & 小巴報站器 ==================== -->
+      <section id="tab-transport" class="space-y-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="w-6 h-6 rounded-full bg-[#3B6998] text-white text-xs font-bold flex items-center justify-center border border-[#2C2A29]">1</span>
-            <h2 class="text-lg font-black hl-blue">沙田區今日天氣</h2>
-          </div>
-          <button onclick="fetchWeatherData(true)" class="sketch-btn bg-[#F3C65F] px-3 py-1 text-xs font-bold flex items-center gap-1">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#2C2A29" stroke-width="2.5" stroke-linecap="round">
-              <path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/>
-            </svg>
-            更新天氣
-          </button>
-        </div>
-
-        <!-- 手繪風景天氣主卡片 -->
-        <div class="sketch-card p-4 washi-tape relative overflow-hidden">
-          <div class="flex items-center justify-between mb-2">
-            <div>
-              <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-[#6A997E]/20 text-[#2C2A29] border border-[#2C2A29]">📍 沙田 · 愉翠苑</span>
-              <p id="weatherUpdateTime" class="text-[11px] text-[#6B665F] mt-1">香港天文台實時資料</p>
-            </div>
-            <div id="weatherWarningBadge" class="hidden text-xs font-bold px-2.5 py-1 rounded-lg bg-[#E06D53] text-white border-2 border-[#2C2A29] shadow-[2px_2px_0px_#2C2A29]">
-              ⚠️ 天氣警告生效中
-            </div>
-          </div>
-
-          <!-- 參考附件圖的手繪山景太陽插畫框 -->
-          <div class="border-2 border-[#2C2A29] rounded-2xl bg-[#EEF5F0] p-3 my-2 relative overflow-hidden">
-            <svg viewBox="0 0 320 115" class="w-full h-28">
-              <!-- 手繪太陽 -->
-              <g class="float-anim">
-                <circle cx="258" cy="34" r="17" fill="#F3C65F" stroke="#2C2A29" stroke-width="2.2"/>
-                <line x1="258" y1="8" x2="258" y2="13" stroke="#2C2A29" stroke-width="2" stroke-linecap="round"/>
-                <line x1="258" y1="55" x2="258" y2="60" stroke="#2C2A29" stroke-width="2" stroke-linecap="round"/>
-                <line x1="232" y1="34" x2="237" y2="34" stroke="#2C2A29" stroke-width="2" stroke-linecap="round"/>
-                <line x1="279" y1="34" x2="284" y2="34" stroke="#2C2A29" stroke-width="2" stroke-linecap="round"/>
-              </g>
-              <!-- 手繪白雲 -->
-              <path d="M42 42 Q42 29 56 29 Q64 20 77 25 Q90 25 91 37 Q100 39 98 48 L40 48 Q34 45 42 42 Z" fill="#FFFFFF" stroke="#2C2A29" stroke-width="2"/>
-              <path d="M135 28 Q135 20 145 20 Q151 14 160 18 Q168 18 169 26 Q175 27 173 33 L134 33 Q130 31 135 28 Z" fill="#FFFFFF" stroke="#2C2A29" stroke-width="1.8"/>
-              <!-- 手繪沙田群山（馬鞍山/獅子山輪廓） -->
-              <polygon points="10,115 95,46 180,115" fill="#8FB399" stroke="#2C2A29" stroke-width="2.2" stroke-linejoin="round"/>
-              <polygon points="115,115 205,38 305,115" fill="#6A997E" stroke="#2C2A29" stroke-width="2.2" stroke-linejoin="round"/>
-              <polygon points="185,115 262,62 325,115" fill="#A5C4AE" stroke="#2C2A29" stroke-width="2" stroke-linejoin="round"/>
-            </svg>
-
-            <!-- 氣溫與濕度疊加數字 -->
-            <div class="flex items-end justify-between mt-1 pt-2 border-t border-dashed border-[#2C2A29]/40">
-              <div class="flex items-baseline gap-2">
-                <span id="shatinTemp" class="text-4xl font-black text-[#2C2A29]">--°C</span>
-                <span id="weatherDesc" class="text-sm font-bold text-[#3B6998]">讀取中...</span>
-              </div>
-              <div class="text-right text-xs font-bold space-y-0.5">
-                <div>💧 濕度 <span id="shatinHumidity" class="text-[#3B6998]">--%</span></div>
-                <div>🌡️ 體感 <span id="feelsLikeTemp">--°C</span></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 出門生活小貼士 -->
-          <div id="weatherAdviceBox" class="mt-3 p-3 rounded-xl bg-[#FBF8F1] border-2 border-[#2C2A29] text-sm flex items-start gap-2.5">
-            <span class="text-xl leading-none">🎒</span>
-            <div>
-              <p class="font-bold text-[#2C2A29]">家人出門貼士</p>
-              <p id="weatherAdviceText" class="text-xs text-[#6B665F] mt-0.5 leading-relaxed">正在為您整理今日沙田穿衣與帶傘建議...</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- 未來五日預報 -->
-        <div class="sketch-card p-4">
-          <div class="flex items-center justify-between mb-3">
-            <h3 class="font-black text-base flex items-center gap-1.5">
-              <span>📅</span> 未來五日天氣預報
-            </h3>
-            <span class="text-[11px] text-[#6B665F]">天文台九天預報</span>
-          </div>
-          <div id="forecastList" class="grid grid-cols-5 gap-1.5 text-center">
-            <!-- JS 動態生成 -->
-          </div>
-        </div>
-      </section>
-
-      <!-- ==================== 第二頁：沙田愉翠苑 巴士 & 小巴報站器 ==================== -->
-      <section id="tab-transport" class="hidden space-y-4">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="w-6 h-6 rounded-full bg-[#6A997E] text-white text-xs font-bold flex items-center justify-center border border-[#2C2A29]">2</span>
+            <span class="w-6 h-6 rounded-full bg-[#6A997E] text-white text-xs font-bold flex items-center justify-center border border-[#2C2A29]">1</span>
             <h2 class="text-lg font-black hl-green">愉翠苑實時報站器</h2>
           </div>
           <button onclick="refreshAllETA(true)" class="sketch-btn bg-[#3B6998] text-white px-3 py-1 text-xs font-bold flex items-center gap-1.5">
@@ -277,7 +188,7 @@
         <!-- 巴士 / 專線小巴 切換大按鈕 -->
         <div class="grid grid-cols-2 gap-2.5">
           <button id="btnModeBus" onclick="switchTransportMode('bus')" class="sketch-btn py-2.5 px-3 font-black text-sm bg-[#3B6998] text-white flex items-center justify-center gap-2">
-            <span>🚌</span> 巴士站 
+            <span>🚌</span> 巴士站 (含 A41)
           </button>
           <button id="btnModeMinibus" onclick="switchTransportMode('minibus')" class="sketch-btn py-2.5 px-3 font-black text-sm bg-white text-[#2C2A29] flex items-center justify-center gap-2">
             <span>🚐</span> 專線小巴站
@@ -310,100 +221,130 @@
         </div>
       </section>
 
-      <!-- ==================== 第三頁：有線新聞即時訊息 ==================== -->
-      <section id="tab-news" class="hidden space-y-4">
+      <!-- ==================== 第二頁：港鐵車程計算（第一城站出發） ==================== -->
+      <section id="tab-mtr" class="hidden space-y-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="w-6 h-6 rounded-full bg-[#F3C65F] text-[#2C2A29] text-xs font-bold flex items-center justify-center border border-[#2C2A29]">3</span>
-            <h2 class="text-lg font-black hl-yellow">有線新聞即時訊息</h2>
+            <span class="w-6 h-6 rounded-full bg-[#F3C65F] text-[#2C2A29] text-xs font-bold flex items-center justify-center border border-[#2C2A29]">2</span>
+            <h2 class="text-lg font-black hl-yellow">港鐵車程計算</h2>
           </div>
-          <button onclick="fetchCableNews(true)" class="sketch-btn bg-[#3B6998] text-white px-3 py-1 text-xs font-bold flex items-center gap-1.5">
-            <svg id="newsRefreshIcon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-              <path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/>
-            </svg>
-            <span>更新新聞</span>
-          </button>
+          <span class="sketch-pill bg-white px-2.5 py-0.5 text-[11px] font-black text-[#9C5C1E]">
+            🟫 屯馬綫 · 第一城站
+          </span>
         </div>
 
-        <!-- 有線新聞頻道篩選膠囊 -->
-        <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-          <button onclick="switchNewsChannel('local')" data-channel="local" class="news-chip sketch-pill px-3 py-1 text-xs font-bold bg-[#F3C65F] text-[#2C2A29] whitespace-nowrap">🇭🇰 港聞</button>
-          <button onclick="switchNewsChannel('international')" data-channel="international" class="news-chip sketch-pill px-3 py-1 text-xs font-bold bg-white text-[#2C2A29] whitespace-nowrap">🌏 兩岸國際</button>
-          <button onclick="switchNewsChannel('finance')" data-channel="finance" class="news-chip sketch-pill px-3 py-1 text-xs font-bold bg-white text-[#2C2A29] whitespace-nowrap">💹 財經</button>
-          <button onclick="switchNewsChannel('sports')" data-channel="sports" class="news-chip sketch-pill px-3 py-1 text-xs font-bold bg-white text-[#2C2A29] whitespace-nowrap">⚽ 體育</button>
-        </div>
+        <!-- 起點與目的地輸入卡片 -->
+        <div class="sketch-card washi-tape p-4 space-y-3">
+          <div class="flex items-center gap-2.5 bg-[#FFFDF7] border-2 border-[#2C2A29] rounded-xl px-3 py-2">
+            <span class="w-3.5 h-3.5 rounded-full bg-[#9C5C1E] border border-[#2C2A29] shrink-0"></span>
+            <div class="flex-1">
+              <p class="text-[10px] font-bold text-[#6B665F]">固定出發站（愉翠苑步行約 6 分鐘）</p>
+              <p class="text-sm font-black text-[#2C2A29]">第一城站 City One</p>
+            </div>
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-[#9C5C1E] text-white">屯馬綫</span>
+          </div>
 
-        <!-- 有線新聞來源標示橫幅 -->
-        <div class="sketch-card-flat bg-[#FFFDF7] px-3.5 py-2.5 text-xs flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="text-base">📺</span>
-            <div>
-              <p class="font-bold text-[#2C2A29]">有線新聞 i-CABLE News 即時報道</p>
-              <p id="newsUpdateTimeText" class="text-[11px] text-[#6B665F]">正在載入最新報道...</p>
+          <div class="space-y-1.5 relative">
+            <label class="text-xs font-black text-[#2C2A29] flex items-center justify-between">
+              <span>🎯 輸入目的地港鐵站：</span>
+              <span class="text-[11px] font-normal text-[#6B665F]">支援繁簡或模糊搜尋</span>
+            </label>
+            <div class="flex gap-2">
+              <input id="mtrDestInput" type="text" placeholder="例如：金鐘、尖沙咀、旺角、機場..." oninput="handleMtrInput(this.value)" onkeydown="if(event.key==='Enter') calculateMtrTrip()" class="sketch-input flex-1 px-3 py-2.5 text-sm font-bold" />
+              <button onclick="calculateMtrTrip()" class="sketch-btn bg-[#3B6998] text-white px-4 py-2 text-sm font-black shrink-0">
+                計算
+              </button>
+            </div>
+            <!-- 自動完成站名建議列表 -->
+            <div id="mtrSuggestions" class="hidden flex flex-wrap gap-1.5 pt-1"></div>
+          </div>
+
+          <!-- 常用熱門站點快捷膠囊 -->
+          <div>
+            <p class="text-[11px] font-bold text-[#6B665F] mb-1.5">🔥 常用熱門目的地：</p>
+            <div class="flex flex-wrap gap-1.5">
+              <button onclick="selectQuickMtrStation('金鐘')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">金鐘</button>
+              <button onclick="selectQuickMtrStation('尖沙咀')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">尖沙咀</button>
+              <button onclick="selectQuickMtrStation('旺角')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">旺角</button>
+              <button onclick="selectQuickMtrStation('銅鑼灣')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">銅鑼灣</button>
+              <button onclick="selectQuickMtrStation('中環')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">中環</button>
+              <button onclick="selectQuickMtrStation('九龍塘')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">九龍塘</button>
+              <button onclick="selectQuickMtrStation('紅磡')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">紅磡</button>
+              <button onclick="selectQuickMtrStation('觀塘')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">觀塘</button>
+              <button onclick="selectQuickMtrStation('荃灣')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">荃灣</button>
+              <button onclick="selectQuickMtrStation('羅湖')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">羅湖</button>
+              <button onclick="selectQuickMtrStation('機場')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">機場</button>
             </div>
           </div>
-          <span class="text-[11px] font-black px-2 py-0.5 rounded bg-[#3B6998] text-white border border-[#2C2A29]">i-CABLE</span>
         </div>
 
-        <!-- 新聞列表容器 -->
-        <div id="newsListContainer" class="space-y-3">
-          <!-- JS 動態渲染有線新聞 -->
+        <!-- 港鐵計算結果顯示區 -->
+        <div id="mtrResultContainer" class="space-y-3">
+          <!-- JS 動態生成計算結果 -->
         </div>
       </section>
 
-      <!-- ==================== 第四頁：Shopping List 購物清單（家庭用 / 工作用） ==================== -->
-      <section id="tab-shopping" class="hidden space-y-4">
+      <!-- ==================== 第三頁：愉翠苑出發自駕時間計算 ==================== -->
+      <section id="tab-drive" class="hidden space-y-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="w-6 h-6 rounded-full bg-[#E06D53] text-white text-xs font-bold flex items-center justify-center border border-[#2C2A29]">4</span>
-            <h2 class="text-lg font-black hl-coral">Shopping List 購物清單</h2>
+            <span class="w-6 h-6 rounded-full bg-[#6A997E] text-white text-xs font-bold flex items-center justify-center border border-[#2C2A29]">3</span>
+            <h2 class="text-lg font-black hl-green">愉翠苑自駕時間估算</h2>
           </div>
-          <button onclick="clearCompletedShopping()" class="sketch-btn bg-white px-2.5 py-1 text-xs font-bold text-[#E06D53]">
-            🧹 清除已買
-          </button>
+          <span id="driveTrafficStatusBadge" class="sketch-pill bg-white px-2.5 py-0.5 text-[11px] font-black text-[#6A997E]">
+            🟢 交通暢順
+          </span>
         </div>
 
-        <!-- 家庭用 vs 工作用 分頁切換 -->
-        <div class="grid grid-cols-2 gap-2.5">
-          <button id="btnShopHome" onclick="switchShoppingScope('home')" class="sketch-btn py-2.5 px-3 font-black text-sm bg-[#6A997E] text-white flex items-center justify-center gap-2">
-            <span>🏠</span> 家庭用 (<span id="countHomePending">0</span>)
-          </button>
-          <button id="btnShopWork" onclick="switchShoppingScope('work')" class="sketch-btn py-2.5 px-3 font-black text-sm bg-white text-[#2C2A29] flex items-center justify-center gap-2">
-            <span>💼</span> 工作用 (<span id="countWorkPending">0</span>)
-          </button>
-        </div>
-
-        <!-- 快速新增項目表單 -->
-        <form onsubmit="handleAddShoppingItem(event)" class="sketch-card p-3.5 space-y-2.5">
-          <div class="flex gap-2">
-            <input id="shopItemInput" type="text" required placeholder="想買啲咩？（例：鮮奶、A4影印紙...）" class="sketch-input flex-1 px-3 py-2 text-sm font-medium" />
-            <button type="submit" class="sketch-btn bg-[#F3C65F] px-4 py-2 font-black text-sm shrink-0">加入</button>
-          </div>
-          <div class="flex items-center justify-between gap-2 text-xs">
-            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar" id="shopCategoryChips">
-              <!-- JS 動態生成對應分類 -->
+        <!-- 自駕起訖點輸入卡片 -->
+        <div class="sketch-card washi-tape p-4 space-y-3">
+          <div class="flex items-center gap-2.5 bg-[#FFFDF7] border-2 border-[#2C2A29] rounded-xl px-3 py-2">
+            <span class="text-base">🏠</span>
+            <div class="flex-1">
+              <p class="text-[10px] font-bold text-[#6B665F]">固定出發點</p>
+              <p class="text-sm font-black text-[#2C2A29]">沙田愉翠苑（牛皮沙街 / 插桅杆街）</p>
             </div>
-            <input id="shopQtyInput" type="text" placeholder="數量/備註" class="sketch-input w-24 px-2 py-1 text-xs" />
           </div>
-        </form>
 
-        <!-- 購物項目列表 -->
-        <div class="sketch-card p-4">
-          <div class="flex items-center justify-between mb-3">
-            <h3 id="shoppingListHeaderTitle" class="font-black text-base">🏠 家庭採購清單</h3>
-            <span id="shoppingProgressText" class="text-xs font-bold text-[#6B665F]">0/0 已完成</span>
+          <div class="space-y-1.5">
+            <label class="text-xs font-black text-[#2C2A29]">📍 輸入駕車目的地（香港各區 / 地標）：</label>
+            <div class="flex gap-2">
+              <input id="driveDestInput" type="text" placeholder="例如：中環、尖沙咀、觀塘、機場、荃灣..." onkeydown="if(event.key==='Enter') calculateDriveTrip()" class="sketch-input flex-1 px-3 py-2.5 text-sm font-bold" />
+              <button onclick="calculateDriveTrip()" class="sketch-btn bg-[#6A997E] text-white px-4 py-2 text-sm font-black shrink-0">
+                估算
+              </button>
+            </div>
           </div>
-          <div id="shoppingItemsContainer" class="space-y-2.5">
-            <!-- JS 動態渲染購物項目 -->
+
+          <!-- 常用自駕目的地快捷標籤 -->
+          <div>
+            <p class="text-[11px] font-bold text-[#6B665F] mb-1.5">🛣️ 常用自駕目的地：</p>
+            <div class="flex flex-wrap gap-1.5">
+              <button onclick="selectQuickDriveDest('中環 / 金鐘')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">中環 / 金鐘</button>
+              <button onclick="selectQuickDriveDest('尖沙咀')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">尖沙咀</button>
+              <button onclick="selectQuickDriveDest('九龍塘 / 旺角')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">九龍塘 / 旺角</button>
+              <button onclick="selectQuickDriveDest('觀塘 / 九龍灣')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">觀塘 / 九龍灣</button>
+              <button onclick="selectQuickDriveDest('香港國際機場')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">香港國際機場</button>
+              <button onclick="selectQuickDriveDest('荃灣 / 葵芳')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">荃灣 / 葵芳</button>
+              <button onclick="selectQuickDriveDest('銅鑼灣 / 灣仔')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">銅鑼灣 / 灣仔</button>
+              <button onclick="selectQuickDriveDest('大埔 / 科學園')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">大埔 / 科學園</button>
+              <button onclick="selectQuickDriveDest('西貢市中心')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">西貢市中心</button>
+              <button onclick="selectQuickDriveDest('將軍澳')" class="sketch-pill bg-white px-2.5 py-1 text-xs font-bold hover:bg-[#F3C65F]">將軍澳</button>
+            </div>
           </div>
+        </div>
+
+        <!-- 自駕路線估算結果 -->
+        <div id="driveResultContainer" class="space-y-3">
+          <!-- JS 動態生成估算結果 -->
         </div>
       </section>
 
-      <!-- ==================== 第五頁：To-Do List 待辦事項 ==================== -->
+      <!-- ==================== 第四頁：To-Do List 待辦事項 ==================== -->
       <section id="tab-todo" class="hidden space-y-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="w-6 h-6 rounded-full bg-[#3B6998] text-white text-xs font-bold flex items-center justify-center border border-[#2C2A29]">5</span>
+            <span class="w-6 h-6 rounded-full bg-[#3B6998] text-white text-xs font-bold flex items-center justify-center border border-[#2C2A29]">4</span>
             <h2 class="text-lg font-black hl-blue">To-Do List 待辦事項</h2>
           </div>
           <button onclick="clearCompletedTodos()" class="sketch-btn bg-white px-2.5 py-1 text-xs font-bold text-[#E06D53]">
@@ -411,29 +352,31 @@
           </button>
         </div>
 
-        <!-- 新增待辦事項表單 -->
-        <form onsubmit="handleAddTodoItem(event)" class="sketch-card p-3.5 space-y-2.5">
+        <!-- 新增待辦輸入框 -->
+        <div class="sketch-card p-3.5 space-y-2.5">
           <div class="flex gap-2">
-            <input id="todoItemInput" type="text" required placeholder="記低要處理嘅事情？（例：交管理費、預約洗冷氣...）" class="sketch-input flex-1 px-3 py-2 text-sm font-medium" />
-            <button type="submit" class="sketch-btn bg-[#F3C65F] px-4 py-2 font-black text-sm shrink-0">新增</button>
+            <input id="todoItemInput" type="text" placeholder="寫下待辦事項（例如：交管理費、預約驗車）..." onkeydown="if(event.key==='Enter') addTodoItem()" class="sketch-input flex-1 px-3 py-2 text-sm font-bold" />
+            <button onclick="addTodoItem()" class="sketch-btn bg-[#3B6998] text-white px-3.5 py-2 text-sm font-black">
+              加入
+            </button>
           </div>
-          <div class="flex items-center justify-between gap-2 text-xs">
-            <div class="flex items-center gap-1.5" id="todoPriorityChips">
-              <button type="button" onclick="selectTodoPriority('high')" data-prio="high" class="todo-prio-chip sketch-pill px-2.5 py-1 font-bold bg-white text-[#6B665F]">🔴 緊急</button>
-              <button type="button" onclick="selectTodoPriority('normal')" data-prio="normal" class="todo-prio-chip sketch-pill px-2.5 py-1 font-bold bg-[#F3C65F] text-[#2C2A29]">🟡 一般</button>
-              <button type="button" onclick="selectTodoPriority('low')" data-prio="low" class="todo-prio-chip sketch-pill px-2.5 py-1 font-bold bg-white text-[#6B665F]">🟢 稍後</button>
-            </div>
-            <input id="todoNoteInput" type="text" placeholder="備註/期限" class="sketch-input w-24 px-2 py-1 text-xs" />
+          <div class="flex gap-2">
+            <select id="todoPrioritySelect" class="sketch-input px-2.5 py-1.5 text-xs font-bold bg-white">
+              <option value="high">🔴 緊急優先</option>
+              <option value="normal" selected>🟡 一般事項</option>
+              <option value="low">🟢 稍後處理</option>
+            </select>
+            <input id="todoNoteInput" type="text" placeholder="備註或期限（如：週五前 / 下午3點）" onkeydown="if(event.key==='Enter') addTodoItem()" class="sketch-input flex-1 px-2.5 py-1.5 text-xs" />
           </div>
-        </form>
+        </div>
 
-        <!-- 待辦事項清單卡片 -->
-        <div class="sketch-card p-4">
-          <div class="flex items-center justify-between mb-3">
-            <h3 class="font-black text-base flex items-center gap-1.5">
-              <span>📝</span> 今日與近期待辦
+        <!-- 待辦清單容器 -->
+        <div class="sketch-card washi-tape p-4 space-y-3">
+          <div class="flex items-center justify-between border-b-2 border-dashed border-[#2C2A29]/25 pb-2">
+            <h3 class="font-black text-sm flex items-center gap-1.5">
+              <span>📋</span> 待辦任務清單
             </h3>
-            <span id="todoProgressText" class="text-xs font-bold text-[#6B665F]">0/0 已完成</span>
+            <span id="todoCountBadge" class="text-xs font-bold px-2 py-0.5 rounded-full bg-[#F3C65F] border border-[#2C2A29]">0 項未完成</span>
           </div>
           <div id="todoItemsContainer" class="space-y-2.5">
             <!-- JS 動態渲染待辦事項 -->
@@ -441,101 +384,248 @@
         </div>
       </section>
 
+      <!-- ==================== 第五頁：Shopping List 購物清單（家庭用 / 工作用） ==================== -->
+      <section id="tab-shopping" class="hidden space-y-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-[#E06D53] text-white text-xs font-bold flex items-center justify-center border border-[#2C2A29]">5</span>
+            <h2 class="text-lg font-black hl-coral">Shopping List 購物清單</h2>
+          </div>
+          <button onclick="clearCompletedShopping()" class="sketch-btn bg-white px-2.5 py-1 text-xs font-bold text-[#E06D53]">
+            🧹 清除已買
+          </button>
+        </div>
+
+        <!-- 家庭用 vs 工作用 切換大按鈕 -->
+        <div class="grid grid-cols-2 gap-2.5">
+          <button id="btnShopHome" onclick="switchShoppingScope('home')" class="sketch-btn py-2.5 px-3 font-black text-sm bg-[#6A997E] text-white flex items-center justify-center gap-2">
+            <span>🏠</span> 家庭用清單
+          </button>
+          <button id="btnShopWork" onclick="switchShoppingScope('work')" class="sketch-btn py-2.5 px-3 font-black text-sm bg-white text-[#2C2A29] flex items-center justify-center gap-2">
+            <span>💼</span> 工作用清單
+          </button>
+        </div>
+
+        <!-- 新增購物項目輸入框 -->
+        <div class="sketch-card p-3.5 space-y-2.5">
+          <div class="flex gap-2">
+            <input id="shopItemInput" type="text" placeholder="輸入要買的物品..." onkeydown="if(event.key==='Enter') addShoppingItem()" class="sketch-input flex-1 px-3 py-2 text-sm font-bold" />
+            <button onclick="addShoppingItem()" class="sketch-btn bg-[#F3C65F] px-3.5 py-2 text-sm font-black">
+              + 加入
+            </button>
+          </div>
+          <div class="flex gap-2">
+            <select id="shopCategorySelect" class="sketch-input px-2.5 py-1.5 text-xs font-bold bg-white">
+              <!-- JS 依據家庭用或工作用自動切換分類 -->
+            </select>
+            <input id="shopQtyInput" type="text" placeholder="數量/備註 (如: 2盒 / 惠康買)" onkeydown="if(event.key==='Enter') addShoppingItem()" class="sketch-input flex-1 px-2.5 py-1.5 text-xs" />
+          </div>
+        </div>
+
+        <!-- 購物清單容器 -->
+        <div class="sketch-card washi-tape p-4 space-y-3">
+          <div class="flex items-center justify-between border-b-2 border-dashed border-[#2C2A29]/25 pb-2">
+            <h3 id="shopListHeader" class="font-black text-sm flex items-center gap-1.5">
+              <span>🏠</span> 家庭用購物清單
+            </h3>
+            <span id="shopCountBadge" class="text-xs font-bold px-2 py-0.5 rounded-full bg-[#F3C65F] border border-[#2C2A29]">0 項待買</span>
+          </div>
+          <div id="shoppingItemsContainer" class="space-y-2.5">
+            <!-- JS 動態渲染購物項目 -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 第六頁：今日天氣資訊 ==================== -->
+      <section id="tab-weather" class="hidden space-y-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-[#3B6998] text-white text-xs font-bold flex items-center justify-center border border-[#2C2A29]">6</span>
+            <h2 class="text-lg font-black hl-blue">沙田區今日天氣</h2>
+          </div>
+          <button onclick="fetchWeatherData(true)" class="sketch-btn bg-[#F3C65F] px-3 py-1 text-xs font-bold flex items-center gap-1">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#2C2A29" stroke-width="2.5" stroke-linecap="round">
+              <path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/>
+            </svg>
+            更新天氣
+          </button>
+        </div>
+
+        <!-- 主天氣手繪卡片 -->
+        <div class="sketch-card washi-tape p-4 relative overflow-hidden">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="inline-block text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#6A997E]/20 border border-[#2C2A29] mb-2">
+                📍 香港天文台 · 沙田區實況
+              </span>
+              <div class="flex items-baseline gap-2">
+                <span id="weatherTemp" class="text-5xl font-black tracking-tighter">--°</span>
+                <span id="weatherCondition" class="text-base font-bold text-[#3B6998]">載入中...</span>
+              </div>
+              <p id="weatherUpdateTime" class="text-[11px] text-[#6B665F] mt-1">正在讀取天文台最新數據</p>
+            </div>
+            <!-- 手繪太陽雲朵插畫 -->
+            <div id="weatherIllustration" class="w-24 h-24 rounded-2xl bg-[#FBF8F1] border-2 border-[#2C2A29] flex items-center justify-center shrink-0">
+              <svg width="64" height="64" viewBox="0 0 80 80" fill="none">
+                <circle cx="48" cy="28" r="14" fill="#F3C65F" stroke="#2C2A29" stroke-width="2.5"/>
+                <path d="M48 8v4M48 44v4M28 28h4M64 28h4M34 14l3 3M59 39l3 3M34 42l3-3M59 17l3-3" stroke="#2C2A29" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M24 58h30a11 11 0 0 0 1.5-21.9A15 15 0 0 0 26.5 33 12 12 0 0 0 24 58z" fill="#FFFFFF" stroke="#2C2A29" stroke-width="2.5" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 濕度 / 紫外線 / 降雨提示三格 -->
+          <div class="grid grid-cols-3 gap-2 mt-4 pt-3 border-t-2 border-dashed border-[#2C2A29]/25 text-center">
+            <div class="bg-[#FBF8F1] rounded-xl p-2 border border-[#2C2A29]">
+              <p class="text-[11px] text-[#6B665F]">相對濕度</p>
+              <p id="weatherHumidity" class="text-base font-black text-[#3B6998] mt-0.5">--%</p>
+            </div>
+            <div class="bg-[#FBF8F1] rounded-xl p-2 border border-[#2C2A29]">
+              <p class="text-[11px] text-[#6B665F]">紫外線指數</p>
+              <p id="weatherUV" class="text-base font-black text-[#E06D53] mt-0.5">--</p>
+            </div>
+            <div class="bg-[#FBF8F1] rounded-xl p-2 border border-[#2C2A29]">
+              <p class="text-[11px] text-[#6B665F]">天氣警告</p>
+              <p id="weatherWarningBadge" class="text-xs font-black text-[#6A997E] mt-1 truncate">無警告</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 出門貼心小提醒 -->
+        <div class="sketch-card-flat bg-[#FFFDF7] p-3.5 flex items-start gap-3">
+          <div class="w-8 h-8 rounded-xl bg-[#F3C65F] border-2 border-[#2C2A29] flex items-center justify-center shrink-0 font-bold">
+            🎒
+          </div>
+          <div>
+            <h3 class="text-xs font-black text-[#2C2A29]">出門穿衣與帶傘貼士</h3>
+            <p id="weatherAdviceText" class="text-xs text-[#6B665F] leading-relaxed mt-0.5">
+              正在分析今日氣溫與降雨機率，為您準備出門建議...
+            </p>
+          </div>
+        </div>
+
+        <!-- 未來五日預報 -->
+        <div class="sketch-card p-4">
+          <h3 class="text-sm font-black mb-3 flex items-center gap-1.5">
+            <span>🌤️</span> 未來五日天氣預報
+          </h3>
+          <div id="forecastList" class="grid grid-cols-5 gap-1.5 text-center">
+            <!-- JS 動態生成 -->
+          </div>
+        </div>
+      </section>
+
     </main>
 
-    <!-- 底部手繪導覽列（5個分頁） -->
-    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-40 bg-[#FBF8F1]/95 backdrop-blur-md border-t-2 border-[#2C2A29] px-1.5 py-2">
-      <div class="grid grid-cols-5 gap-1">
-        <button onclick="switchTab('weather')" data-tab="weather" class="nav-tab flex flex-col items-center justify-center py-1 rounded-xl font-black text-[#2C2A29] bg-[#F3C65F] border-2 border-[#2C2A29] shadow-[1.5px_1.5px_0px_#2C2A29]">
-          <span class="text-base leading-none">🌤️</span>
-          <span class="text-[10px] mt-1">天氣</span>
-        </button>
-        <button onclick="switchTab('transport')" data-tab="transport" class="nav-tab flex flex-col items-center justify-center py-1 rounded-xl font-bold text-[#6B665F] border-2 border-transparent">
-          <span class="text-base leading-none">🚌</span>
+    <!-- 底部手繪導覽列（報站 -> 港鐵 -> 自駕 -> 待辦 -> 購物 -> 天氣） -->
+    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-40 bg-[#FBF8F1]/95 backdrop-blur-md border-t-2 border-[#2C2A29] px-1 py-2">
+      <div class="grid grid-cols-6 gap-0.5">
+        <button onclick="switchTab('transport')" data-tab="transport" class="nav-tab flex flex-col items-center justify-center py-1 rounded-xl font-black text-[#2C2A29] bg-[#F3C65F] border-2 border-[#2C2A29] shadow-[1.5px_1.5px_0px_#2C2A29]">
+          <span class="text-sm leading-none">🚌</span>
           <span class="text-[10px] mt-1">報站</span>
         </button>
-        <button onclick="switchTab('news')" data-tab="news" class="nav-tab flex flex-col items-center justify-center py-1 rounded-xl font-bold text-[#6B665F] border-2 border-transparent">
-          <span class="text-base leading-none">📺</span>
-          <span class="text-[10px] mt-1">有線新聞</span>
+        <button onclick="switchTab('mtr')" data-tab="mtr" class="nav-tab flex flex-col items-center justify-center py-1 rounded-xl font-bold text-[#6B665F] border-2 border-transparent">
+          <span class="text-sm leading-none">🚇</span>
+          <span class="text-[10px] mt-1">港鐵</span>
         </button>
-        <button onclick="switchTab('shopping')" data-tab="shopping" class="nav-tab flex flex-col items-center justify-center py-1 rounded-xl font-bold text-[#6B665F] border-2 border-transparent">
-          <span class="text-base leading-none">🛒</span>
-          <span class="text-[10px] mt-1">購物</span>
+        <button onclick="switchTab('drive')" data-tab="drive" class="nav-tab flex flex-col items-center justify-center py-1 rounded-xl font-bold text-[#6B665F] border-2 border-transparent">
+          <span class="text-sm leading-none">🚗</span>
+          <span class="text-[10px] mt-1">自駕</span>
         </button>
         <button onclick="switchTab('todo')" data-tab="todo" class="nav-tab flex flex-col items-center justify-center py-1 rounded-xl font-bold text-[#6B665F] border-2 border-transparent">
-          <span class="text-base leading-none">✅</span>
+          <span class="text-sm leading-none">✅</span>
           <span class="text-[10px] mt-1">待辦</span>
+        </button>
+        <button onclick="switchTab('shopping')" data-tab="shopping" class="nav-tab flex flex-col items-center justify-center py-1 rounded-xl font-bold text-[#6B665F] border-2 border-transparent">
+          <span class="text-sm leading-none">🛒</span>
+          <span class="text-[10px] mt-1">購物</span>
+        </button>
+        <button onclick="switchTab('weather')" data-tab="weather" class="nav-tab flex flex-col items-center justify-center py-1 rounded-xl font-bold text-[#6B665F] border-2 border-transparent">
+          <span class="text-sm leading-none">🌤️</span>
+          <span class="text-[10px] mt-1">天氣</span>
         </button>
       </div>
     </nav>
 
-  </div>
-
-  <!-- 自訂手繪提示訊息框（取代 alert） -->
-  <div id="toastBox" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-200">
-    <div id="toastMsg" class="sketch-card px-4 py-2 bg-[#2C2A29] text-white text-xs font-bold shadow-lg whitespace-nowrap">
-      提示訊息
+    <!-- 輕量手繪提示框 Toast -->
+    <div id="toastBox" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-opacity duration-200">
+      <div class="sketch-pill bg-[#2C2A29] text-white px-4 py-2 text-xs font-bold shadow-lg whitespace-nowrap">
+        <span id="toastMsg">操作成功</span>
+      </div>
     </div>
+
   </div>
 
-  <!-- ==================== 應用程式核心邏輯 ==================== -->
+  <!-- 核心應用程式邏輯（報站 -> 港鐵 -> 自駕 -> 待辦 -> 購物 -> 天氣） -->
   <script>
-    // ==================== 1. 本地儲存狀態管理 ====================
-    const STORAGE_KEY = 'shatin_yuchui_notebook_v3';
-
-    const defaultData = {
-      shopping: [
-        { id: 'sh1', scope: 'home', text: '維記鮮奶 (家庭裝)', category: '🥩 生鮮雪櫃', qty: '2盒', done: false },
-        { id: 'sh2', scope: 'home', text: '日本珍珠米 5kg', category: '🥫 糧油雜貨', qty: '1包', done: false },
-        { id: 'sh3', scope: 'home', text: '三層卷裝衛生紙', category: '🧻 日用清潔', qty: '1條', done: true },
-        { id: 'sh4', scope: 'work', text: 'A4 80g 影印紙', category: '📎 文具耗材', qty: '2包', done: false },
-        { id: 'sh5', scope: 'work', text: 'Type-C 充電線 (1.5m)', category: '💻 數碼設備', qty: '1條', done: false }
-      ],
+    // ==================== 1. 本地狀態初始化 ====================
+    const STORAGE_KEY = 'yu_chui_notebook_v5';
+    let appState = {
+      favRoutes: ['A41', '89X', '49X', '80K', '182', '811', '65A'],
       todos: [
-        { id: 'td1', text: '繳交愉翠苑本月管理費', priority: 'high', note: '月底前', done: false },
-        { id: 'td2', text: '預約師傅上門清洗冷氣機', priority: 'normal', note: '週末上午', done: false },
-        { id: 'td3', text: '整理旅行證件與八達通餘額', priority: 'low', note: '出發前', done: true }
+        { id: 'td1', text: '繳交本月屋苑管理費及水電煤', priority: 'high', note: '本月 28 日前', done: false },
+        { id: 'td2', text: '預約下週六汽車定期保養', priority: 'normal', note: '沙田車房', done: false },
+        { id: 'td3', text: '整理小朋友學校通告與簽名', priority: 'high', note: '今晚完成', done: true }
       ],
-      favRoutes: ['A41', '49X', '89X', '182', '808']
+      shopping: {
+        home: [
+          { id: 's1', text: '鮮奶（家庭裝 2L）', category: '生鮮蔬果', qty: '1 支', done: false },
+          { id: 's2', text: '三層衛生紙（10卷裝）', category: '日用品', qty: '1 條', done: false },
+          { id: 's3', text: '富士蘋果 / 香蕉', category: '生鮮蔬果', qty: '各 4 個', done: true }
+        ],
+        work: [
+          { id: 'w1', text: 'A4 打印白紙 (80gsm)', category: '文具耗材', qty: '2 包', done: false },
+          { id: 'w2', text: 'USB-C 桌面快充線', category: '電腦配件', qty: '1 條', done: false }
+        ]
+      }
     };
 
-    function loadLocalState() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('shatin_yuchui_notebook_v2');
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          return {
-            shopping: Array.isArray(parsed.shopping) ? parsed.shopping : defaultData.shopping,
-            todos: Array.isArray(parsed.todos) ? parsed.todos : defaultData.todos,
-            favRoutes: Array.isArray(parsed.favRoutes) ? parsed.favRoutes : defaultData.favRoutes
-          };
-        }
-      } catch (e) {}
-      return JSON.parse(JSON.stringify(defaultData));
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.favRoutes) appState.favRoutes = parsed.favRoutes;
+        if (parsed.todos) appState.todos = parsed.todos;
+        if (parsed.shopping) appState.shopping = parsed.shopping;
+      }
+    } catch (e) {
+      console.warn('本地紀錄讀取失敗:', e);
     }
-
-    let appState = loadLocalState();
 
     function saveState() {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
       } catch (e) {
-        console.warn('localStorage save failed:', e);
+        console.warn('本地儲存失敗:', e);
       }
+    }
+
+    function showToast(msg) {
+      const box = document.getElementById('toastBox');
+      const txt = document.getElementById('toastMsg');
+      if (!box || !txt) return;
+      txt.textContent = msg;
+      box.classList.remove('opacity-0');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => {
+        box.classList.add('opacity-0');
+      }, 2400);
     }
 
     function updateHeaderDate() {
       const now = new Date();
-      const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
-      const badge = document.getElementById('headerTodayBadge');
-      if (badge) {
-        badge.textContent = `${now.getMonth() + 1}月${now.getDate()}日 (週${weekDays[now.getDay()]})`;
-      }
+      const weekNames = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
+      const dateStr = `${now.getMonth() + 1}月${now.getDate()}日 (${weekNames[now.getDay()]})`;
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      const subEl = document.getElementById('headerSubtitleText');
+      const clkEl = document.getElementById('headerClock');
+      if (subEl) subEl.textContent = `${dateStr} · 報站 · 港鐵 · 自駕 · 待辦 · 購物 · 天氣`;
+      if (clkEl) clkEl.textContent = timeStr;
     }
 
-    // ==================== 2. 分頁導航切換（5個分頁） ====================
+    // ==================== 2. 分頁導航切換（6個分頁：報站、港鐵、自駕、待辦、購物、天氣） ====================
     window.switchTab = (tabName) => {
-      ['weather', 'transport', 'news', 'shopping', 'todo'].forEach(t => {
+      ['transport', 'mtr', 'drive', 'todo', 'shopping', 'weather'].forEach(t => {
         const sec = document.getElementById(`tab-${t}`);
         if (sec) sec.classList.toggle('hidden', t !== tabName);
       });
@@ -547,314 +637,191 @@
           btn.className = 'nav-tab flex flex-col items-center justify-center py-1 rounded-xl font-bold text-[#6B665F] border-2 border-transparent';
         }
       });
-      if (tabName === 'news' && newsCache[currentNewsChannel].length === 0) {
-        fetchCableNews(false);
-      }
-      if (tabName === 'shopping') renderShopping();
-      if (tabName === 'todo') renderTodos();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // ==================== 3. 第一頁：香港天文台沙田天氣實時資訊 ====================
-    window.fetchWeatherData = async (manual = false) => {
-      try {
-        const [rhrRes, fndRes, warnRes] = await Promise.all([
-          fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=tc'),
-          fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=tc'),
-          fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=tc')
-        ]);
-
-        const rhr = await rhrRes.json();
-        const fnd = await fndRes.json();
-        const warn = await warnRes.json();
-
-        const tempList = rhr.temperature?.data || [];
-        const shatinObj = tempList.find(d => d.place === '沙田') || tempList.find(d => d.place === '香港天文台') || tempList[0];
-        const tempVal = shatinObj ? shatinObj.value : 23;
-        const humVal = rhr.humidity?.data?.[0]?.value ?? 72;
-
-        document.getElementById('shatinTemp').textContent = `${tempVal}°C`;
-        document.getElementById('shatinHumidity').textContent = `${humVal}%`;
-        document.getElementById('feelsLikeTemp').textContent = `${tempVal >= 26 ? tempVal + 1 : tempVal}°C`;
-
-        const forecastToday = fnd.weatherForecast?.[0];
-        const weatherSummary = forecastToday?.forecastWeather || '部分時間有陽光';
-        document.getElementById('weatherDesc').textContent = weatherSummary.split('。')[0];
-
-        const now = new Date();
-        document.getElementById('weatherUpdateTime').textContent =
-          `天文台更新：${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-
-        const warnKeys = Object.keys(warn || {});
-        const warnBadge = document.getElementById('weatherWarningBadge');
-        if (warnKeys.length > 0) {
-          const firstWarn = warn[warnKeys[0]];
-          warnBadge.textContent = `⚠️ ${firstWarn.name || '天氣警告生效中'}`;
-          warnBadge.classList.remove('hidden');
-        } else {
-          warnBadge.classList.add('hidden');
-        }
-
-        let advice = '';
-        if (tempVal <= 16) advice = '沙田早晚清涼，出門搭車或接送小朋友記得加件厚外套 🧥。';
-        else if (tempVal >= 29) advice = '今日天氣炎熱，記得帶備食水及防曬用品 ☀️。';
-        else advice = '今日沙田氣溫舒適，早晚微涼，帶備薄外套即可 🌤️。';
-
-        if (weatherSummary.includes('雨') || warnKeys.length > 0) {
-          advice += ' 預料有驟雨，出門記得帶雨傘 ☔！';
-        }
-        document.getElementById('weatherAdviceText').textContent = advice;
-
-        const forecastList = (fnd.weatherForecast || []).slice(0, 5);
-        const fContainer = document.getElementById('forecastList');
-        if (fContainer) {
-          fContainer.innerHTML = forecastList.map(day => {
-            const dStr = `${day.forecastDate.slice(4, 6)}/${day.forecastDate.slice(6, 8)}`;
-            const wShort = day.week.replace('星期', '週');
-            let icon = '⛅';
-            if (day.forecastWeather.includes('雷')) icon = '⛈️';
-            else if (day.forecastWeather.includes('雨')) icon = '🌧️';
-            else if (day.forecastWeather.includes('晴') || day.forecastWeather.includes('陽光')) icon = '☀️';
-            else if (day.forecastWeather.includes('雲')) icon = '☁️';
-
-            return `
-              <div class="p-2 rounded-xl border-2 border-[#2C2A29] bg-[#FBF8F1] flex flex-col items-center">
-                <span class="text-[11px] font-black">${wShort}</span>
-                <span class="text-[10px] text-[#6B665F]">${dStr}</span>
-                <span class="text-xl my-1">${icon}</span>
-                <span class="text-[11px] font-bold text-[#3B6998]">${day.forecastMintemp.value}°-${day.forecastMaxtemp.value}°</span>
-              </div>
-            `;
-          }).join('');
-        }
-
-        if (manual) showToast('已更新沙田實時天氣 🌤️');
-      } catch (err) {
-        console.warn('Weather API fallback:', err);
-        document.getElementById('shatinTemp').textContent = '22°C';
-        document.getElementById('shatinHumidity').textContent = '70%';
-        document.getElementById('feelsLikeTemp').textContent = '22°C';
-        document.getElementById('weatherDesc').textContent = '部分時間有陽光';
-        document.getElementById('weatherAdviceText').textContent = '沙田今日氣溫舒適，早晚微涼，出門可帶備薄外套。';
-      }
-    };
-
-    // ==================== 4. 第二頁：沙田愉翠苑 巴士 & 專線小巴報站器 ====================
-    const BUS_ROUTES = [
+    // ==================== 3. 第一頁：沙田愉翠苑 巴士 & 小巴報站器 ====================
+    const YU_CHUI_BUS_ROUTES = [
       {
-        id: 'A41',
-        route: 'A41',
-        operator: 'LWB',
+        id: 'A41', route: 'A41', operator: 'LWB', dir: 'outbound',
         dest: '機場（地面運輸中心）',
         stopName: '愉翠苑巴士總站',
-        direction: 'outbound',
+        stopKeywords: ['愉翠苑'],
+        kmbDir: 'O',
         fare: '$23.4',
-        via: '沙田市中心 · 青嶼幹線 · 一號客運大樓 · 港珠澳大橋口岸',
-        kmbDir: 'outbound',
-        stopIds: ['58F00A3581349263', '659A7D6C8A5D2E34']
+        note: '✈️ 機場快線 · 經沙田市中心、青嶼幹線、一號客運大樓'
       },
       {
-        id: '49X',
-        route: '49X',
-        operator: 'KMB',
-        dest: '青衣碼頭',
-        stopName: '愉翠苑 · 插桅杆街',
-        direction: 'outbound',
+        id: '89X-O', route: '89X', operator: 'KMB', dir: 'outbound',
+        dest: '觀塘站（經大老山隧道）',
+        stopName: '愉翠苑 / 插桅杆街',
+        stopKeywords: ['愉翠苑', '插桅杆街', '第一城'],
+        kmbDir: 'O',
+        fare: '$8.1',
+        note: '特快往九龍灣、牛頭角、觀塘'
+      },
+      {
+        id: '49X-O', route: '49X', operator: 'KMB', dir: 'outbound',
+        dest: '青衣碼頭（經城門隧道）',
+        stopName: '愉翠苑 / 插桅杆街',
+        stopKeywords: ['愉翠苑', '插桅杆街', '威爾斯'],
+        kmbDir: 'O',
         fare: '$9.1',
-        via: '沙田市中心 · 城門隧道 · 荃灣 · 青衣',
-        kmbDir: 'outbound',
-        stopIds: ['659A7D6C8A5D2E34', '58F00A3581349263']
+        note: '經沙田市中心、荃灣眾安街、青衣'
       },
       {
-        id: '89X',
-        route: '89X',
-        operator: 'KMB',
-        dest: '觀塘（翠屏道）',
-        stopName: '愉翠苑 · 牛皮沙街',
-        direction: 'outbound',
-        fare: '$8.3',
-        via: '大老山隧道 · 鑽石山 · 九龍灣 · 觀塘',
-        kmbDir: 'outbound',
-        stopIds: ['8E5D3E43E5C2A451', '659A7D6C8A5D2E34']
+        id: '80K-O', route: '80K', operator: 'KMB', dir: 'outbound',
+        dest: '新翠（經沙田市中心 / 大圍）',
+        stopName: '愉翠苑巴士總站',
+        stopKeywords: ['愉翠苑'],
+        kmbDir: 'O',
+        fare: '$5.4',
+        note: '總站開出 · 往沙田站、大圍站'
       },
       {
-        id: '182',
-        route: '182',
-        operator: 'KMB/CTB',
+        id: '82K-O', route: '82K', operator: 'KMB', dir: 'outbound',
+        dest: '美田（經威爾斯醫院 / 大圍）',
+        stopName: '愉翠苑 / 插桅杆街',
+        stopKeywords: ['愉翠苑', '插桅杆街', '威爾斯'],
+        kmbDir: 'O',
+        fare: '$5.8',
+        note: '途經第一城、威爾斯醫院、大圍'
+      },
+      {
+        id: '83K-O', route: '83K', operator: 'KMB', dir: 'outbound',
+        dest: '沙田市中心（循環線）',
+        stopName: '愉翠苑 / 牛皮沙街',
+        stopKeywords: ['愉翠苑', '牛皮沙街', '插桅杆街'],
+        kmbDir: 'O',
+        fare: '$5.0',
+        note: '往沙田大會堂、新城市廣場'
+      },
+      {
+        id: '85A-O', route: '85A', operator: 'KMB', dir: 'outbound',
+        dest: '九龍城碼頭（經獅子山隧道）',
+        stopName: '愉翠苑 / 插桅杆街',
+        stopKeywords: ['愉翠苑', '插桅杆街', '第一城'],
+        kmbDir: 'O',
+        fare: '$7.5',
+        note: '經九龍塘、樂富、九龍城、土瓜灣'
+      },
+      {
+        id: '86-O', route: '86', operator: 'KMB', dir: 'outbound',
+        dest: '美孚（經獅子山隧道）',
+        stopName: '愉翠苑 / 插桅杆街',
+        stopKeywords: ['愉翠苑', '插桅杆街', '威爾斯'],
+        kmbDir: 'O',
+        fare: '$7.5',
+        note: '經石硤尾、深水埗、長沙灣'
+      },
+      {
+        id: '182-O', route: '182', operator: 'KMB/CTB', dir: 'outbound',
         dest: '中環（港澳碼頭）',
         stopName: '愉翠苑巴士總站',
-        direction: 'outbound',
+        stopKeywords: ['愉翠苑'],
+        kmbDir: 'O',
         fare: '$19.2',
-        via: '獅子山隧道 · 紅磡海底隧道 · 灣仔 · 金鐘',
-        kmbDir: 'outbound',
-        stopIds: ['58F00A3581349263']
+        note: '過海隧巴 · 經紅隧、灣仔、金鐘、中環'
       },
       {
-        id: '80K',
-        route: '80K',
-        operator: 'KMB',
-        dest: '新翠（經沙田市中心）',
-        stopName: '愉翠苑 · 插桅杆街',
-        direction: 'inbound',
-        fare: '$5.4',
-        via: '第一城 · 沙田站 · 大圍站 · 新翠邨',
-        kmbDir: 'outbound',
-        stopIds: ['659A7D6C8A5D2E34']
-      },
-      {
-        id: '82K',
-        route: '82K',
-        operator: 'KMB',
-        dest: '美田（經威爾斯親王醫院）',
-        stopName: '愉翠苑 · 插桅杆街',
-        direction: 'inbound',
-        fare: '$5.8',
-        via: '威爾斯醫院 · 沙田圍 · 大圍 · 美林',
-        kmbDir: 'outbound',
-        stopIds: ['659A7D6C8A5D2E34']
-      },
-      {
-        id: '83K',
-        route: '83K',
-        operator: 'KMB',
-        dest: '黃泥頭（循環線經沙田市中心）',
-        stopName: '愉翠苑 · 牛皮沙街',
-        direction: 'inbound',
-        fare: '$5.4',
-        via: '沙田市中心 · 廣源 · 黃泥頭',
-        kmbDir: 'outbound',
-        stopIds: ['8E5D3E43E5C2A451']
-      },
-      {
-        id: '73A',
-        route: '73A',
-        operator: 'KMB',
-        dest: '粉嶺（華明）',
+        id: '73A-I', route: '73A', operator: 'KMB', dir: 'inbound',
+        dest: '粉嶺（華明）（經大埔）',
         stopName: '愉翠苑巴士總站',
-        direction: 'inbound',
-        fare: '$11.6',
-        via: '第一城 · 科學園 · 大埔墟 · 太和',
-        kmbDir: 'inbound',
-        stopIds: ['58F00A3581349263']
+        stopKeywords: ['愉翠苑'],
+        kmbDir: 'I',
+        fare: '$11.4',
+        note: '總站開出 · 往中文大學、大埔墟'
       },
       {
-        id: '85A',
-        route: '85A',
-        operator: 'KMB',
-        dest: '九龍城碼頭',
-        stopName: '愉翠苑 · 插桅杆街',
-        direction: 'outbound',
-        fare: '$7.5',
-        via: '獅子山隧道 · 九龍塘 · 九龍城 · 土瓜灣',
-        kmbDir: 'outbound',
-        stopIds: ['659A7D6C8A5D2E34']
+        id: '89X-I', route: '89X', operator: 'KMB', dir: 'inbound',
+        dest: '沙田站（經第一城）',
+        stopName: '愉翠苑 / 插桅杆街',
+        stopKeywords: ['愉翠苑', '插桅杆街'],
+        kmbDir: 'I',
+        fare: '$5.0',
+        note: '短途分段往沙田火車站總站'
       }
     ];
 
-    const MINIBUS_ROUTES = [
+    const YU_CHUI_MINIBUS_ROUTES = [
       {
-        id: '808',
-        route: '808',
-        operator: 'GMB',
-        dest: '錦英苑（經威爾斯醫院 · 馬鞍山）',
-        stopName: '愉翠苑 · 插桅杆街小巴站',
-        direction: 'inbound',
-        fare: '$7.9',
-        via: '威爾斯醫院 · 第一城 · 亞公角 · 耀安 · 馬鞍山市中心',
-        gmbRouteId: 2004623,
-        routeSeq: 1,
-        stopSeq: 4
-      },
-      {
-        id: '808_out',
-        route: '808',
-        operator: 'GMB',
-        dest: '威爾斯親王醫院（循環線）',
-        stopName: '愉翠苑 · 插桅杆街小巴站',
-        direction: 'outbound',
-        fare: '$5.8',
-        via: '插桅杆街 · 威爾斯親王醫院正門',
-        gmbRouteId: 2004623,
-        routeSeq: 2,
-        stopSeq: 12
-      },
-      {
-        id: '65A',
-        route: '65A',
-        operator: 'GMB',
-        dest: '沙田市中心（新城市廣場）',
-        stopName: '愉翠苑 · 牛皮沙街小巴站',
-        direction: 'inbound',
-        fare: '$6.2',
-        via: '第一城 · 富豪花園 · 沙田市中心總站',
-        gmbRouteId: 2004591,
-        routeSeq: 2,
-        stopSeq: 5
-      },
-      {
-        id: '65K',
-        route: '65K',
-        operator: 'GMB',
-        dest: '火炭站（經第一城 · 石門）',
-        stopName: '愉翠苑 · 插桅杆街小巴站',
-        direction: 'inbound',
-        fare: '$6.2',
-        via: '第一城站 · 石門站 · 火炭工業區 · 火炭站',
-        gmbRouteId: 2004593,
-        routeSeq: 2,
-        stopSeq: 4
-      },
-      {
-        id: '811',
-        route: '811',
-        operator: 'GMB',
-        dest: '穗禾苑（經火炭 · 沙田）',
-        stopName: '愉翠苑總站小巴站',
-        direction: 'inbound',
-        fare: '$6.9',
-        via: '第一城 · 禾輋 · 瀝源 · 火炭 · 穗禾苑',
+        id: 'GMB-811', route: '811', operator: 'GMB', dir: 'outbound',
+        dest: '穗禾苑（經沙田市中心 / 火炭）',
+        stopName: '愉翠苑小巴總站 / 牛皮沙街',
+        fare: '$6.8',
+        note: '班次頻密（約 6-10 分鐘一班）',
         gmbRouteId: 2004628,
-        routeSeq: 1,
-        stopSeq: 1
+        fallbackFreq: [4, 12, 20]
       },
       {
-        id: '813',
-        route: '813',
-        operator: 'GMB',
-        dest: '水泉澳（經沙田圍 · 博康）',
-        stopName: '愉翠苑 · 插桅杆街小巴站',
-        direction: 'outbound',
+        id: 'GMB-811A', route: '811A', operator: 'GMB', dir: 'outbound',
+        dest: '華翠園（經第一城站 / 火炭站）',
+        stopName: '愉翠苑 / 插桅杆街',
+        fare: '$6.8',
+        note: '直達港鐵第一城站及火炭站',
+        gmbRouteId: 2004630,
+        fallbackFreq: [5, 14, 24]
+      },
+      {
+        id: 'GMB-808', route: '808', operator: 'GMB', dir: 'inbound',
+        dest: '錦英苑（經馬鞍山市中心 / 耀安）',
+        stopName: '插桅杆街（愉翠苑對面）',
+        fare: '$7.5',
+        note: '往馬鞍山、威爾斯親王醫院',
+        gmbRouteId: 2004620,
+        fallbackFreq: [3, 11, 19]
+      },
+      {
+        id: 'GMB-65A', route: '65A', operator: 'GMB', dir: 'outbound',
+        dest: '沙田市中心（經圓洲角 / 沙角）',
+        stopName: '愉翠苑 / 牛皮沙街',
+        fare: '$5.6',
+        note: '特快往新城市廣場、沙田大會堂',
+        gmbRouteId: 2004590,
+        fallbackFreq: [2, 9, 17]
+      },
+      {
+        id: 'GMB-65K', route: '65K', operator: 'GMB', dir: 'inbound',
+        dest: '火炭站（經石門 / 亞公角）',
+        stopName: '插桅杆街（愉翠苑）',
         fare: '$6.2',
-        via: '威爾斯醫院 · 沙田圍站 · 博康邨 · 水泉澳邨',
-        gmbRouteId: 2004631,
-        routeSeq: 1,
-        stopSeq: 6
+        note: '往石門商貿區、火炭工業區',
+        gmbRouteId: 2004595,
+        fallbackFreq: [6, 15, 25]
+      },
+      {
+        id: 'GMB-813', route: '813', operator: 'GMB', dir: 'outbound',
+        dest: '水泉澳（經沙田圍站 / 博康）',
+        stopName: '愉翠苑 / 牛皮沙街',
+        fare: '$5.8',
+        note: '連接沙田圍站及水泉澳邨',
+        gmbRouteId: 2004635,
+        fallbackFreq: [7, 16, 26]
       }
     ];
 
-    let transportMode = 'bus';
-    let directionFilter = 'all';
+    let currentTransportMode = 'bus';
+    let currentDirFilter = 'all';
     let etaCache = {};
-    let etaTimer = null;
+    let kmbStopsMap = null;
     let countdownSec = 30;
-    let kmbStopNameMap = null;
 
     window.switchTransportMode = (mode) => {
-      transportMode = mode;
+      currentTransportMode = mode;
       const btnBus = document.getElementById('btnModeBus');
-      const btnMb = document.getElementById('btnModeMinibus');
+      const btnMini = document.getElementById('btnModeMinibus');
       if (mode === 'bus') {
         btnBus.className = 'sketch-btn py-2.5 px-3 font-black text-sm bg-[#3B6998] text-white flex items-center justify-center gap-2';
-        btnMb.className = 'sketch-btn py-2.5 px-3 font-black text-sm bg-white text-[#2C2A29] flex items-center justify-center gap-2';
+        btnMini.className = 'sketch-btn py-2.5 px-3 font-black text-sm bg-white text-[#2C2A29] flex items-center justify-center gap-2';
       } else {
-        btnMb.className = 'sketch-btn py-2.5 px-3 font-black text-sm bg-[#6A997E] text-white flex items-center justify-center gap-2';
+        btnMini.className = 'sketch-btn py-2.5 px-3 font-black text-sm bg-[#6A997E] text-white flex items-center justify-center gap-2';
         btnBus.className = 'sketch-btn py-2.5 px-3 font-black text-sm bg-white text-[#2C2A29] flex items-center justify-center gap-2';
       }
       renderTransportList();
-      refreshAllETA(false);
     };
 
     window.setDirectionFilter = (dir) => {
-      directionFilter = dir;
+      currentDirFilter = dir;
       document.querySelectorAll('.dir-chip').forEach(btn => {
         const active = btn.dataset.dir === dir;
         btn.className = active
@@ -878,593 +845,675 @@
     };
 
     async function ensureKmbStopsLoaded() {
-      if (kmbStopNameMap) return kmbStopNameMap;
+      if (kmbStopsMap) return kmbStopsMap;
       try {
         const res = await fetch('https://data.etabus.gov.hk/v1/transport/kmb/stop');
         const json = await res.json();
         const map = {};
         (json.data || []).forEach(s => {
-          if (s.name_tc && s.name_tc.includes('愉翠苑')) {
+          if (s.name_tc && (s.name_tc.includes('愉翠苑') || s.name_tc.includes('插桅杆街') || s.name_tc.includes('牛皮沙街'))) {
             map[s.stop] = s.name_tc;
           }
         });
-        kmbStopNameMap = map;
+        kmbStopsMap = map;
+        return map;
       } catch (e) {
-        kmbStopNameMap = {};
+        return {};
       }
-      return kmbStopNameMap;
     }
 
     async function fetchSingleBusETA(item) {
       try {
+        const stopsMap = await ensureKmbStopsLoaded();
         const res = await fetch(`https://data.etabus.gov.hk/v1/transport/kmb/route-eta/${item.route}/1`);
         const json = await res.json();
         const now = Date.now();
-        const stopMap = await ensureKmbStopsLoaded();
-        const yuChuiIds = Object.keys(stopMap);
-
-        let matches = (json.data || []).filter(row => {
-          if (!row.eta) return false;
-          const isTargetStop = yuChuiIds.length > 0
-            ? yuChuiIds.includes(row.stop)
-            : (item.stopIds || []).includes(row.stop);
-          return isTargetStop;
+        let matched = (json.data || []).filter(e => {
+          const stopName = stopsMap[e.stop] || '';
+          return e.dir === item.kmbDir && stopName && item.stopKeywords.some(kw => stopName.includes(kw));
         });
 
-        if (matches.length === 0) {
-          matches = (json.data || []).filter(row => row.eta && row.seq <= 3);
+        if (matched.length === 0) {
+          matched = (json.data || []).filter(e => e.dir === item.kmbDir && e.seq <= 4 && e.eta);
         }
 
-        const times = matches
-          .map(row => {
-            const diffMin = Math.round((new Date(row.eta).getTime() - now) / 60000);
+        const validEtas = matched
+          .filter(e => e.eta)
+          .map(e => {
+            const diffMin = Math.max(0, Math.round((new Date(e.eta).getTime() - now) / 60000));
             return {
               min: diffMin,
-              rmk: row.rmk_tc || ''
+              rmk: e.rmk_tc || '實時班次',
+              stopName: stopsMap[e.stop] || item.stopName
             };
           })
-          .filter(t => t.min >= -1 && t.min <= 90)
           .slice(0, 3);
 
-        if (times.length > 0) {
-          etaCache[item.id] = times;
+        if (validEtas.length > 0) {
+          etaCache[item.id] = { list: validEtas, live: true };
           return;
         }
       } catch (e) {
-        console.warn('KMB ETA fetch fallback:', item.route, e);
+        // Fallback below
       }
 
-      const seed = item.route.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
-      const base = (seed % 9) + 3;
-      etaCache[item.id] = [
-        { min: base, rmk: '實時班次' },
-        { min: base + 15, rmk: '' },
-        { min: base + 30, rmk: '' }
-      ];
+      const base = (parseInt(item.route.replace(/\D/g, ''), 10) % 7) + 3;
+      etaCache[item.id] = {
+        live: false,
+        list: [
+          { min: base, rmk: '預計班次', stopName: item.stopName },
+          { min: base + 12, rmk: '預計班次', stopName: item.stopName },
+          { min: base + 24, rmk: '預計班次', stopName: item.stopName }
+        ]
+      };
     }
 
     async function fetchSingleMinibusETA(item) {
       try {
-        const res = await fetch(`https://data.etagmb.gov.hk/eta/route-stop/${item.gmbRouteId}/${item.routeSeq}/${item.stopSeq}`);
-        const json = await res.json();
-        const etaArr = json.data?.eta || [];
-        if (etaArr.length > 0) {
-          etaCache[item.id] = etaArr.slice(0, 3).map(e => ({
-            min: Math.max(0, e.diff ?? 0),
-            rmk: e.remarks_tc || ''
-          }));
-          return;
+        const res = await fetch(`https://data.etagamb.gov.hk/eta/route-stop/${item.gmbRouteId}/1`);
+        if (res.ok) {
+          const json = await res.json();
+          const stopList = json.data || [];
+          for (const st of stopList) {
+            if (st.eta && st.eta.length > 0) {
+              const valid = st.eta.slice(0, 3).map(e => ({
+                min: Math.max(0, e.diff || 0),
+                rmk: e.remarks_tc || '專線小巴',
+                stopName: item.stopName
+              }));
+              etaCache[item.id] = { list: valid, live: true };
+              return;
+            }
+          }
         }
       } catch (e) {
-        console.warn('GMB ETA fallback:', item.route, e);
+        // Fallback below
       }
 
-      const seed = item.id.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
-      const base = (seed % 6) + 2;
-      etaCache[item.id] = [
-        { min: base, rmk: '' },
-        { min: base + 8, rmk: '' },
-        { min: base + 16, rmk: '' }
-      ];
+      const offset = new Date().getMinutes() % 4;
+      etaCache[item.id] = {
+        live: false,
+        list: item.fallbackFreq.map(m => ({
+          min: Math.max(1, m - offset),
+          rmk: '參考班次',
+          stopName: item.stopName
+        }))
+      };
     }
 
     window.refreshAllETA = async (manual = false) => {
-      const icon = document.getElementById('etaRefreshIcon');
-      if (icon) icon.classList.add('animate-spin');
       countdownSec = 30;
+      const icon = document.getElementById('etaRefreshIcon');
+      if (icon && manual) {
+        icon.classList.remove('spin-once');
+        void icon.offsetWidth;
+        icon.classList.add('spin-once');
+      }
 
-      const list = transportMode === 'bus' ? BUS_ROUTES : MINIBUS_ROUTES;
-      await Promise.all(list.map(item =>
-        transportMode === 'bus' ? fetchSingleBusETA(item) : fetchSingleMinibusETA(item)
-      ));
-
+      await Promise.all([
+        ...YU_CHUI_BUS_ROUTES.map(fetchSingleBusETA),
+        ...YU_CHUI_MINIBUS_ROUTES.map(fetchSingleMinibusETA)
+      ]);
       renderTransportList();
-      setTimeout(() => { if (icon) icon.classList.remove('animate-spin'); }, 500);
-      if (manual) showToast('已刷新愉翠苑實時到站時間 🚏');
+      if (manual) showToast('🚌 愉翠苑巴士及小巴到站時間已更新');
     };
 
+    function renderTransportList() {
+      const container = document.getElementById('etaCardsContainer');
+      if (!container) return;
+
+      let list = currentTransportMode === 'bus' ? [...YU_CHUI_BUS_ROUTES] : [...YU_CHUI_MINIBUS_ROUTES];
+
+      if (currentDirFilter === 'fav') {
+        list = list.filter(r => appState.favRoutes.includes(r.route));
+      } else if (currentDirFilter !== 'all') {
+        list = list.filter(r => r.dir === currentDirFilter);
+      }
+
+      list.sort((a, b) => {
+        const aFav = appState.favRoutes.includes(a.route) ? 0 : 1;
+        const bFav = appState.favRoutes.includes(b.route) ? 0 : 1;
+        return aFav - bFav;
+      });
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="sketch-card p-6 text-center text-xs text-[#6B665F]">
+            此篩選條件下暫無路線，請切換其他方向或點選「全部方向」🚌
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = list.map(item => {
+        const isFav = appState.favRoutes.includes(item.route);
+        const isAirport = item.route === 'A41';
+        const isMinibus = currentTransportMode === 'minibus';
+        const badgeBg = isAirport
+          ? 'bg-[#E06D53] text-white'
+          : isMinibus
+            ? 'bg-[#6A997E] text-white'
+            : 'bg-[#3B6998] text-white';
+
+        const etaObj = etaCache[item.id] || {
+          live: false,
+          list: [{ min: '--', rmk: '讀取中', stopName: item.stopName }]
+        };
+
+        const etaBadges = etaObj.list.map((e, idx) => {
+          const isSoon = typeof e.min === 'number' && e.min <= 3;
+          const timeLabel = e.min === 0 ? '即將抵達' : `${e.min} 分鐘`;
+          if (idx === 0) {
+            return `
+              <div class="flex items-baseline gap-1.5 bg-[#F3C65F]/45 border-2 border-[#2C2A29] rounded-xl px-2.5 py-1">
+                <span class="text-base font-black ${isSoon ? 'text-[#E06D53]' : 'text-[#2C2A29]'}">${timeLabel}</span>
+                <span class="text-[10px] font-bold text-[#6B665F]">${e.rmk}</span>
+              </div>
+            `;
+          }
+          return `
+            <div class="flex items-baseline gap-1 bg-[#FBF8F1] border border-[#2C2A29] rounded-lg px-2 py-1">
+              <span class="text-xs font-black text-[#2C2A29]">${timeLabel}</span>
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <div class="sketch-card p-3.5 space-y-2.5 ${isAirport ? 'bg-[#FFFDF6]' : ''}">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="${badgeBg} font-hand text-xl font-black px-2.5 py-1 rounded-xl border-2 border-[#2C2A29] shadow-[1.5px_1.5px_0px_#2C2A29] shrink-0">
+                  ${item.route}
+                </div>
+                <div class="min-w-0">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-[11px] font-bold text-[#6B665F]">往</span>
+                    <h3 class="text-sm font-black text-[#2C2A29] truncate">${item.dest}</h3>
+                  </div>
+                  <p class="text-[11px] text-[#6B665F] truncate mt-0.5">📍 ${item.stopName} · 車費 ${item.fare}</p>
+                </div>
+              </div>
+
+              <button onclick="toggleFavRoute('${item.route}')" class="p-1.5 rounded-xl border border-[#2C2A29] ${isFav ? 'bg-[#F3C65F]' : 'bg-white'} shrink-0" title="置頂常用路線">
+                <span class="text-xs">${isFav ? '⭐' : '☆'}</span>
+              </button>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2 pt-1">
+              ${etaBadges}
+            </div>
+
+            <div class="flex items-center justify-between text-[11px] text-[#6B665F] pt-1 border-t border-dashed border-[#2C2A29]/20">
+              <span class="truncate">${item.note}</span>
+              <span class="shrink-0 font-bold ${etaObj.live ? 'text-[#6A997E]' : 'text-[#6B665F]'}">
+                ${etaObj.live ? '● 實時GPS' : '○ 班次表'}
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
     function startEtaCountdown() {
-      if (etaTimer) clearInterval(etaTimer);
-      etaTimer = setInterval(() => {
+      setInterval(() => {
         countdownSec--;
         if (countdownSec <= 0) {
           countdownSec = 30;
-          if (!document.getElementById('tab-transport').classList.contains('hidden')) {
-            refreshAllETA(false);
-          }
+          refreshAllETA(false);
         }
         const el = document.getElementById('etaCountdown');
         if (el) el.textContent = countdownSec;
       }, 1000);
     }
 
-    function renderTransportList() {
-      const container = document.getElementById('etaCardsContainer');
-      if (!container) return;
+    // ==================== 4. 第二頁：港鐵車程計算（第一城站出發） ====================
+    const MTR_LINES_META = {
+      TML: { name: '屯馬綫', color: '#9C5C1E', text: '#FFFFFF' },
+      EAL: { name: '東鐵綫', color: '#53B7E8', text: '#FFFFFF' },
+      KTL: { name: '觀塘綫', color: '#00AB4E', text: '#FFFFFF' },
+      TWL: { name: '荃灣綫', color: '#ED1D24', text: '#FFFFFF' },
+      ISL: { name: '港島綫', color: '#007DC5', text: '#FFFFFF' },
+      TKL: { name: '將軍澳綫', color: '#7D499D', text: '#FFFFFF' },
+      TCL: { name: '東涌綫', color: '#F7943E', text: '#FFFFFF' },
+      AEL: { name: '機場快綫', color: '#00888A', text: '#FFFFFF' },
+      SIL: { name: '南港島綫', color: '#BAC429', text: '#2C2A29' }
+    };
 
-      const sourceList = transportMode === 'bus' ? BUS_ROUTES : MINIBUS_ROUTES;
-      let filtered = sourceList.filter(item => {
-        if (directionFilter === 'fav') return appState.favRoutes.includes(item.route);
-        if (directionFilter !== 'all') return item.direction === directionFilter;
-        return true;
+    const MTR_LINE_SEQUENCES = {
+      TML: [
+        '烏溪沙', '馬鞍山', '恆安', '大水坑', '石門', '第一城', '沙田圍', '車公廟', '大圍',
+        '顯徑', '鑽石山', '啟德', '宋皇臺', '土瓜灣', '何文田', '紅磡', '尖東', '柯士甸',
+        '南昌', '美孚', '荃灣西', '錦上路', '元朗', '朗屏', '天水圍', '兆康', '屯門'
+      ],
+      EAL: [
+        '羅湖', '落馬洲', '上水', '粉嶺', '太和', '大埔墟', '大學', '火炭', '馬場', '沙田',
+        '大圍', '九龍塘', '旺角東', '紅磡', '會展', '金鐘'
+      ],
+      KTL: [
+        '黃埔', '何文田', '油麻地', '旺角', '太子', '石硤尾', '九龍塘', '樂富', '黃大仙',
+        '鑽石山', '彩虹', '九龍灣', '牛頭角', '觀塘', '藍田', '油塘', '調景嶺'
+      ],
+      TWL: [
+        '中環', '金鐘', '尖沙咀', '佐敦', '油麻地', '旺角', '太子', '深水埗', '長沙灣',
+        '荔枝角', '美孚', '荔景', '葵芳', '葵興', '大窩口', '荃灣'
+      ],
+      ISL: [
+        '堅尼地城', '香港大學', '西營盤', '上環', '中環', '金鐘', '灣仔', '銅鑼灣', '天后',
+        '炮台山', '北角', '鰂魚涌', '太古', '西灣河', '筲箕灣', '杏花邨', '柴灣'
+      ],
+      TKL: [
+        '北角', '鰂魚涌', '油塘', '調景嶺', '將軍澳', '坑口', '寶琳', '康城'
+      ],
+      TCL: [
+        '香港', '九龍', '奧運', '南昌', '荔景', '青衣', '欣澳', '東涌'
+      ],
+      AEL: [
+        '香港', '九龍', '青衣', '機場', '博覽館'
+      ],
+      SIL: [
+        '金鐘', '海洋公園', '黃竹坑', '利東', '海怡半島'
+      ]
+    };
+
+    const MTR_GRAPH = (() => {
+      const adj = {};
+      const allStations = new Set();
+
+      Object.entries(MTR_LINE_SEQUENCES).forEach(([line, stations]) => {
+        stations.forEach((st, idx) => {
+          allStations.add(st);
+          const node = `${st}|${line}`;
+          if (!adj[node]) adj[node] = [];
+          const segTime = (line === 'AEL') ? 9 : (line === 'TCL' && idx >= 4) ? 5 : 2.3;
+          if (idx > 0) {
+            const prev = stations[idx - 1];
+            if (!((st === '落馬洲' && prev === '羅湖') || (st === '康城' && prev === '寶琳'))) {
+              adj[node].push({ to: `${prev}|${line}`, cost: segTime, type: 'ride', line });
+            }
+          }
+          if (idx < stations.length - 1) {
+            const next = stations[idx + 1];
+            if (!((st === '羅湖' && next === '落馬洲') || (st === '寶琳' && next === '康城'))) {
+              adj[node].push({ to: `${next}|${line}`, cost: segTime, type: 'ride', line });
+            }
+          }
+          if (line === 'EAL' && st === '羅湖') {
+            adj[node].push({ to: `上水|EAL`, cost: 4, type: 'ride', line });
+          }
+          if (line === 'TKL' && st === '寶琳') {
+            adj[node].push({ to: `將軍澳|TKL`, cost: 2.5, type: 'ride', line });
+          }
+        });
       });
 
-      filtered.sort((a, b) => {
-        const aFav = appState.favRoutes.includes(a.route) ? 0 : 1;
-        const bFav = appState.favRoutes.includes(b.route) ? 0 : 1;
-        return aFav - bFav;
+      allStations.forEach(st => {
+        const linesHere = Object.keys(MTR_LINE_SEQUENCES).filter(l => MTR_LINE_SEQUENCES[l].includes(st));
+        for (let i = 0; i < linesHere.length; i++) {
+          for (let j = 0; j < linesHere.length; j++) {
+            if (i !== j) {
+              const u = `${st}|${linesHere[i]}`;
+              const v = `${st}|${linesHere[j]}`;
+              adj[u].push({ to: v, cost: 3.5, type: 'transfer', line: linesHere[j] });
+            }
+          }
+        }
       });
 
-      if (filtered.length === 0) {
-        container.innerHTML = `
-          <div class="sketch-card p-6 text-center text-xs text-[#6B665F]">
-            此篩選條件下暫無路線，請切換「全部方向」或點擊路線右上角 ⭐ 收藏常用路線。
-          </div>
-        `;
+      const walkPairs = [
+        ['尖東|TML', '尖沙咀|TWL', 5],
+        ['香港|TCL', '中環|TWL', 5],
+        ['香港|TCL', '中環|ISL', 5],
+        ['香港|AEL', '中環|TWL', 6]
+      ];
+      walkPairs.forEach(([a, b, c]) => {
+        if (adj[a] && adj[b]) {
+          adj[a].push({ to: b, cost: c, type: 'walk', line: b.split('|')[1] });
+          adj[b].push({ to: a, cost: c, type: 'walk', line: a.split('|')[1] });
+        }
+      });
+
+      return { adj, allStations: Array.from(allStations) };
+    })();
+
+    function normalizeStationQuery(raw) {
+      return raw.trim()
+        .replace(/站$/g, '')
+        .replace(/地铁|港铁/g, '')
+        .replace(/尖沙嘴/g, '尖沙咀')
+        .replace(/铜锣湾/g, '銅鑼灣')
+        .replace(/金钟/g, '金鐘')
+        .replace(/红磡/g, '紅磡')
+        .replace(/钻石山/g, '鑽石山')
+        .replace(/观塘/g, '觀塘')
+        .replace(/荃湾/g, '荃灣')
+        .replace(/东涌/g, '東涌')
+        .replace(/机场/g, '機場')
+        .replace(/罗湖/g, '羅湖')
+        .replace(/将军澳/g, '將軍澳');
+    }
+
+    window.handleMtrInput = (val) => {
+      const sugBox = document.getElementById('mtrSuggestions');
+      if (!sugBox) return;
+      const q = normalizeStationQuery(val);
+      if (!q) {
+        sugBox.classList.add('hidden');
         return;
       }
-
-      container.innerHTML = filtered.map(item => {
-        const isFav = appState.favRoutes.includes(item.route);
-        const isAirport = item.route === 'A41';
-        const etas = etaCache[item.id] || [];
-
-        const badgeColor = isAirport
-          ? 'bg-[#E87A24] text-white'
-          : transportMode === 'bus'
-            ? 'bg-[#E06D53] text-white'
-            : 'bg-[#6A997E] text-white';
-
-        const etaHtml = etas.length > 0
-          ? etas.map((t, idx) => {
-              const minLabel = t.min <= 0 ? '即將到達' : `${t.min} 分鐘`;
-              return `
-                <div class="px-2.5 py-1.5 rounded-xl border-2 border-[#2C2A29] text-center ${idx === 0 ? 'bg-[#F3C65F] font-black' : 'bg-[#FBF8F1] font-bold'}">
-                  <div class="text-xs leading-tight">${minLabel}</div>
-                  ${t.rmk ? `<div class="text-[9px] text-[#6B665F] mt-0.5">${t.rmk}</div>` : ''}
-                </div>
-              `;
-            }).join('')
-          : `<span class="text-xs text-[#6B665F]">載入班次中...</span>`;
-
-        return `
-          <div class="sketch-card p-3.5 ${isAirport ? 'bg-[#FFFDF5] washi-tape' : ''}">
-            <div class="flex items-start justify-between gap-2">
-              <div class="flex items-center gap-2.5 min-w-0">
-                <div class="px-2.5 py-1.5 rounded-xl border-2 border-[#2C2A29] ${badgeColor} font-black text-base shadow-[2px_2px_0px_#2C2A29] shrink-0">
-                  ${isAirport ? '✈️ ' : ''}${item.route}
-                </div>
-                <div class="min-w-0">
-                  <div class="flex items-center gap-1.5">
-                    <span class="text-xs font-bold text-[#6B665F]">往</span>
-                    <h3 class="font-black text-base truncate">${item.dest}</h3>
-                  </div>
-                  <p class="text-[11px] font-bold text-[#3B6998] truncate">🚏 ${item.stopName} · ${item.fare}</p>
-                </div>
-              </div>
-              <button onclick="toggleFavRoute('${item.route}')" class="text-lg leading-none p-1 shrink-0" title="置頂常用路線">
-                ${isFav ? '⭐' : '☆'}
-              </button>
-            </div>
-
-            <p class="text-[11px] text-[#6B665F] mt-1.5 truncate">途經：${item.via}</p>
-
-            <div class="grid grid-cols-3 gap-2 mt-2.5 pt-2.5 border-t border-dashed border-[#2C2A29]/25">
-              ${etaHtml}
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    // ==================== 5. 第三頁：有線新聞（i-CABLE News）即時訊息 ====================
-    const CABLE_FEED_CONFIG = {
-      local: {
-        label: '港聞',
-        rssUrl: 'https://www.i-cable.com/%E6%96%B0%E8%81%9E%E8%B3%87%E8%A8%8A/%E6%B8%AF%E8%81%9E/feed/',
-        wpCatId: 13
-      },
-      international: {
-        label: '兩岸國際',
-        rssUrl: 'https://www.i-cable.com/%E6%96%B0%E8%81%9E%E8%B3%87%E8%A8%8A/%E5%85%A9%E5%B2%B8%E5%9C%8B%E9%9A%9B/feed/',
-        wpCatId: 14
-      },
-      finance: {
-        label: '財經',
-        rssUrl: 'https://www.i-cable.com/%E8%B2%A1%E7%B6%93%E8%B3%87%E8%A8%8A/feed/',
-        wpCatId: 15
-      },
-      sports: {
-        label: '體育',
-        rssUrl: 'https://www.i-cable.com/%E9%AB%94%E8%82%B2%E8%B3%87%E8%A8%8A/feed/',
-        wpCatId: 16
-      }
-    };
-
-    let currentNewsChannel = 'local';
-    let newsCache = {
-      local: [],
-      international: [],
-      finance: [],
-      sports: []
-    };
-
-    window.switchNewsChannel = (channel) => {
-      currentNewsChannel = channel;
-      document.querySelectorAll('.news-chip').forEach(btn => {
-        const active = btn.dataset.channel === channel;
-        btn.className = active
-          ? 'news-chip sketch-pill px-3 py-1 text-xs font-bold bg-[#F3C65F] text-[#2C2A29] whitespace-nowrap'
-          : 'news-chip sketch-pill px-3 py-1 text-xs font-bold bg-white text-[#2C2A29] whitespace-nowrap';
-      });
-      if (newsCache[channel].length > 0) {
-        renderNewsList();
-      } else {
-        fetchCableNews(false);
-      }
-    };
-
-    function formatNewsTime(pubDateStr) {
-      if (!pubDateStr) return '剛剛';
-      const d = new Date(pubDateStr);
-      if (isNaN(d.getTime())) return pubDateStr;
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      const hh = String(d.getHours()).padStart(2, '0');
-      const mm = String(d.getMinutes()).padStart(2, '0');
-      return `${month}/${day} ${hh}:${mm}`;
-    }
-
-    function stripHtmlTags(html) {
-      const tmp = document.createElement('div');
-      tmp.innerHTML = html || '';
-      return (tmp.textContent || tmp.innerText || '').replace(/\s+/g, ' ').trim();
-    }
-
-    function parseXmlItems(xmlText) {
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
-      const xmlItems = Array.from(xmlDoc.querySelectorAll('item'));
-      return xmlItems.map(node => ({
-        title: stripHtmlTags(node.querySelector('title')?.textContent),
-        desc: stripHtmlTags(node.querySelector('description')?.textContent),
-        link: node.querySelector('link')?.textContent?.trim() || 'https://www.i-cable.com/',
-        pubDate: formatNewsTime(node.querySelector('pubDate')?.textContent)
-      })).filter(it => it.title);
-    }
-
-    window.fetchCableNews = async (manual = false) => {
-      const icon = document.getElementById('newsRefreshIcon');
-      const container = document.getElementById('newsListContainer');
-      if (icon) icon.classList.add('animate-spin');
-
-      const cfg = CABLE_FEED_CONFIG[currentNewsChannel];
-
-      if (newsCache[currentNewsChannel].length === 0 && container) {
-        container.innerHTML = `
-          <div class="sketch-card p-6 text-center text-sm text-[#6B665F]">
-            📺 正在從有線新聞 i-CABLE 讀取最新${cfg.label}報道...
-          </div>
-        `;
-      }
-
-      let items = [];
-
-      // 方案 A：透過 rss2json 讀取有線新聞官方 RSS Feed
-      try {
-        const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(cfg.rssUrl)}`);
-        const data = await res.json();
-        if (data.status === 'ok' && Array.isArray(data.items) && data.items.length > 0) {
-          items = data.items.map(it => ({
-            title: stripHtmlTags(it.title),
-            desc: stripHtmlTags(it.description || it.content),
-            link: it.link || 'https://www.i-cable.com/',
-            pubDate: formatNewsTime(it.pubDate)
-          })).filter(it => it.title);
-        }
-      } catch (e) {
-        console.warn('Cable rss2json error:', e);
-      }
-
-      // 方案 B：透過 corsproxy.io 讀取有線新聞 XML Feed
-      if (items.length === 0) {
-        try {
-          const proxyRes = await fetch(`https://corsproxy.io/?${encodeURIComponent(cfg.rssUrl)}`);
-          if (proxyRes.ok) {
-            const xmlText = await proxyRes.text();
-            items = parseXmlItems(xmlText);
-          }
-        } catch (e) {
-          console.warn('Cable corsproxy error:', e);
-        }
-      }
-
-      // 方案 C：透過 allorigins 讀取有線新聞全站最新 Feed 並依分類過濾
-      if (items.length === 0) {
-        try {
-          const mainFeedUrl = 'https://www.i-cable.com/feed/';
-          const proxyRes = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(mainFeedUrl)}`);
-          const proxyJson = await proxyRes.json();
-          if (proxyJson.contents) {
-            items = parseXmlItems(proxyJson.contents);
-          }
-        } catch (e) {
-          console.warn('Cable allorigins fallback error:', e);
-        }
-      }
-
-      if (items.length > 0) {
-        newsCache[currentNewsChannel] = items.slice(0, 15);
-        const now = new Date();
-        const hhmm = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-        const timeEl = document.getElementById('newsUpdateTimeText');
-        if (timeEl) timeEl.textContent = `最後更新：${hhmm}（有線新聞 i-CABLE）`;
-        renderNewsList();
-        if (manual) showToast(`已更新有線新聞（${cfg.label}）📺`);
-      } else {
-        if (container) {
-          container.innerHTML = `
-            <div class="sketch-card p-5 text-center space-y-2.5">
-              <p class="text-sm font-bold text-[#2C2A29]">暫時未能連線至有線新聞資訊源</p>
-              <p class="text-xs text-[#6B665F]">您可點擊右上角「更新新聞」重試，或直接開啟有線新聞網站瀏覽。</p>
-              <a href="https://www.i-cable.com/" target="_blank" rel="noopener noreferrer"
-                 class="sketch-btn inline-block bg-[#F3C65F] px-4 py-2 text-xs font-black text-[#2C2A29]">
-                前往有線新聞 i-CABLE.com →
-              </a>
-            </div>
-          `;
-        }
-      }
-
-      setTimeout(() => { if (icon) icon.classList.remove('animate-spin'); }, 500);
-    };
-
-    function renderNewsList() {
-      const container = document.getElementById('newsListContainer');
-      if (!container) return;
-      const list = newsCache[currentNewsChannel] || [];
-      const cfg = CABLE_FEED_CONFIG[currentNewsChannel];
-
-      if (list.length === 0) return;
-
-      container.innerHTML = list.map((news, idx) => {
-        const isTop = idx === 0;
-        const summary = news.desc && news.desc !== news.title ? news.desc : '';
-        return `
-          <article class="sketch-card p-3.5 ${isTop ? 'bg-[#FFFDF5] washi-tape' : ''}">
-            <div class="flex items-center justify-between gap-2 mb-1.5">
-              <div class="flex items-center gap-1.5">
-                <span class="text-[10px] font-black px-2 py-0.5 rounded-full border border-[#2C2A29] ${isTop ? 'bg-[#E06D53] text-white' : 'bg-[#3B6998]/15 text-[#2C2A29]'}">
-                  ${isTop ? '🔥 焦點快訊' : cfg.label}
-                </span>
-                <span class="text-[11px] font-bold text-[#3B6998]">🕒 ${news.pubDate}</span>
-              </div>
-              <span class="text-[10px] font-bold text-[#6B665F]">#${idx + 1}</span>
-            </div>
-
-            <h3 class="font-black text-base leading-snug text-[#2C2A29]">
-              ${news.title}
-            </h3>
-
-            ${summary ? `<p class="text-xs text-[#6B665F] mt-1.5 leading-relaxed line-clamp-3">${summary}</p>` : ''}
-
-            <div class="mt-2.5 pt-2 border-t border-dashed border-[#2C2A29]/25 flex justify-end">
-              <a href="${news.link}" target="_blank" rel="noopener noreferrer"
-                 class="text-xs font-black text-[#3B6998] flex items-center gap-1 hover:underline">
-                <span>閱讀有線全文</span>
-                <span>↗</span>
-              </a>
-            </div>
-          </article>
-        `;
-      }).join('');
-    }
-
-    // ==================== 6. 第四頁：Shopping List 購物清單（家庭用 / 工作用） ====================
-    let shoppingScope = 'home';
-    let selectedShopCategory = '🥩 生鮮雪櫃';
-
-    const SHOP_CATEGORIES = {
-      home: ['🥩 生鮮雪櫃', '🥫 糧油雜貨', '🧻 日用清潔', '🍎 生果零食'],
-      work: ['📎 文具耗材', '💻 數碼設備', '☕ 茶水零食', '📦 寄件包裝']
-    };
-
-    window.switchShoppingScope = (scope) => {
-      shoppingScope = scope;
-      selectedShopCategory = SHOP_CATEGORIES[scope][0];
-      const btnHome = document.getElementById('btnShopHome');
-      const btnWork = document.getElementById('btnShopWork');
-      const titleEl = document.getElementById('shoppingListHeaderTitle');
-
-      if (scope === 'home') {
-        btnHome.className = 'sketch-btn py-2.5 px-3 font-black text-sm bg-[#6A997E] text-white flex items-center justify-center gap-2';
-        btnWork.className = 'sketch-btn py-2.5 px-3 font-black text-sm bg-white text-[#2C2A29] flex items-center justify-center gap-2';
-        if (titleEl) titleEl.textContent = '🏠 家庭採購清單';
-      } else {
-        btnWork.className = 'sketch-btn py-2.5 px-3 font-black text-sm bg-[#3B6998] text-white flex items-center justify-center gap-2';
-        btnHome.className = 'sketch-btn py-2.5 px-3 font-black text-sm bg-white text-[#2C2A29] flex items-center justify-center gap-2';
-        if (titleEl) titleEl.textContent = '💼 工作採購清單';
-      }
-      renderShopping();
-    };
-
-    window.selectShopCategory = (cat) => {
-      selectedShopCategory = cat;
-      renderShopCategoryChips();
-    };
-
-    function renderShopCategoryChips() {
-      const container = document.getElementById('shopCategoryChips');
-      if (!container) return;
-      const cats = SHOP_CATEGORIES[shoppingScope] || [];
-      container.innerHTML = cats.map(cat => {
-        const active = cat === selectedShopCategory;
-        return `
-          <button type="button" onclick="selectShopCategory('${cat}')"
-            class="sketch-pill px-2.5 py-1 font-bold whitespace-nowrap ${active ? 'bg-[#F3C65F] text-[#2C2A29]' : 'bg-white text-[#6B665F]'}">
-            ${cat}
-          </button>
-        `;
-      }).join('');
-    }
-
-    window.handleAddShoppingItem = (e) => {
-      e.preventDefault();
-      const input = document.getElementById('shopItemInput');
-      const qtyInput = document.getElementById('shopQtyInput');
-      const text = input.value.trim();
-      if (!text) return;
-
-      appState.shopping.unshift({
-        id: 'sh_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
-        scope: shoppingScope,
-        text,
-        category: selectedShopCategory,
-        qty: qtyInput.value.trim(),
-        done: false
-      });
-
-      input.value = '';
-      qtyInput.value = '';
-      saveState();
-      renderShopping();
-      showToast(`已加入${shoppingScope === 'home' ? '家庭' : '工作'}清單 🛒`);
-    };
-
-    window.toggleShoppingDone = (id) => {
-      const item = appState.shopping.find(i => i.id === id);
-      if (item) {
-        item.done = !item.done;
-        saveState();
-        renderShopping();
-      }
-    };
-
-    window.deleteShoppingItem = (id) => {
-      appState.shopping = appState.shopping.filter(i => i.id !== id);
-      saveState();
-      renderShopping();
-    };
-
-    window.clearCompletedShopping = () => {
-      appState.shopping = appState.shopping.filter(i => !(i.scope === shoppingScope && i.done));
-      saveState();
-      renderShopping();
-      showToast('已清除已購買項目 🧹');
-    };
-
-    function renderShopping() {
-      renderShopCategoryChips();
-
-      const homePending = appState.shopping.filter(i => i.scope === 'home' && !i.done).length;
-      const workPending = appState.shopping.filter(i => i.scope === 'work' && !i.done).length;
-      const homeEl = document.getElementById('countHomePending');
-      const workEl = document.getElementById('countWorkPending');
-      if (homeEl) homeEl.textContent = homePending;
-      if (workEl) workEl.textContent = workPending;
-
-      const items = appState.shopping
-        .filter(i => i.scope === shoppingScope)
-        .sort((a, b) => Number(a.done) - Number(b.done));
-
-      const doneCount = items.filter(i => i.done).length;
-      const progEl = document.getElementById('shoppingProgressText');
-      if (progEl) progEl.textContent = `${doneCount}/${items.length} 已完成`;
-
-      const container = document.getElementById('shoppingItemsContainer');
-      if (!container) return;
-
-      if (items.length === 0) {
-        container.innerHTML = `
-          <div class="text-center py-6 text-xs text-[#6B665F] border-2 border-dashed border-[#2C2A29]/30 rounded-xl">
-            目前清單空空如也！上方輸入即可快速加入 ✍️
-          </div>
-        `;
+      const matches = MTR_GRAPH.allStations.filter(s => s.includes(q) && s !== '第一城').slice(0, 6);
+      if (matches.length === 0) {
+        sugBox.classList.add('hidden');
         return;
       }
-
-      container.innerHTML = items.map(item => `
-        <div class="flex items-center justify-between gap-2.5 p-2.5 rounded-xl border-2 border-[#2C2A29] ${item.done ? 'bg-gray-100/80' : 'bg-[#FBF8F1]'}">
-          <button onclick="toggleShoppingDone('${item.id}')" class="flex items-center gap-2.5 flex-1 text-left min-w-0">
-            <span class="w-6 h-6 rounded-lg border-2 border-[#2C2A29] flex items-center justify-center shrink-0 ${item.done ? 'bg-[#6A997E] text-white' : 'bg-white'}">
-              ${item.done ? '✓' : ''}
-            </span>
-            <div class="min-w-0 flex-1">
-              <p class="font-bold text-sm truncate ${item.done ? 'strike-item' : ''}">${item.text}</p>
-              <div class="flex items-center gap-1.5 mt-0.5">
-                <span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-white border border-[#2C2A29]">${item.category}</span>
-                ${item.qty ? `<span class="text-[11px] font-bold text-[#3B6998]">× ${item.qty}</span>` : ''}
-              </div>
-            </div>
-          </button>
-          <button onclick="deleteShoppingItem('${item.id}')" class="text-xs font-bold text-[#E06D53] px-2 py-1 shrink-0">✕</button>
-        </div>
+      sugBox.classList.remove('hidden');
+      sugBox.innerHTML = matches.map(st => `
+        <button onclick="selectQuickMtrStation('${st}')" class="px-2.5 py-1 text-xs font-bold bg-[#F3C65F]/40 border border-[#2C2A29] rounded-lg hover:bg-[#F3C65F]">
+          🚇 ${st}站
+        </button>
       `).join('');
+    };
+
+    window.selectQuickMtrStation = (stationName) => {
+      const input = document.getElementById('mtrDestInput');
+      const sugBox = document.getElementById('mtrSuggestions');
+      if (input) input.value = stationName;
+      if (sugBox) sugBox.classList.add('hidden');
+      calculateMtrTrip();
+    };
+
+    window.calculateMtrTrip = () => {
+      const input = document.getElementById('mtrDestInput');
+      const container = document.getElementById('mtrResultContainer');
+      if (!input || !container) return;
+
+      const query = normalizeStationQuery(input.value);
+      if (!query) {
+        showToast('請輸入目的地港鐵站名稱 🚇');
+        return;
+      }
+
+      if (query === '第一城') {
+        container.innerHTML = `
+          <div class="sketch-card p-4 text-center">
+            <p class="text-sm font-black text-[#2C2A29]">您目前已在「第一城站」起點啦！😊</p>
+            <p class="text-xs text-[#6B665F] mt-1">請輸入其他目的地車站查詢車程時間。</p>
+          </div>
+        `;
+        return;
+      }
+
+      let targetStation = MTR_GRAPH.allStations.find(s => s === query)
+        || MTR_GRAPH.allStations.find(s => s.includes(query));
+
+      if (!targetStation) {
+        container.innerHTML = `
+          <div class="sketch-card p-4 text-center space-y-1">
+            <p class="text-sm font-black text-[#E06D53]">找不到「${input.value}」港鐵站</p>
+            <p class="text-xs text-[#6B665F]">請確認站名（例如：金鐘、尖沙咀、旺角、銅鑼灣、機場）</p>
+          </div>
+        `;
+        return;
+      }
+
+      const startNode = '第一城|TML';
+      const dist = {};
+      const prev = {};
+      const visited = new Set();
+      Object.keys(MTR_GRAPH.adj).forEach(n => dist[n] = Infinity);
+      dist[startNode] = 0;
+
+      while (true) {
+        let u = null;
+        let minD = Infinity;
+        for (const n of Object.keys(dist)) {
+          if (!visited.has(n) && dist[n] < minD) {
+            minD = dist[n];
+            u = n;
+          }
+        }
+        if (!u || minD === Infinity) break;
+        visited.add(u);
+        if (u.startsWith(`${targetStation}|`)) break;
+
+        for (const edge of MTR_GRAPH.adj[u]) {
+          if (!visited.has(edge.to) && dist[u] + edge.cost < dist[edge.to]) {
+            dist[edge.to] = dist[u] + edge.cost;
+            prev[edge.to] = { node: u, edge };
+          }
+        }
+      }
+
+      let bestEndNode = null;
+      let bestCost = Infinity;
+      Object.keys(dist).forEach(n => {
+        if (n.startsWith(`${targetStation}|`) && dist[n] < bestCost) {
+          bestCost = dist[n];
+          bestEndNode = n;
+        }
+      });
+
+      if (!bestEndNode) return;
+
+      const steps = [];
+      let curr = bestEndNode;
+      while (prev[curr]) {
+        steps.unshift({ from: prev[curr].node, to: curr, edge: prev[curr].edge });
+        curr = prev[curr].node;
+      }
+
+      const rideMinutes = Math.max(2, Math.round(bestCost));
+      const totalDoorToDoor = rideMinutes + 6;
+      const stopCount = steps.filter(s => s.edge.type === 'ride').length;
+      const transfers = steps.filter(s => s.edge.type === 'transfer' || s.edge.type === 'walk');
+
+      const isAirportLine = bestEndNode.endsWith('|AEL');
+      const isBorder = targetStation === '羅湖' || targetStation === '落馬洲';
+      const estFare = isAirportLine
+        ? '$105.0'
+        : isBorder
+          ? '$33.5'
+          : `$${(5.2 + stopCount * 0.65).toFixed(1)}`;
+
+      const segments = [];
+      let curSeg = null;
+      steps.forEach(s => {
+        const [fromSt, fromLine] = s.from.split('|');
+        const [toSt, toLine] = s.to.split('|');
+        if (s.edge.type === 'ride') {
+          if (!curSeg || curSeg.line !== s.edge.line) {
+            curSeg = { line: s.edge.line, start: fromSt, end: toSt, stops: 1 };
+            segments.push(curSeg);
+          } else {
+            curSeg.end = toSt;
+            curSeg.stops++;
+          }
+        }
+      });
+
+      const segmentsHtml = segments.map((seg, i) => {
+        const meta = MTR_LINES_META[seg.line] || { name: seg.line, color: '#3B6998', text: '#FFF' };
+        const transferHint = i > 0
+          ? `<div class="text-[11px] font-bold text-[#E06D53] pl-3 py-1">🔄 於【${seg.start}站】轉乘</div>`
+          : '';
+        return `
+          ${transferHint}
+          <div class="flex items-center justify-between bg-[#FBF8F1] border border-[#2C2A29] rounded-xl px-3 py-2">
+            <div class="flex items-center gap-2">
+              <span class="text-[11px] font-black px-2 py-0.5 rounded-md border border-[#2C2A29]" style="background:${meta.color};color:${meta.text}">
+                ${meta.name}
+              </span>
+              <span class="text-xs font-black text-[#2C2A29]">${seg.start}站 ➔ ${seg.end}站</span>
+            </div>
+            <span class="text-[11px] font-bold text-[#6B665F]">${seg.stops} 站</span>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <div class="sketch-card p-4 space-y-3 bg-[#FFFDF7]">
+          <div class="flex items-center justify-between border-b-2 border-dashed border-[#2C2A29]/25 pb-3">
+            <div>
+              <span class="text-[11px] font-bold text-[#6B665F]">第一城站 ➔ ${targetStation}站</span>
+              <div class="flex items-baseline gap-2 mt-0.5">
+                <span class="text-4xl font-black text-[#3B6998]">約 ${rideMinutes}</span>
+                <span class="text-base font-black text-[#2C2A29]">分鐘車程</span>
+              </div>
+              <p class="text-[11px] font-bold text-[#6A997E] mt-0.5">
+                🚶 連同愉翠苑步行至第一城站：全程約 ${totalDoorToDoor} 分鐘
+              </p>
+            </div>
+            <div class="text-right space-y-1">
+              <div class="sketch-pill bg-[#F3C65F] px-2.5 py-1 text-xs font-black">
+                ${transfers.length === 0 ? '✨ 直達免轉車' : `🔄 轉車 ${transfers.length} 次`}
+              </div>
+              <p class="text-[11px] font-bold text-[#6B665F]">沿途 ${stopCount} 站 · 八達通約 ${estFare}</p>
+            </div>
+          </div>
+
+          <div class="space-y-1.5">
+            <p class="text-xs font-black text-[#2C2A29]">🗺️ 建議乘車及轉車路線：</p>
+            ${segmentsHtml}
+          </div>
+        </div>
+      `;
+    };
+
+    // ==================== 5. 第三頁：愉翠苑出發自駕時間計算 ====================
+    const DRIVE_PRESETS = [
+      { keywords: ['中環', '金鐘', '上環', '中區'], name: '中環 / 金鐘商業區', baseMin: 24, km: 16.5, route: '大老山隧道 ➔ 東區海底隧道 / 紅磡海底隧道 ➔ 告士打道', toll: '$20 - $40 (視乎時段及隧道)' },
+      { keywords: ['銅鑼灣', '灣仔', '天后', '炮台山'], name: '銅鑼灣 / 灣仔', baseMin: 22, km: 15.2, route: '大老山隧道 ➔ 觀塘繞道 ➔ 東區海底隧道 ➔ 東區走廊', toll: '$20 - $40 (大老山+東隧)' },
+      { keywords: ['太古', '鰂魚涌', '北角', '柴灣', '筲箕灣'], name: '港島東（太古 / 北角 / 柴灣）', baseMin: 23, km: 16.8, route: '大老山隧道 ➔ 觀塘繞道 ➔ 東區海底隧道', toll: '$20 - $40 (大老山+東隧)' },
+      { keywords: ['尖沙咀', '佐敦', '紅磡', '西九龍', '高鐵'], name: '尖沙咀 / 西九龍', baseMin: 20, km: 13.8, route: '獅子山隧道 ➔ 窩打老道 ➔ 公主道 / 彌敦道', toll: '$8 (獅子山隧道)' },
+      { keywords: ['九龍塘', '旺角', '太子', '油麻地', '深水埗'], name: '九龍塘 / 旺角區', baseMin: 16, km: 10.5, route: '獅子山隧道 ➔ 窩打老道', toll: '$8 (獅子山隧道)' },
+      { keywords: ['觀塘', '九龍灣', '牛頭角', '藍田', '啟德'], name: '觀塘 / 九龍灣商貿區', baseMin: 15, km: 11.2, route: '大老山隧道 ➔ 觀塘繞道', toll: '$20 (大老山隧道)' },
+      { keywords: ['將軍澳', '坑口', '寶琳', '康城', '調景嶺'], name: '將軍澳區', baseMin: 22, km: 16.0, route: '大老山隧道 ➔ 觀塘繞道 ➔ 將軍澳隧道 / 將藍隧道', toll: '$20 (將藍隧道免費)' },
+      { keywords: ['機場', '赤鱲角', '博覽館', '東涌', '迪士尼'], name: '香港國際機場 / 東涌', baseMin: 31, km: 34.5, route: '青沙公路（尖山隧道）➔ 青葵公路 ➔ 青嶼幹線 ➔ 北大嶼山公路', toll: '$8 (尖山隧道，青馬大橋免費)' },
+      { keywords: ['荃灣', '葵芳', '葵涌', '青衣', '深井'], name: '荃灣 / 葵青區', baseMin: 17, km: 13.6, route: '沙田鄉事會路 ➔ 城門隧道 ➔ 象鼻山路', toll: '$5 (城門隧道)' },
+      { keywords: ['屯門', '元朗', '天水圍', '錦上路'], name: '屯門 / 元朗區', baseMin: 33, km: 32.0, route: '城門隧道 ➔ 屯門公路 / 大欖隧道', toll: '$5 - $63 (視乎是否經大欖隧道)' },
+      { keywords: ['大埔', '科學園', '白石角', '太和'], name: '大埔 / 科學園', baseMin: 13, km: 11.8, route: '大涌橋路 ➔ 吐露港公路', toll: '$0 (全程免費公路)' },
+      { keywords: ['粉嶺', '上水', '羅湖', '落馬洲', '香園圍'], name: '北區（粉嶺 / 上水 / 口岸）', baseMin: 24, km: 24.5, route: '大涌橋路 ➔ 吐露港公路 ➔ 粉嶺公路', toll: '$0 (全程免費公路)' },
+      { keywords: ['西貢', '清水灣', '科技大學', '馬鞍山'], name: '西貢 / 科技大學', baseMin: 22, km: 15.8, route: '亞公角街 ➔ 西沙路 / 清水灣道', toll: '$0 (全程免費公路)' },
+      { keywords: ['沙田市中心', '新城市', '大圍', '火炭', '威爾斯'], name: '沙田區內（市中心 / 大圍 / 火炭）', baseMin: 8, km: 4.2, route: '插桅杆街 ➔ 大涌橋路 / 沙田路', toll: '$0 (區內道路)' }
+    ];
+
+    function getCurrentTrafficMultiplier() {
+      const now = new Date();
+      const day = now.getDay();
+      const hour = now.getHours();
+      const isWeekday = day >= 1 && day <= 5;
+      const isRushHour = isWeekday && ((hour >= 8 && hour <= 9) || (hour >= 18 && hour <= 19));
+      const isDayBusy = hour >= 10 && hour <= 20;
+
+      if (isRushHour) {
+        return { mult: 1.45, label: '🔴 繁忙時段（隧道或較擠塞）', color: 'text-[#E06D53]' };
+      }
+      if (isDayBusy) {
+        return { mult: 1.15, label: '🟡 日間正常車流', color: 'text-[#9C5C1E]' };
+      }
+      return { mult: 1.0, label: '🟢 路面暢順', color: 'text-[#6A997E]' };
     }
 
-    // ==================== 7. 第五頁：To-Do List 待辦事項 ====================
-    let selectedTodoPriority = 'normal';
+    function updateTrafficBadge() {
+      const badge = document.getElementById('driveTrafficStatusBadge');
+      if (!badge) return;
+      const info = getCurrentTrafficMultiplier();
+      badge.textContent = info.label.split('（')[0];
+      badge.className = `sketch-pill bg-white px-2.5 py-0.5 text-[11px] font-black ${info.color}`;
+    }
 
-    const TODO_PRIO_META = {
-      high: { label: '🔴 緊急', badgeClass: 'bg-[#E06D53] text-white' },
-      normal: { label: '🟡 一般', badgeClass: 'bg-[#F3C65F] text-[#2C2A29]' },
-      low: { label: '🟢 稍後', badgeClass: 'bg-[#6A997E]/25 text-[#2C2A29]' }
+    window.selectQuickDriveDest = (dest) => {
+      const input = document.getElementById('driveDestInput');
+      if (input) input.value = dest;
+      calculateDriveTrip();
     };
 
-    window.selectTodoPriority = (prio) => {
-      selectedTodoPriority = prio;
-      document.querySelectorAll('.todo-prio-chip').forEach(btn => {
-        const active = btn.dataset.prio === prio;
-        btn.className = active
-          ? 'todo-prio-chip sketch-pill px-2.5 py-1 font-bold bg-[#F3C65F] text-[#2C2A29]'
-          : 'todo-prio-chip sketch-pill px-2.5 py-1 font-bold bg-white text-[#6B665F]';
-      });
+    window.calculateDriveTrip = () => {
+      const input = document.getElementById('driveDestInput');
+      const container = document.getElementById('driveResultContainer');
+      if (!input || !container) return;
+
+      const raw = input.value.trim();
+      if (!raw) {
+        showToast('請輸入自駕目的地 🚗');
+        return;
+      }
+
+      const traffic = getCurrentTrafficMultiplier();
+      const matched = DRIVE_PRESETS.find(p => p.keywords.some(kw => raw.includes(kw)));
+
+      const destTitle = matched ? matched.name : raw;
+      const baseMin = matched ? matched.baseMin : 24;
+      const km = matched ? matched.km : 17.5;
+      const routeText = matched ? matched.route : '愉翠苑 ➔ 大老山公路 / 獅子山隧道公路（視乎目的地方向）';
+      const tollText = matched ? matched.toll : '$8 - $20（視乎選用隧道）';
+
+      const estMinLow = Math.max(5, Math.round(baseMin * traffic.mult));
+      const estMinHigh = estMinLow + (traffic.mult > 1.2 ? 10 : 5);
+      const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent('沙田愉翠苑')}&destination=${encodeURIComponent(raw + ' 香港')}&travelmode=driving`;
+
+      container.innerHTML = `
+        <div class="sketch-card p-4 space-y-3 bg-[#FFFDF7]">
+          <div class="flex items-start justify-between border-b-2 border-dashed border-[#2C2A29]/25 pb-3">
+            <div>
+              <span class="text-[11px] font-bold text-[#6B665F]">沙田愉翠苑 ➔ ${destTitle}</span>
+              <div class="flex items-baseline gap-1.5 mt-0.5">
+                <span class="text-3xl font-black text-[#6A997E]">約 ${estMinLow} - ${estMinHigh}</span>
+                <span class="text-sm font-black text-[#2C2A29]">分鐘</span>
+              </div>
+              <p class="text-[11px] font-bold ${traffic.color} mt-0.5">${traffic.label}</p>
+            </div>
+            <div class="text-right space-y-1">
+              <span class="sketch-pill bg-[#F3C65F] px-2.5 py-1 text-xs font-black inline-block">
+                📏 約 ${km} 公里
+              </span>
+              <p class="text-[11px] font-bold text-[#6B665F]">隧道費：${tollText.split(' ')[0]}</p>
+            </div>
+          </div>
+
+          <div class="space-y-2 text-xs">
+            <div class="bg-[#FBF8F1] border border-[#2C2A29] rounded-xl p-2.5">
+              <p class="font-black text-[#2C2A29] mb-0.5">🛣️ 建議行車路線：</p>
+              <p class="text-[#6B665F] font-bold">${routeText}</p>
+            </div>
+            <div class="bg-[#FBF8F1] border border-[#2C2A29] rounded-xl p-2.5 flex items-center justify-between">
+              <span class="font-bold text-[#2C2A29]">💰 預計隧道費：</span>
+              <span class="font-black text-[#3B6998]">${tollText}</span>
+            </div>
+          </div>
+
+          <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="sketch-btn w-full bg-[#3B6998] text-white py-2.5 text-xs font-black flex items-center justify-center gap-1.5">
+            <span>🧭</span> 開啟 Google Maps 即時路況導航
+          </a>
+        </div>
+      `;
     };
 
-    window.handleAddTodoItem = (e) => {
-      e.preventDefault();
-      const input = document.getElementById('todoItemInput');
+    // ==================== 6. 第四頁：To-Do List 待辦事項 ====================
+    window.addTodoItem = () => {
+      const textInput = document.getElementById('todoItemInput');
+      const prioSelect = document.getElementById('todoPrioritySelect');
       const noteInput = document.getElementById('todoNoteInput');
-      const text = input.value.trim();
-      if (!text) return;
-
+      const text = textInput.value.trim();
+      if (!text) {
+        showToast('請輸入待辦事項內容 ✅');
+        return;
+      }
       appState.todos.unshift({
-        id: 'td_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        id: 'td_' + Date.now(),
         text,
-        priority: selectedTodoPriority,
+        priority: prioSelect.value || 'normal',
         note: noteInput.value.trim(),
         done: false
       });
-
-      input.value = '';
+      textInput.value = '';
       noteInput.value = '';
       saveState();
       renderTodos();
-      showToast('已新增待辦事項 ✅');
+      showToast('✅ 已新增待辦事項');
     };
 
-    window.toggleTodoDone = (id) => {
-      const item = appState.todos.find(i => i.id === id);
+    window.toggleTodoItem = (id) => {
+      const item = appState.todos.find(t => t.id === id);
       if (item) {
         item.done = !item.done;
         saveState();
@@ -1473,87 +1522,296 @@
     };
 
     window.deleteTodoItem = (id) => {
-      appState.todos = appState.todos.filter(i => i.id !== id);
+      appState.todos = appState.todos.filter(t => t.id !== id);
       saveState();
       renderTodos();
     };
 
     window.clearCompletedTodos = () => {
-      appState.todos = appState.todos.filter(i => !i.done);
+      const before = appState.todos.length;
+      appState.todos = appState.todos.filter(t => !t.done);
+      if (appState.todos.length === before) {
+        showToast('目前沒有已完成的待辦事項');
+        return;
+      }
       saveState();
       renderTodos();
-      showToast('已清除所有已完成待辦 🧹');
+      showToast('🧹 已清除完成項目');
     };
 
     function renderTodos() {
-      const prioOrder = { high: 0, normal: 1, low: 2 };
-      const items = [...appState.todos].sort((a, b) => {
-        if (Number(a.done) !== Number(b.done)) return Number(a.done) - Number(b.done);
-        return (prioOrder[a.priority] ?? 1) - (prioOrder[b.priority] ?? 1);
-      });
-
-      const doneCount = items.filter(i => i.done).length;
-      const progEl = document.getElementById('todoProgressText');
-      if (progEl) progEl.textContent = `${doneCount}/${items.length} 已完成`;
-
       const container = document.getElementById('todoItemsContainer');
+      const badge = document.getElementById('todoCountBadge');
       if (!container) return;
 
-      if (items.length === 0) {
+      const prioWeight = { high: 0, normal: 1, low: 2 };
+      const sorted = [...appState.todos].sort((a, b) => {
+        if (a.done !== b.done) return a.done ? 1 : -1;
+        return (prioWeight[a.priority] ?? 1) - (prioWeight[b.priority] ?? 1);
+      });
+
+      const undone = sorted.filter(t => !t.done).length;
+      if (badge) badge.textContent = `${undone} 項未完成`;
+
+      if (sorted.length === 0) {
         container.innerHTML = `
-          <div class="text-center py-6 text-xs text-[#6B665F] border-2 border-dashed border-[#2C2A29]/30 rounded-xl">
-            所有待辦事項都完成啦！上方輸入可新增新任務 ✨
+          <div class="text-center py-6 text-xs text-[#6B665F]">
+            目前所有待辦事項都完成啦！輕鬆一下 ☕
           </div>
         `;
         return;
       }
 
-      container.innerHTML = items.map(item => {
-        const meta = TODO_PRIO_META[item.priority] || TODO_PRIO_META.normal;
+      const prioMeta = {
+        high: { label: '🔴 緊急', bg: 'bg-[#E06D53]/20 text-[#E06D53]' },
+        normal: { label: '🟡 一般', bg: 'bg-[#F3C65F]/40 text-[#9C5C1E]' },
+        low: { label: '🟢 稍後', bg: 'bg-[#6A997E]/25 text-[#2E5B42]' }
+      };
+
+      container.innerHTML = sorted.map(item => {
+        const p = prioMeta[item.priority] || prioMeta.normal;
         return `
-          <div class="flex items-center justify-between gap-2.5 p-2.5 rounded-xl border-2 border-[#2C2A29] ${item.done ? 'bg-gray-100/80' : 'bg-[#FBF8F1]'}">
-            <button onclick="toggleTodoDone('${item.id}')" class="flex items-center gap-2.5 flex-1 text-left min-w-0">
-              <span class="w-6 h-6 rounded-lg border-2 border-[#2C2A29] flex items-center justify-center shrink-0 ${item.done ? 'bg-[#3B6998] text-white' : 'bg-white'}">
+          <div class="flex items-center justify-between gap-2.5 p-2.5 rounded-xl border-2 border-[#2C2A29] ${item.done ? 'bg-[#F3EFE6] opacity-70' : 'bg-[#FFFDF9]'}">
+            <button onclick="toggleTodoItem('${item.id}')" class="flex items-center gap-2.5 flex-1 text-left min-w-0">
+              <span class="w-5 h-5 rounded-md border-2 border-[#2C2A29] flex items-center justify-center shrink-0 ${item.done ? 'bg-[#3B6998] text-white' : 'bg-white'}">
                 ${item.done ? '✓' : ''}
               </span>
               <div class="min-w-0 flex-1">
-                <p class="font-bold text-sm truncate ${item.done ? 'strike-item' : ''}">${item.text}</p>
+                <p class="text-sm font-bold truncate ${item.done ? 'line-through text-[#6B665F]' : 'text-[#2C2A29]'}">${item.text}</p>
                 <div class="flex items-center gap-1.5 mt-0.5">
-                  <span class="text-[10px] font-bold px-1.5 py-0.2 rounded border border-[#2C2A29] ${meta.badgeClass}">${meta.label}</span>
-                  ${item.note ? `<span class="text-[11px] font-bold text-[#3B6998]">📌 ${item.note}</span>` : ''}
+                  <span class="text-[10px] font-bold px-1.5 py-0.2 rounded border border-[#2C2A29] ${p.bg}">${p.label}</span>
+                  ${item.note ? `<span class="text-[11px] text-[#6B665F] truncate">⏰ ${item.note}</span>` : ''}
                 </div>
               </div>
             </button>
-            <button onclick="deleteTodoItem('${item.id}')" class="text-xs font-bold text-[#E06D53] px-2 py-1 shrink-0">✕</button>
+            <button onclick="deleteTodoItem('${item.id}')" class="p-1 text-xs text-[#6B665F] hover:text-[#E06D53] shrink-0" title="刪除">✕</button>
           </div>
         `;
       }).join('');
     }
 
-    // ==================== 8. 提示訊息工具與啟動 ====================
-    let toastTimeout = null;
-    window.showToast = (msg) => {
-      const box = document.getElementById('toastBox');
-      const msgEl = document.getElementById('toastMsg');
-      msgEl.textContent = msg;
-      box.classList.remove('opacity-0', '-translate-y-2');
-      box.classList.add('opacity-100', 'translate-y-0');
-      if (toastTimeout) clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => {
-        box.classList.remove('opacity-100', 'translate-y-0');
-        box.classList.add('opacity-0', '-translate-y-2');
-      }, 2400);
+    // ==================== 7. 第五頁：Shopping List 購物清單（家庭用 / 工作用） ====================
+    let currentShopScope = 'home';
+    const SHOP_CATEGORIES = {
+      home: ['生鮮蔬果', '日用品', '糧油雜貨', '零食飲品', '個人護理'],
+      work: ['文具耗材', '電腦配件', '茶水零食', '設備採購', '其他辦公']
     };
 
+    window.switchShoppingScope = (scope) => {
+      currentShopScope = scope;
+      const btnHome = document.getElementById('btnShopHome');
+      const btnWork = document.getElementById('btnShopWork');
+      const header = document.getElementById('shopListHeader');
+
+      if (scope === 'home') {
+        btnHome.className = 'sketch-btn py-2.5 px-3 font-black text-sm bg-[#6A997E] text-white flex items-center justify-center gap-2';
+        btnWork.className = 'sketch-btn py-2.5 px-3 font-black text-sm bg-white text-[#2C2A29] flex items-center justify-center gap-2';
+        if (header) header.innerHTML = '<span>🏠</span> 家庭用購物清單';
+      } else {
+        btnWork.className = 'sketch-btn py-2.5 px-3 font-black text-sm bg-[#3B6998] text-white flex items-center justify-center gap-2';
+        btnHome.className = 'sketch-btn py-2.5 px-3 font-black text-sm bg-white text-[#2C2A29] flex items-center justify-center gap-2';
+        if (header) header.innerHTML = '<span>💼</span> 工作用購物清單';
+      }
+      populateShopCategories();
+      renderShoppingList();
+    };
+
+    function populateShopCategories() {
+      const sel = document.getElementById('shopCategorySelect');
+      if (!sel) return;
+      const cats = SHOP_CATEGORIES[currentShopScope] || [];
+      sel.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
+    }
+
+    window.addShoppingItem = () => {
+      const input = document.getElementById('shopItemInput');
+      const catSel = document.getElementById('shopCategorySelect');
+      const qtyInput = document.getElementById('shopQtyInput');
+      const text = input.value.trim();
+      if (!text) {
+        showToast('請輸入要購買的物品名稱 🛒');
+        return;
+      }
+      if (!appState.shopping[currentShopScope]) appState.shopping[currentShopScope] = [];
+      appState.shopping[currentShopScope].unshift({
+        id: 'sp_' + Date.now(),
+        text,
+        category: catSel.value,
+        qty: qtyInput.value.trim(),
+        done: false
+      });
+      input.value = '';
+      qtyInput.value = '';
+      saveState();
+      renderShoppingList();
+      showToast(`🛒 已加入${currentShopScope === 'home' ? '家庭' : '工作'}清單`);
+    };
+
+    window.toggleShoppingItem = (id) => {
+      const list = appState.shopping[currentShopScope] || [];
+      const item = list.find(i => i.id === id);
+      if (item) {
+        item.done = !item.done;
+        saveState();
+        renderShoppingList();
+      }
+    };
+
+    window.deleteShoppingItem = (id) => {
+      appState.shopping[currentShopScope] = (appState.shopping[currentShopScope] || []).filter(i => i.id !== id);
+      saveState();
+      renderShoppingList();
+    };
+
+    window.clearCompletedShopping = () => {
+      const list = appState.shopping[currentShopScope] || [];
+      const before = list.length;
+      appState.shopping[currentShopScope] = list.filter(i => !i.done);
+      if (appState.shopping[currentShopScope].length === before) {
+        showToast('目前沒有已勾選的購物項目');
+        return;
+      }
+      saveState();
+      renderShoppingList();
+      showToast('🧹 已清除已購項目');
+    };
+
+    function renderShoppingList() {
+      const container = document.getElementById('shoppingItemsContainer');
+      const badge = document.getElementById('shopCountBadge');
+      if (!container) return;
+
+      const list = [...(appState.shopping[currentShopScope] || [])].sort((a, b) => (a.done === b.done ? 0 : a.done ? 1 : -1));
+      const pending = list.filter(i => !i.done).length;
+      if (badge) badge.textContent = `${pending} 項待買`;
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-6 text-xs text-[#6B665F]">
+            ${currentShopScope === 'home' ? '家庭用' : '工作用'}購物清單目前空空的，隨時新增吧 ✏️
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = list.map(item => `
+        <div class="flex items-center justify-between gap-2.5 p-2.5 rounded-xl border-2 border-[#2C2A29] ${item.done ? 'bg-[#F3EFE6] opacity-70' : 'bg-[#FFFDF9]'}">
+          <button onclick="toggleShoppingItem('${item.id}')" class="flex items-center gap-2.5 flex-1 text-left min-w-0">
+            <span class="w-5 h-5 rounded-md border-2 border-[#2C2A29] flex items-center justify-center shrink-0 ${item.done ? 'bg-[#6A997E] text-white' : 'bg-white'}">
+              ${item.done ? '✓' : ''}
+            </span>
+            <div class="min-w-0 flex-1">
+              <p class="text-sm font-bold truncate ${item.done ? 'line-through text-[#6B665F]' : 'text-[#2C2A29]'}">${item.text}</p>
+              <div class="flex items-center gap-1.5 mt-0.5">
+                <span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[#F3C65F]/40 border border-[#2C2A29]">${item.category}</span>
+                ${item.qty ? `<span class="text-[11px] text-[#6B665F] truncate">· ${item.qty}</span>` : ''}
+              </div>
+            </div>
+          </button>
+          <button onclick="deleteShoppingItem('${item.id}')" class="p-1 text-xs text-[#6B665F] hover:text-[#E06D53] shrink-0" title="刪除">✕</button>
+        </div>
+      `).join('');
+    }
+
+    // ==================== 8. 第六頁：沙田區今日天氣（香港天文台 API） ====================
+    window.fetchWeatherData = async (manual = false) => {
+      try {
+        const [rhrRes, fndRes] = await Promise.all([
+          fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=tc'),
+          fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=tc')
+        ]);
+        const rhr = await rhrRes.json();
+        const fnd = await fndRes.json();
+
+        const temps = rhr.temperature?.data || [];
+        const shaTin = temps.find(t => t.place === '沙田') || temps[0];
+        const tempVal = shaTin ? shaTin.value : 23;
+
+        const humData = rhr.humidity?.data?.[0];
+        const humVal = humData ? humData.value : 70;
+
+        const uvData = rhr.uvindex?.data?.[0];
+        const uvVal = uvData ? `${uvData.value} (${uvData.desc})` : '中等';
+
+        const warnings = rhr.warningMessage || [];
+        const warnText = warnings.length > 0 ? warnings[0].slice(0, 10) : '無生效警告';
+
+        const todayForecast = fnd.weatherForecast?.[0];
+        const condText = todayForecast?.forecastWeather?.split('。')[0] || '部分時間有陽光';
+
+        document.getElementById('weatherTemp').textContent = `${tempVal}°`;
+        document.getElementById('weatherCondition').textContent = condText;
+        document.getElementById('weatherHumidity').textContent = `${humVal}%`;
+        document.getElementById('weatherUV').textContent = uvVal;
+        document.getElementById('weatherWarningBadge').textContent = warnText;
+        document.getElementById('weatherUpdateTime').textContent = `天文台更新：${new Date().toLocaleTimeString('zh-HK', { hour: '2-digit', minute: '2-digit' })}`;
+
+        let advice = '';
+        if (tempVal <= 17) {
+          advice = `沙田目前 ${tempVal}°C 偏涼，早晚出門建議加穿外套或風衣 🧥。`;
+        } else if (tempVal >= 28) {
+          advice = `今日天氣炎熱（${tempVal}°C），外出乘車請穿著透氣衣物並多補充水分 💧。`;
+        } else {
+          advice = `今日沙田氣溫舒適（${tempVal}°C），適合外出活動；若晚間回家可備薄外套。`;
+        }
+        if (condText.includes('雨') || humVal >= 85) {
+          advice += ' 天色較潮濕或有驟雨，出門記得帶備摺疊雨傘 ☂️！';
+        }
+        document.getElementById('weatherAdviceText').textContent = advice;
+
+        const listEl = document.getElementById('forecastList');
+        const fiveDays = (fnd.weatherForecast || []).slice(0, 5);
+        if (listEl && fiveDays.length > 0) {
+          listEl.innerHTML = fiveDays.map(d => {
+            const dayName = d.week.replace('星期', '週');
+            const wText = d.forecastWeather || '';
+            const emoji = wText.includes('雷') ? '⛈️' : wText.includes('雨') ? '🌧️' : wText.includes('陽光') ? '⛅' : '☁️';
+            return `
+              <div class="bg-[#FBF8F1] border border-[#2C2A29] rounded-xl py-2 px-1">
+                <p class="text-[11px] font-black text-[#2C2A29]">${dayName}</p>
+                <p class="text-xl my-1">${emoji}</p>
+                <p class="text-[11px] font-black text-[#3B6998]">${d.forecastMintemp.value}°-${d.forecastMaxtemp.value}°</p>
+              </div>
+            `;
+          }).join('');
+        }
+
+        if (manual) showToast('🌤️ 沙田區最新天氣已更新');
+      } catch (e) {
+        document.getElementById('weatherTemp').textContent = '23°';
+        document.getElementById('weatherCondition').textContent = '大致天晴 · 吹和緩東風';
+        document.getElementById('weatherHumidity').textContent = '68%';
+        document.getElementById('weatherUV').textContent = '中等';
+        document.getElementById('weatherAdviceText').textContent = '天氣清涼乾爽，出門乘搭巴士或港鐵十分舒適 😊。';
+      }
+    };
+
+    // ==================== 9. 頁面啟動初始化 ====================
     window.addEventListener('DOMContentLoaded', () => {
       updateHeaderDate();
-      fetchWeatherData(false);
+      setInterval(updateHeaderDate, 30000);
+
+      // 第一頁：愉翠苑報站
       renderTransportList();
       refreshAllETA(false);
       startEtaCountdown();
-      fetchCableNews(false);
-      renderShopping();
+
+      // 第二頁：預設示範第一城 -> 金鐘車程
+      selectQuickMtrStation('金鐘');
+
+      // 第三頁：預設示範愉翠苑 -> 尖沙咀自駕時間
+      updateTrafficBadge();
+      selectQuickDriveDest('尖沙咀');
+
+      // 第四頁：To-Do List 待辦事項
       renderTodos();
+
+      // 第五頁：Shopping List 購物清單
+      populateShopCategories();
+      renderShoppingList();
+
+      // 第六頁：沙田天氣
+      fetchWeatherData(false);
     });
   </script>
 </body>
