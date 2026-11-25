@@ -235,13 +235,14 @@
 
       <!-- 右上角立即同步 + 家庭暗號按鈕 -->
       <div class="flex items-center gap-1.5 shrink-0">
-        <button onclick="manualForceSync()" class="sketch-btn bg-[#769676] text-white p-1.5 flex items-center justify-center" title="立即手動同步雲端資料" aria-label="立即手動同步">
-          <svg id="cloudSyncSpin" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <button onclick="manualForceSync()" class="sketch-btn bg-[#769676] text-white px-2 py-1.5 flex items-center gap-1 text-[11px] font-bold" title="立即手動同步雲端資料" aria-label="立即手動同步">
+          <svg id="cloudSyncSpin" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 2v6h-6"></path>
             <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
             <path d="M3 22v-6h6"></path>
             <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
           </svg>
+          <span>同步</span>
         </button>
 
         <button onclick="openFamilyModal()" class="sketch-btn bg-white px-2.5 py-1.5 flex items-center gap-1 text-xs font-bold" aria-label="家庭共用設定">
@@ -755,11 +756,11 @@
     import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
     // ==========================================
-    // 1. 全域狀態與跨裝置即時雲端同步架構（徹底修復同步問題）
+    // 1. 全域狀態與跨裝置即時雲端同步引擎（支援外部網頁與內建雙通道）
     // ==========================================
-    const STORAGE_KEY_STATE = 'yuchui_family_assistant_v2';
+    const STORAGE_KEY_STATE = 'yuchui_family_assistant_v3';
 
-    // 支援從網址 ?room=XXX 自動讀取家庭共享暗號，方便一鍵分享給家人
+    // 支援從網址 ?room=XXX 自動讀取家庭共享暗號
     const urlParams = new URLSearchParams(window.location.search);
     const urlRoom = urlParams.get('room');
     if (urlRoom && urlRoom.trim()) {
@@ -771,29 +772,33 @@
     let auth = null;
     let currentUser = null;
     let unsubscribeSnapshot = null;
-    let isRemoteUpdating = false; // 防止快照寫回循環
+    let isRemoteUpdating = false;
     let hasReceivedFirstCloudSnapshot = false;
+    let syncMode = 'initializing'; // 'firestore' | 'webcloud' | 'local'
+    let webCloudPollTimer = null;
+    let lastCloudHash = '';
 
     const todayStr = new Date().toISOString().split('T')[0];
     window.todayStr = todayStr;
 
     const defaultState = {
       events: [
-        { id: 'ev-1', date: todayStr, time: '16:30', title: '接小朋友放學 & 買下午茶', member: '媽媽', category: 'school', done: false },
-        { id: 'ev-2', date: todayStr, time: '19:30', title: '愉翠商場食晚飯', member: '全家', category: 'family', done: false }
+        { id: 'ev-1', date: todayStr, time: '16:30', title: '接小朋友放學 & 買下午茶', member: '媽媽', category: 'school', done: false, updatedAt: 1700000000000 },
+        { id: 'ev-2', date: todayStr, time: '19:30', title: '愉翠商場食晚飯', member: '全家', category: 'family', done: false, updatedAt: 1700000000000 }
       ],
       shopping: {
         home: [
-          { id: 'sh-1', name: '維記鮮奶 (家庭裝)', qty: '1盒', category: '🥬 生鮮蔬果', done: false },
-          { id: 'sh-2', name: '廚房紙巾 (三卷裝)', qty: '1袋', category: '🧻 家居日用', done: false },
-          { id: 'sh-3', name: '小朋友中文練習簿', qty: '2本', category: '🧒 小朋友用品', done: true }
+          { id: 'sh-1', name: '維記鮮奶 (家庭裝)', qty: '1盒', category: '🥬 生鮮蔬果', done: false, updatedAt: 1700000000000 },
+          { id: 'sh-2', name: '廚房紙巾 (三卷裝)', qty: '1袋', category: '🧻 家居日用', done: false, updatedAt: 1700000000000 },
+          { id: 'sh-3', name: '小朋友中文練習簿', qty: '2本', category: '🧒 小朋友用品', done: true, updatedAt: 1700000000000 }
         ],
         work: [
-          { id: 'sw-1', name: 'SDXC 高速記憶卡 128GB', qty: '2張', category: '📷 攝影器材配件', done: false },
-          { id: 'sw-2', name: '相機備用電池充電座', qty: '1個', category: '🔋 電池 / 記憶卡 / 線材', done: false },
-          { id: 'sw-3', name: 'A4 影印紙 & 黑色原子筆', qty: '1盒', category: '📎 辦公文具', done: false }
+          { id: 'sw-1', name: 'SDXC 高速記憶卡 128GB', qty: '2張', category: '📷 攝影器材配件', done: false, updatedAt: 1700000000000 },
+          { id: 'sw-2', name: '相機備用電池充電座', qty: '1個', category: '🔋 電池 / 記憶卡 / 線材', done: false, updatedAt: 1700000000000 },
+          { id: 'sw-3', name: 'A4 影印紙 & 黑色原子筆', qty: '1盒', category: '📎 辦公文具', done: false, updatedAt: 1700000000000 }
         ]
       },
+      deletedIds: [],
       favRoutes: ['A41', '49X', '89X', '182', '808', '65A'],
       updatedAt: 0
     };
@@ -809,7 +814,11 @@
           if (!favs.includes('A41')) favs.unshift('A41');
           return {
             events: Array.isArray(parsed.events) ? parsed.events : defaultState.events,
-            shopping: parsed.shopping || defaultState.shopping,
+            shopping: {
+              home: Array.isArray(parsed.shopping?.home) ? parsed.shopping.home : defaultState.shopping.home,
+              work: Array.isArray(parsed.shopping?.work) ? parsed.shopping.work : defaultState.shopping.work
+            },
+            deletedIds: Array.isArray(parsed.deletedIds) ? parsed.deletedIds.slice(-100) : [],
             favRoutes: favs,
             updatedAt: parsed.updatedAt || 0
           };
@@ -818,6 +827,48 @@
         console.warn('Local state load failed', e);
       }
       return JSON.parse(JSON.stringify(defaultState));
+    }
+
+    // 智慧合併雲端與本地資料，防止多部手機同時編輯時互相覆蓋
+    function mergeRemoteWithLocal(remoteData) {
+      if (!remoteData || typeof remoteData !== 'object') return false;
+
+      const deletedSet = new Set([
+        ...(appState.deletedIds || []),
+        ...(Array.isArray(remoteData.deletedIds) ? remoteData.deletedIds : [])
+      ]);
+
+      const mergeListById = (localArr = [], remoteArr = []) => {
+        const map = new Map();
+        localArr.forEach(item => {
+          if (item && item.id && !deletedSet.has(item.id)) map.set(item.id, item);
+        });
+        remoteArr.forEach(item => {
+          if (!item || !item.id || deletedSet.has(item.id)) return;
+          const existing = map.get(item.id);
+          if (!existing || (item.updatedAt || 0) >= (existing.updatedAt || 0)) {
+            map.set(item.id, item);
+          }
+        });
+        return Array.from(map.values());
+      };
+
+      const nextEvents = mergeListById(appState.events, Array.isArray(remoteData.events) ? remoteData.events : []);
+      const nextHome = mergeListById(appState.shopping?.home, Array.isArray(remoteData.shopping?.home) ? remoteData.shopping.home : []);
+      const nextWork = mergeListById(appState.shopping?.work, Array.isArray(remoteData.shopping?.work) ? remoteData.shopping.work : []);
+      const nextFavs = Array.isArray(remoteData.favRoutes) && remoteData.favRoutes.length > 0 ? remoteData.favRoutes : appState.favRoutes;
+
+      const prevFingerprint = JSON.stringify({ e: appState.events, s: appState.shopping });
+      const nextFingerprint = JSON.stringify({ e: nextEvents, s: { home: nextHome, work: nextWork } });
+
+      appState.events = nextEvents;
+      appState.shopping = { home: nextHome, work: nextWork };
+      appState.deletedIds = Array.from(deletedSet).slice(-100);
+      appState.favRoutes = nextFavs;
+      appState.updatedAt = Math.max(appState.updatedAt || 0, remoteData.updatedAt || 0);
+
+      localStorage.setItem(`${STORAGE_KEY_STATE}_${familyCode}`, JSON.stringify(appState));
+      return prevFingerprint !== nextFingerprint;
     }
 
     function updateSyncIndicator(status, label) {
@@ -836,17 +887,119 @@
         if (text) text.textContent = label || '同步資料中...';
       } else {
         if (dot) dot.className = 'inline-block w-2 h-2 rounded-full bg-[#E5B454] shrink-0';
-        if (text) text.textContent = label || '🟡 本地離線暫存模式';
+        if (text) text.textContent = label || '🟡 離線暫存（連網自動同步）';
         if (modalBadge) {
-          modalBadge.textContent = '🟡 本地暫存模式（連網後自動同步）';
+          modalBadge.textContent = '🟡 離線暫存模式（連網自動同步）';
           modalBadge.className = 'text-xs font-black text-[#B88628]';
         }
       }
     }
 
+    // 外部獨立網頁專用即時雲端通道（基於 npoint / kvdb 無需註冊跨裝置同步）
+    function getWebCloudEndpoint() {
+      const cleanRoom = familyCode.replace(/[^A-Z0-9_-]/g, '').toLowerCase() || 'yuchui-home';
+      return `https://kvdb.io/A2k8v9P3xLm7QwR5tN4zB8/yuchui_${cleanRoom}`;
+    }
+
+    async function pullFromWebCloud(silent = true) {
+      try {
+        const res = await fetch(`${getWebCloudEndpoint()}?t=${Date.now()}`, {
+          method: 'GET',
+          cache: 'no-store'
+        });
+        if (res.status === 404) {
+          // 雲端尚未建立房間，立即上傳目前資料
+          await pushToWebCloud();
+          updateSyncIndicator('online', '🟢 雲端已即時同步');
+          return true;
+        }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const rawText = await res.text();
+        if (!rawText) return true;
+
+        if (rawText !== lastCloudHash) {
+          lastCloudHash = rawText;
+          const remoteData = JSON.parse(rawText);
+          const changed = mergeRemoteWithLocal(remoteData);
+          if (changed) {
+            renderAllDataViews();
+            if (!silent) showToast('已收到家人最新更新 ✨');
+          }
+        }
+        const now = new Date();
+        const hhmm = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        updateSyncIndicator('online', `🟢 已同步 (${hhmm})`);
+        return true;
+      } catch (err) {
+        console.warn('WebCloud pull error:', err);
+        updateSyncIndicator('offline', '🟡 網絡不穩，暫存本機');
+        return false;
+      }
+    }
+
+    async function pushToWebCloud() {
+      try {
+        updateSyncIndicator('syncing', '正在同步至雲端...');
+        // 先抓取最新雲端資料合併再寫入，避免覆蓋家人剛新增的項目
+        try {
+          const preRes = await fetch(`${getWebCloudEndpoint()}?t=${Date.now()}`, { cache: 'no-store' });
+          if (preRes.ok) {
+            const txt = await preRes.text();
+            if (txt) mergeRemoteWithLocal(JSON.parse(txt));
+          }
+        } catch (e) {}
+
+        const payload = JSON.stringify({
+          events: appState.events,
+          shopping: appState.shopping,
+          deletedIds: appState.deletedIds,
+          favRoutes: appState.favRoutes,
+          updatedAt: appState.updatedAt
+        });
+
+        const res = await fetch(getWebCloudEndpoint(), {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+          body: payload
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        lastCloudHash = payload;
+        const now = new Date();
+        const hhmm = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        updateSyncIndicator('online', `🟢 已同步 (${hhmm})`);
+        return true;
+      } catch (err) {
+        console.warn('WebCloud push error:', err);
+        updateSyncIndicator('offline', '🟡 暫存本機（寫入異常）');
+        return false;
+      }
+    }
+
+    function startWebCloudPolling() {
+      if (webCloudPollTimer) clearInterval(webCloudPollTimer);
+      pullFromWebCloud(true);
+      // 每 5 秒自動背景檢查一次家人更新，並於切回頁面時立即同步
+      webCloudPollTimer = setInterval(() => {
+        if (!document.hidden) pullFromWebCloud(false);
+      }, 5000);
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        if (syncMode === 'webcloud') pullFromWebCloud(false);
+        else if (syncMode === 'firestore' && db && currentUser) window.manualForceSync(true);
+      }
+    });
+
+    function renderAllDataViews() {
+      renderDailyScheduleFeed();
+      renderCalendar();
+      renderShopping();
+      renderTransportList();
+    }
+
     function getFamilyDocRef() {
       const appId = typeof __app_id !== 'undefined' ? __app_id : 'yuchui-family-app';
-      // 嚴格遵守 /artifacts/{appId}/public/data/{collectionName}/{documentId} 公開共享路徑
       return doc(db, 'artifacts', appId, 'public', 'data', 'family_rooms', familyCode);
     }
 
@@ -856,21 +1009,28 @@
         localStorage.setItem(`${STORAGE_KEY_STATE}_${familyCode}`, JSON.stringify(appState));
       } catch (e) {}
 
-      if (db && currentUser && !isRemoteUpdating) {
+      if (isRemoteUpdating) return;
+
+      if (syncMode === 'firestore' && db && currentUser) {
         updateSyncIndicator('syncing', '正在同步至雲端...');
         try {
           const docRef = getFamilyDocRef();
           await setDoc(docRef, {
             events: JSON.parse(JSON.stringify(appState.events)),
             shopping: JSON.parse(JSON.stringify(appState.shopping)),
+            deletedIds: [...(appState.deletedIds || [])],
             favRoutes: [...appState.favRoutes],
             updatedAt: appState.updatedAt
           }, { merge: true });
           updateSyncIndicator('online', '🟢 雲端已即時同步');
         } catch (err) {
           console.error('Firestore write error:', err);
-          updateSyncIndicator('offline', '🟡 暫存本機（寫入異常）');
+          syncMode = 'webcloud';
+          await pushToWebCloud();
         }
+      } else {
+        syncMode = 'webcloud';
+        await pushToWebCloud();
       }
     }
 
@@ -878,31 +1038,33 @@
       document.getElementById('headerRoomBadge').textContent = `#${familyCode}`;
       document.getElementById('familyCodeInput').value = familyCode;
 
-      if (typeof __firebase_config === 'undefined') {
-        updateSyncIndicator('offline', '🟡 單機本地儲存模式');
-        return;
-      }
+      // 若在預覽環境具有 __firebase_config，優先使用 Firestore；若放於外部網頁則自動啟用 WebCloud 跨手機同步引擎
+      if (typeof __firebase_config !== 'undefined') {
+        try {
+          const firebaseConfig = JSON.parse(__firebase_config);
+          const app = initializeApp(firebaseConfig);
+          auth = getAuth(app);
+          db = getFirestore(app);
 
-      try {
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const app = initializeApp(firebaseConfig);
-        auth = getAuth(app);
-        db = getFirestore(app);
+          if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+            const cred = await signInWithCustomToken(auth, __initial_auth_token);
+            currentUser = cred.user;
+          } else {
+            const cred = await signInAnonymously(auth);
+            currentUser = cred.user;
+          }
 
-        // 必須先完成驗證再進行任何 Firestore 操作
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          const cred = await signInWithCustomToken(auth, __initial_auth_token);
-          currentUser = cred.user;
-        } else {
-          const cred = await signInAnonymously(auth);
-          currentUser = cred.user;
+          syncMode = 'firestore';
+          await subscribeFamilyRoom();
+          return;
+        } catch (err) {
+          console.warn('Firestore unavailable, switching to WebCloud sync:', err);
         }
-
-        await subscribeFamilyRoom();
-      } catch (err) {
-        console.warn('Firebase init fallback to local:', err);
-        updateSyncIndicator('offline', '🟡 本地離線暫存模式');
       }
+
+      // 外部獨立網頁同步模式
+      syncMode = 'webcloud';
+      startWebCloudPolling();
     }
 
     async function subscribeFamilyRoom() {
@@ -917,71 +1079,55 @@
 
         if (snap.exists()) {
           const data = snap.data();
-          const cloudUpdatedAt = data.updatedAt || 0;
-
-          // 若雲端有資料，且是首次載入或雲端時間戳較新，立即更新本地畫面
-          if (!hasReceivedFirstCloudSnapshot || cloudUpdatedAt >= (appState.updatedAt || 0)) {
-            isRemoteUpdating = true;
-            if (Array.isArray(data.events)) appState.events = data.events;
-            if (data.shopping && typeof data.shopping === 'object') {
-              appState.shopping = {
-                home: Array.isArray(data.shopping.home) ? data.shopping.home : [],
-                work: Array.isArray(data.shopping.work) ? data.shopping.work : []
-              };
-            }
-            if (Array.isArray(data.favRoutes)) appState.favRoutes = data.favRoutes;
-            appState.updatedAt = cloudUpdatedAt;
-
-            localStorage.setItem(`${STORAGE_KEY_STATE}_${familyCode}`, JSON.stringify(appState));
-            renderDailyScheduleFeed();
-            renderCalendar();
-            renderShopping();
-            renderTransportList();
-            isRemoteUpdating = false;
+          isRemoteUpdating = true;
+          const changed = mergeRemoteWithLocal(data);
+          if (!hasReceivedFirstCloudSnapshot || changed) {
+            renderAllDataViews();
           }
+          isRemoteUpdating = false;
           hasReceivedFirstCloudSnapshot = true;
         } else {
-          // 雲端尚未建立此家庭房間，立即將本地資料初始化上傳至雲端
           hasReceivedFirstCloudSnapshot = true;
           await saveState();
         }
       }, (error) => {
-        console.error('Snapshot listener error:', error);
-        updateSyncIndicator('offline', '🟡 雲端連線中斷');
+        console.error('Snapshot listener error, switching to WebCloud:', error);
+        syncMode = 'webcloud';
+        startWebCloudPolling();
       });
     }
 
-    window.manualForceSync = async () => {
+    window.manualForceSync = async (silent = false) => {
       const spin = document.getElementById('cloudSyncSpin');
       if (spin) spin.classList.add('animate-spin');
 
-      if (!db || !currentUser) {
-        await initCloudSync();
-      } else {
+      if (syncMode === 'firestore' && db && currentUser) {
         try {
           const docRef = getFamilyDocRef();
           const snap = await getDoc(docRef);
           if (snap.exists()) {
-            const data = snap.data();
             isRemoteUpdating = true;
-            if (Array.isArray(data.events)) appState.events = data.events;
-            if (data.shopping) appState.shopping = data.shopping;
-            if (Array.isArray(data.favRoutes)) appState.favRoutes = data.favRoutes;
-            appState.updatedAt = data.updatedAt || Date.now();
-            localStorage.setItem(`${STORAGE_KEY_STATE}_${familyCode}`, JSON.stringify(appState));
-            renderDailyScheduleFeed();
-            renderCalendar();
-            renderShopping();
-            renderTransportList();
+            mergeRemoteWithLocal(snap.data());
+            renderAllDataViews();
             isRemoteUpdating = false;
             updateSyncIndicator('online', '🟢 雲端已即時同步');
-            showToast('已從雲端刷新最新家庭日曆與清單 ✓');
+            if (!silent) showToast('已從雲端刷新最新月曆、家庭日曆與清單 ✓');
           } else {
             await saveState();
-            showToast('已將本機資料同步至雲端 ✓');
+            if (!silent) showToast('已將資料上傳至雲端 ✓');
           }
         } catch (e) {
-          showToast('同步失敗，請檢查網絡連線');
+          syncMode = 'webcloud';
+          await pullFromWebCloud(silent);
+        }
+      } else {
+        syncMode = 'webcloud';
+        const ok = await pullFromWebCloud(true);
+        if (ok) {
+          await pushToWebCloud();
+          if (!silent) showToast('已與家人雲端完成雙向同步 ✓');
+        } else if (!silent) {
+          showToast('同步失敗，請檢查手機網絡連線');
         }
       }
 
@@ -1000,14 +1146,18 @@
       const val = document.getElementById('familyCodeInput').value.trim().toUpperCase();
       if (!val) return showToast('請輸入家庭共享暗號');
       familyCode = val;
+      lastCloudHash = '';
       localStorage.setItem('yuchui_family_code', familyCode);
       document.getElementById('headerRoomBadge').textContent = `#${familyCode}`;
       appState = loadLocalState();
-      renderDailyScheduleFeed();
-      renderCalendar();
-      renderShopping();
-      renderTransportList();
-      if (db && currentUser) await subscribeFamilyRoom();
+      renderAllDataViews();
+
+      if (syncMode === 'firestore' && db && currentUser) {
+        await subscribeFamilyRoom();
+      } else {
+        syncMode = 'webcloud';
+        startWebCloudPolling();
+      }
       closeFamilyModal();
       showToast(`已切換至家庭手帳 #${familyCode}`);
     };
@@ -1569,6 +1719,7 @@
       const ev = appState.events.find(e => e.id === id);
       if (ev) {
         ev.done = !ev.done;
+        ev.updatedAt = Date.now();
         saveState();
         renderDailyScheduleFeed();
         renderCalendar();
@@ -1850,18 +2001,19 @@
         const idx = appState.events.findIndex(item => item.id === editId);
         if (idx > -1) {
           const oldDone = Boolean(appState.events[idx].done);
-          appState.events[idx] = { id: editId, date, time, title, member, category, done: oldDone };
+          appState.events[idx] = { id: editId, date, time, title, member, category, done: oldDone, updatedAt: Date.now() };
         }
         showToast('已更新家庭行程 ✓');
       } else {
         appState.events.push({
-          id: `ev-${Date.now()}`,
+          id: `ev-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
           date,
           time,
           title,
           member,
           category,
-          done: false
+          done: false,
+          updatedAt: Date.now()
         });
         showToast('已加入家庭日曆並同步給家人 📅');
       }
@@ -1878,6 +2030,8 @@
     };
 
     window.deleteCalendarEvent = (id) => {
+      if (!appState.deletedIds) appState.deletedIds = [];
+      appState.deletedIds.push(id);
       appState.events = appState.events.filter(e => e.id !== id);
       saveState();
       renderDailyScheduleFeed();
@@ -1938,11 +2092,12 @@
       if (!name) return;
 
       appState.shopping[currentShopMode].unshift({
-        id: `shop-${Date.now()}`,
+        id: `shop-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         name,
         qty: qtyInput.value.trim() || '1份',
         category: catSelect.value,
-        done: false
+        done: false,
+        updatedAt: Date.now()
       });
 
       nameInput.value = '';
@@ -1957,25 +2112,29 @@
       const item = list.find(i => i.id === id);
       if (item) {
         item.done = !item.done;
+        item.updatedAt = Date.now();
         saveState();
         renderShopping();
       }
     };
 
     window.deleteShoppingItem = (id) => {
+      if (!appState.deletedIds) appState.deletedIds = [];
+      appState.deletedIds.push(id);
       appState.shopping[currentShopMode] = appState.shopping[currentShopMode].filter(i => i.id !== id);
       saveState();
       renderShopping();
     };
 
     window.clearCompletedShopping = () => {
-      const before = appState.shopping[currentShopMode].length;
-      appState.shopping[currentShopMode] = appState.shopping[currentShopMode].filter(i => !i.done);
-      const removed = before - appState.shopping[currentShopMode].length;
-      if (removed > 0) {
+      const completed = appState.shopping[currentShopMode].filter(i => i.done);
+      if (completed.length > 0) {
+        if (!appState.deletedIds) appState.deletedIds = [];
+        completed.forEach(i => appState.deletedIds.push(i.id));
+        appState.shopping[currentShopMode] = appState.shopping[currentShopMode].filter(i => !i.done);
         saveState();
         renderShopping();
-        showToast(`已清除 ${removed} 項已購買物品 🧹`);
+        showToast(`已清除 ${completed.length} 項已購買物品 🧹`);
       } else {
         showToast('目前沒有已勾選的項目');
       }
