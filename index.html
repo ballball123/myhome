@@ -1716,38 +1716,265 @@
 
     // ==================== 6. 第四頁：自駕時間與的士車資估算（預設沙田愉翠苑，可更改） ====================
     const DRIVE_HUB_COORDS = {
-      '沙田愉翠苑': { lat: 22.3835, lng: 114.2055, area: '沙田圓洲角' },
-      '第一城': { lat: 22.3865, lng: 114.2035, area: '沙田第一城' },
-      '沙田市中心': { lat: 22.3820, lng: 114.1880, area: '沙田' },
-      '大圍': { lat: 22.3730, lng: 114.1785, area: '大圍' },
-      '火炭': { lat: 22.3955, lng: 114.1980, area: '火炭' },
-      '馬鞍山': { lat: 22.4245, lng: 114.2315, area: '馬鞍山' },
-      '大埔': { lat: 22.4455, lng: 114.1695, area: '大埔' },
-      '大埔墟': { lat: 22.4455, lng: 114.1695, area: '大埔' },
-      '粉嶺': { lat: 22.4920, lng: 114.1385, area: '粉嶺' },
-      '上水': { lat: 22.5010, lng: 114.1280, area: '上水' },
-      '西貢': { lat: 22.3815, lng: 114.2705, area: '西貢' },
-      '西貢市中心': { lat: 22.3815, lng: 114.2705, area: '西貢' },
-      '九龍塘': { lat: 22.3370, lng: 114.1765, area: '九龍塘' },
-      '旺角': { lat: 22.3193, lng: 114.1694, area: '旺角' },
-      '尖沙咀': { lat: 22.2988, lng: 114.1722, area: '尖沙咀' },
-      '紅磡': { lat: 22.3030, lng: 114.1815, area: '紅磡' },
-      '觀塘': { lat: 22.3122, lng: 114.2250, area: '觀塘' },
-      '九龍灣': { lat: 22.3235, lng: 114.2140, area: '九龍灣' },
-      '將軍澳': { lat: 22.3075, lng: 114.2595, area: '將軍澳' },
-      '荃灣': { lat: 22.3710, lng: 114.1145, area: '荃灣' },
-      '葵芳': { lat: 22.3568, lng: 114.1280, area: '葵芳' },
-      '青衣': { lat: 22.3585, lng: 114.1065, area: '青衣' },
-      '屯門': { lat: 22.3910, lng: 113.9725, area: '屯門' },
-      '元朗': { lat: 22.4445, lng: 114.0225, area: '元朗' },
-      '中環': { lat: 22.2820, lng: 114.1585, area: '中環' },
-      '金鐘': { lat: 22.2790, lng: 114.1650, area: '金鐘' },
-      '灣仔': { lat: 22.2775, lng: 114.1730, area: '灣仔' },
-      '銅鑼灣': { lat: 22.2800, lng: 114.1850, area: '銅鑼灣' },
-      '太古': { lat: 22.2845, lng: 114.2165, area: '太古' },
-      '柴灣': { lat: 22.2645, lng: 114.2365, area: '柴灣' },
-      '香港國際機場': { lat: 22.3080, lng: 113.9185, area: '赤鱲角機場' },
-      '機場': { lat: 22.3080, lng: 113.9185, area: '赤鱲角機場' }
+      '沙田愉翠苑': {
+        lat: 22.3835, lng: 114.2055, area: '沙田圓洲角',
+        carparks: [
+          { name: '愉翠商場停車場', type: '時租室內', rate: '$18/小時', note: '領展場 · 設電動車充電' },
+          { name: '第一城中心 / 置富第一城停車場', type: '時租室內', rate: '$20/小時', note: '步行約 6 分鐘' }
+        ],
+        meters: ['牛皮沙街路旁咪錶位（愉翠苑外）', '插桅杆街路旁咪錶位（近第一城站）']
+      },
+      '第一城': {
+        lat: 22.3865, lng: 114.2035, area: '沙田第一城',
+        carparks: [
+          { name: '置富第一城停車場', type: '時租室內', rate: '$20/小時', note: '消費滿額享免費泊車' },
+          { name: '愉翠商場停車場', type: '時租室內', rate: '$18/小時', note: '近牛皮沙街出口' }
+        ],
+        meters: ['銀城街及百得街路旁咪錶位', '插桅杆街路旁咪錶位']
+      },
+      '沙田市中心': {
+        lat: 22.3820, lng: 114.1880, area: '沙田',
+        carparks: [
+          { name: '新城市廣場第一期 / 第三期停車場', type: '時租室內', rate: '$24/小時', note: '假日車位較緊張' },
+          { name: '沙田廣場 / 好運中心停車場', type: '時租室內', rate: '$22/小時', note: '近源禾路入口' }
+        ],
+        meters: ['源禾路（近沙田大會堂）路旁咪錶位', '担杆莆街路旁咪錶位']
+      },
+      '大圍': {
+        lat: 22.3730, lng: 114.1785, area: '大圍',
+        carparks: [
+          { name: '圍方 The Wai 停車場', type: '時租室內', rate: '$24/小時', note: '車位充足 · 支援八達通/免觸式' },
+          { name: '海福花園 / 金禧花園停車場', type: '時租室內', rate: '$20/小時', note: '大圍站對面' }
+        ],
+        meters: ['積福街及積富街路旁咪錶位', '村南道（大圍站外）路旁咪錶位']
+      },
+      '火炭': {
+        lat: 22.3955, lng: 114.1980, area: '火炭',
+        carparks: [
+          { name: '駿景廣場停車場', type: '時租室內', rate: '$18/小時', note: '近火炭站' },
+          { name: '銀禧薈停車場', type: '時租室內', rate: '$18/小時', note: '設消費泊車優惠' }
+        ],
+        meters: ['山尾街及穗禾路路旁咪錶位', '坳背灣街路旁咪錶位']
+      },
+      '馬鞍山': {
+        lat: 22.4245, lng: 114.2315, area: '馬鞍山',
+        carparks: [
+          { name: 'MOSTown 新港城中心停車場', type: '時租室內', rate: '$20/小時', note: '鞍祿街入口' },
+          { name: '馬鞍山廣場停車場', type: '時租室內', rate: '$20/小時', note: '西沙路入口' }
+        ],
+        meters: ['鞍駿街（近海濱長廊）路旁咪錶位', '西沙路路旁咪錶位']
+      },
+      '大埔': {
+        lat: 22.4455, lng: 114.1695, area: '大埔',
+        carparks: [
+          { name: '大埔超級城 A/B/C 區停車場', type: '時租室內', rate: '$20/小時', note: '安邦路入口' },
+          { name: '新達廣場停車場', type: '時租室內', rate: '$22/小時', note: '大埔墟站旁' }
+        ],
+        meters: ['安慈路及安泰路路旁咪錶位', '廣福道及寶鄉街路旁咪錶位']
+      },
+      '大埔墟': {
+        lat: 22.4455, lng: 114.1695, area: '大埔',
+        carparks: [
+          { name: '新達廣場停車場', type: '時租室內', rate: '$22/小時', note: '大埔墟站上蓋' },
+          { name: '大埔綜合大樓停車場', type: '政府時租', rate: '$15/小時', note: '鄉事會街 · 價格實惠' }
+        ],
+        meters: ['鄉事會街及懷仁街路旁咪錶位', '運頭街路旁咪錶位']
+      },
+      '粉嶺': {
+        lat: 22.4920, lng: 114.1385, area: '粉嶺',
+        carparks: [
+          { name: '粉嶺名都廣場停車場', type: '時租室內', rate: '$18/小時', note: '粉嶺站旁' },
+          { name: '逸峯廣場停車場', type: '時租室內', rate: '$16/小時', note: '聯和墟' }
+        ],
+        meters: ['聯和墟和泰街及聯安街路旁咪錶位', '粉嶺車站路旁咪錶位']
+      },
+      '上水': {
+        lat: 22.5010, lng: 114.1280, area: '上水',
+        carparks: [
+          { name: '上水廣場 Landmark North 停車場', type: '時租室內', rate: '$22/小時', note: '龍琛路入口' },
+          { name: '新都廣場停車場', type: '時租室內', rate: '$18/小時', note: '龍運街' }
+        ],
+        meters: ['新康街及新成路路旁咪錶位', '智昌路路旁咪錶位']
+      },
+      '西貢': {
+        lat: 22.3815, lng: 114.2705, area: '西貢',
+        carparks: [
+          { name: '西貢海濱公園 / 惠民路露天停車場', type: '時租露天', rate: '$18/小時', note: '假日建議早到' },
+          { name: '萬年街 / 福民路公眾停車場', type: '時租露天', rate: '$20/小時', note: '近海鮮街' }
+        ],
+        meters: ['惠民路及福民路路旁咪錶位', '美源街及普通道旁咪錶位']
+      },
+      '西貢市中心': {
+        lat: 22.3815, lng: 114.2705, area: '西貢',
+        carparks: [
+          { name: '西貢惠民路公眾停車場', type: '時租露天', rate: '$18/小時', note: '近碼頭及巴士總站' },
+          { name: '西貢海傍廣場停車場', type: '時租露天', rate: '$22/小時', note: '近海鮮食肆區' }
+        ],
+        meters: ['惠民路路旁咪錶位', '福民路路旁咪錶位']
+      },
+      '九龍塘': {
+        lat: 22.3370, lng: 114.1765, area: '九龍塘',
+        carparks: [
+          { name: '又一城 Festival Walk 停車場', type: '時租室內', rate: '$28/小時', note: '達之路入口 · 消費優惠' },
+          { name: '九龍塘教育服務中心停車場', type: '時租室內', rate: '$22/小時', note: '沙福道' }
+        ],
+        meters: ['達之路及桃源街路旁咪錶位', '森麻實道及羅福道路旁咪錶位']
+      },
+      '旺角': {
+        lat: 22.3193, lng: 114.1694, area: '旺角',
+        carparks: [
+          { name: '朗豪坊 Langham Place 停車場', type: '時租室內', rate: '$32/小時', note: '上海街入口 · 代客/時租' },
+          { name: 'MOKO 新世紀廣場停車場', type: '時租室內', rate: '$28/小時', note: '太子道西入口' }
+        ],
+        meters: ['洗衣街及黑布街路旁咪錶位', '染布房街及通菜街北段咪錶位']
+      },
+      '尖沙咀': {
+        lat: 22.2988, lng: 114.1722, area: '尖沙咀',
+        carparks: [
+          { name: 'K11 MUSEA / K11 Art Mall 停車場', type: '時租室內', rate: '$34/小時', note: '梳士巴利道 / 河內道入口' },
+          { name: '海港城 Harbour City 停車場', type: '時租室內', rate: '$34/小時', note: '廣東道入口 · 車位最多' },
+          { name: '中間道 H Zentre 停車場', type: '智能時租', rate: '$30/小時', note: '自動泊車系統' }
+        ],
+        meters: ['漆咸道南及天文臺道旁咪錶位', '赫德道及寶勒巷周邊咪錶位']
+      },
+      '紅磡': {
+        lat: 22.3030, lng: 114.1815, area: '紅磡',
+        carparks: [
+          { name: '置富都會 Metropolis 停車場', type: '時租室內', rate: '$24/小時', note: '紅磡站旁 · 暢通道入口' },
+          { name: '黃埔天地時尚坊 / 聚寶坊停車場', type: '時租室內', rate: '$24/小時', note: '德安街 / 船景街入口' }
+        ],
+        meters: ['必嘉街及差館里路旁咪錶位', '暢運道（近紅館）路旁咪錶位']
+      },
+      '觀塘': {
+        lat: 22.3122, lng: 114.2250, area: '觀塘',
+        carparks: [
+          { name: 'apm 創紀之城五期停車場', type: '時租室內', rate: '$26/小時', note: '巧明街入口' },
+          { name: '裕民坊 YM² 停車場', type: '時租室內', rate: '$24/小時', note: '物華街入口 · 設快充' }
+        ],
+        meters: ['巧明街及駿業街路旁咪錶位', '成業街及開源道內街咪錶位']
+      },
+      '九龍灣': {
+        lat: 22.3235, lng: 114.2140, area: '九龍灣',
+        carparks: [
+          { name: '德福廣場一期 / 二期停車場', type: '時租室內', rate: '$25/小時', note: '偉業街入口' },
+          { name: 'MegaBox 停車場', type: '時租室內', rate: '$22/小時', note: '常怡道 · 消費享免費泊車' }
+        ],
+        meters: ['常悅道及宏照道内街咪錶位', '臨興街及臨樂街路旁咪錶位']
+      },
+      '將軍澳': {
+        lat: 22.3075, lng: 114.2595, area: '將軍澳',
+        carparks: [
+          { name: 'PopCorn / 將軍澳中心停車場', type: '時租室內', rate: '$22/小時', note: '唐賢街 / 唐德街入口' },
+          { name: '東港城停車場', type: '時租室內', rate: '$20/小時', note: '坑口站旁' }
+        ],
+        meters: ['唐俊街及至善街（海濱）咪錶位', '寶邑路內街路旁咪錶位']
+      },
+      '荃灣': {
+        lat: 22.3710, lng: 114.1145, area: '荃灣',
+        carparks: [
+          { name: '荃灣廣場 / 如心廣場停車場', type: '時租室內', rate: '$22/小時', note: '大壩街 / 楊屋道入口' },
+          { name: '荃新天地 Citywalk 停車場', type: '時租室內', rate: '$22/小時', note: '禾笛街入口' }
+        ],
+        meters: ['大河道北及享和街路旁咪錶位', '海盛路（近海之戀）路旁咪錶位']
+      },
+      '葵芳': {
+        lat: 22.3568, lng: 114.1280, area: '葵芳',
+        carparks: [
+          { name: '新都會廣場 Metroplaza 停車場', type: '時租室內', rate: '$24/小時', note: '興寧路入口' },
+          { name: '葵涌廣場停車場', type: '時租室內', rate: '$22/小時', note: '葵富路入口' }
+        ],
+        meters: ['興芳路及盛芳街路旁咪錶位', '葵義路路旁咪錶位']
+      },
+      '青衣': {
+        lat: 22.3585, lng: 114.1065, area: '青衣',
+        carparks: [
+          { name: '青衣城一期 / 二期停車場', type: '時租室內', rate: '$22/小時', note: '青敬路入口 · 車位充裕' },
+          { name: '青衣公共圖書館 / 體育館停車場', type: '時租室內', rate: '$16/小時', note: '青綠街' }
+        ],
+        meters: ['青敬路（近青衣公園）路旁咪錶位', '楓樹窩路路旁咪錶位']
+      },
+      '屯門': {
+        lat: 22.3910, lng: 113.9725, area: '屯門',
+        carparks: [
+          { name: '屯門市廣場一期停車場', type: '時租室內', rate: '$20/小時', note: '屯順街入口' },
+          { name: 'V city 停車場', type: '時租室內', rate: '$22/小時', note: '屯門站旁' }
+        ],
+        meters: ['仁政街及啟民徑路旁咪錶位', '杯渡路及井財街路旁咪錶位']
+      },
+      '元朗': {
+        lat: 22.4445, lng: 114.0225, area: '元朗',
+        carparks: [
+          { name: 'YOHO MALL 形點 I / II 停車場', type: '時租室內', rate: '$22/小時', note: '朗日路入口' },
+          { name: '元朗廣場停車場', type: '時租室內', rate: '$20/小時', note: '青山公路元朗段' }
+        ],
+        meters: ['教育路及又新街周邊咪錶位', '鳳攸北街及鳳琴街路旁咪錶位']
+      },
+      '中環': {
+        lat: 22.2820, lng: 114.1585, area: '中環',
+        carparks: [
+          { name: '國際金融中心 ifc 停車場', type: '時租室內', rate: '$36/小時', note: '金融街入口 · 設充電位' },
+          { name: '大會堂多層停車場 / 天星碼頭停車場', type: '政府/時租', rate: '$26/小時', note: '愛丁堡廣場 · 中環較實惠之選' },
+          { name: '置地廣場 / 歷山大廈停車場', type: '時租室內', rate: '$38/小時', note: '雪廠街入口' }
+        ],
+        meters: ['愛丁堡廣場（大會堂外）路旁咪錶位', '荷李活道及結志街周邊咪錶位']
+      },
+      '金鐘': {
+        lat: 22.2790, lng: 114.1650, area: '金鐘',
+        carparks: [
+          { name: '太古廣場 Pacific Place 停車場', type: '時租室內', rate: '$36/小時', note: '法院道 / 金鐘道入口' },
+          { name: '添馬公園 / 政府總部公眾停車場', type: '時租室內', rate: '$26/小時', note: '添美道入口' }
+        ],
+        meters: ['添美道及立法會道旁咪錶位', '紅棉路（近香港公園）咪錶位']
+      },
+      '灣仔': {
+        lat: 22.2775, lng: 114.1730, area: '灣仔',
+        carparks: [
+          { name: '合和中心 Hopewell Centre 停車場', type: '時租室內', rate: '$28/小時', note: '皇后大道東 / 堅尼地道入口' },
+          { name: '灣仔會展中心 / 鷹君中心停車場', type: '時租室內', rate: '$32/小時', note: '港灣道入口' }
+        ],
+        meters: ['謝斐道及駱克道內街咪錶位', '皇后大道東（近利東街）咪錶位']
+      },
+      '銅鑼灣': {
+        lat: 22.2800, lng: 114.1850, area: '銅鑼灣',
+        carparks: [
+          { name: '時代廣場 Times Square 停車場', type: '時租室內', rate: '$36/小時', note: '霎東街 / 羅素街入口' },
+          { name: '希慎廣場 Hysan Place 停車場', type: '時租室內', rate: '$36/小時', note: '啟超道入口' },
+          { name: '維多利亞公園（興發街）公眾停車場', type: '時租露天', rate: '$22/小時', note: '天后興發街 · 價格實惠' }
+        ],
+        meters: ['加路連山道及大球場徑咪錶位', '興發街（維園旁）路旁咪錶位']
+      },
+      '太古': {
+        lat: 22.2845, lng: 114.2165, area: '太古',
+        carparks: [
+          { name: '太古城中心 Cityplaza 停車場', type: '時租室內', rate: '$26/小時', note: '太古城道入口' },
+          { name: '康怡廣場 Kornhill Plaza 停車場', type: '時租室內', rate: '$24/小時', note: '康山道入口' }
+        ],
+        meters: ['太古城道及太茂路旁咪錶位', '海灣街及糖廠街周邊咪錶位']
+      },
+      '柴灣': {
+        lat: 22.2645, lng: 114.2365, area: '柴灣',
+        carparks: [
+          { name: '新翠商場停車場', type: '時租室內', rate: '$20/小時', note: '柴灣道入口' },
+          { name: '杏花新城停車場', type: '時租室內', rate: '$20/小時', note: '盛泰道入口' }
+        ],
+        meters: ['祥利街及吉勝街路旁咪錶位', '寧富街（柴灣站旁）咪錶位']
+      },
+      '香港國際機場': {
+        lat: 22.3080, lng: 113.9185, area: '赤鱲角機場',
+        carparks: [
+          { name: '機場 1 號停車場（短途時租）', type: '時租露天', rate: '$28/小時', note: '一號客運大樓正對面 · 接機首選' },
+          { name: '機場 4 號多層停車場（時租/日租）', type: '時租室內', rate: '$28/小時', note: '設有蓋行人天橋直通客運大樓' }
+        ],
+        meters: ['暢達路（一號停車場外）上落客區', '東涌達東路（東薈城外）路旁咪錶位']
+      },
+      '機場': {
+        lat: 22.3080, lng: 113.9185, area: '赤鱲角機場',
+        carparks: [
+          { name: '機場 1 號停車場（短途時租）', type: '時租露天', rate: '$28/小時', note: '一號客運大樓正對面 · 接機首選' },
+          { name: '機場 4 號多層停車場（時租/日租）', type: '時租室內', rate: '$28/小時', note: '設有蓋行人天橋直通客運大樓' }
+        ],
+        meters: ['暢達路（一號停車場外）上落客區', '東涌達東路（東薈城外）路旁咪錶位']
+      }
     };
 
     function getCurrentTrafficMultiplier() {
@@ -1776,7 +2003,128 @@
       if (DRIVE_HUB_COORDS[clean]) return { name: clean, ...DRIVE_HUB_COORDS[clean] };
       const key = Object.keys(DRIVE_HUB_COORDS).find(k => clean.includes(k) || k.includes(clean));
       if (key) return { name: clean, ...DRIVE_HUB_COORDS[key] };
-      return { name: clean, lat: 22.3350, lng: 114.1750, area: '香港市區' };
+      return {
+        name: clean,
+        lat: 22.3350,
+        lng: 114.1750,
+        area: '香港市區',
+        carparks: [
+          { name: `${clean} 鄰近商場 / 商業大廈時租停車場`, type: '時租室內', rate: '$22-$30/小時', note: '建議先查看商場消費泊車優惠' },
+          { name: `${clean} 附近政府 / 領展公眾停車場`, type: '公眾時租', rate: '$18-$24/小時', note: '支援八達通及免觸式繳費' }
+        ],
+        meters: [`${clean} 周邊內街路旁八達通 / 入錶易咪錶位`]
+      };
+    }
+
+    // 計算即時私家車隧道分時段收費（依據香港運輸署最新私家車收費表）
+    function getRealtimePrivateCarTunnels(originName, destName, oCoord, dCoord) {
+      const now = new Date();
+      const minsNow = now.getHours() * 60 + now.getMinutes();
+      const isSundayOrHoliday = now.getDay() === 0;
+
+      // 三條過海隧道分時段私家車收費計算（週一至六 vs 週日）
+      function calcCrossHarbourToll(tunnelCode) {
+        if (isSundayOrHoliday) {
+          // 週日及公眾假期：10:15 - 19:15 劃一 $25（西隧）/ $25（紅隧/東隧）；其餘時間 $20
+          const isSunDaytime = minsNow >= 615 && minsNow < 1155;
+          return {
+            fee: isSunDaytime ? 25 : 20,
+            periodLabel: isSunDaytime ? '週日日間時段 (10:15-19:15)' : '週日非繁忙時段'
+          };
+        }
+        // 週一至週六分時段收費
+        if (minsNow >= 450 && minsNow < 615) {
+          // 07:30 - 10:15 早上繁忙時段
+          return {
+            fee: tunnelCode === 'WHC' ? 60 : 40,
+            periodLabel: '早上繁忙時段 (07:30-10:15)'
+          };
+        }
+        if ((minsNow >= 420 && minsNow < 450) || (minsNow >= 615 && minsNow < 645) ||
+            (minsNow >= 960 && minsNow < 990) || (minsNow >= 1140 && minsNow < 1170)) {
+          // 過渡時段
+          return {
+            fee: tunnelCode === 'WHC' ? 45 : 30,
+            periodLabel: '分時段過渡期'
+          };
+        }
+        if (minsNow >= 645 && minsNow < 960) {
+          // 10:15 - 16:30 一般日間時段
+          return {
+            fee: 30,
+            periodLabel: '一般日間時段 (10:15-16:30)'
+          };
+        }
+        if (minsNow >= 990 && minsNow < 1140) {
+          // 16:30 - 19:00 傍晚繁忙時段
+          return {
+            fee: tunnelCode === 'WHC' ? 60 : 40,
+            periodLabel: '傍晚繁忙時段 (16:30-19:00)'
+          };
+        }
+        // 19:30 - 07:30 晚間非繁忙時段
+        return {
+          fee: 20,
+          periodLabel: '晚間非繁忙時段 (19:30-07:30)'
+        };
+      }
+
+      const combined = `${originName} ${destName}`;
+      const isCrossHarbour = dCoord.lat < 22.292 || oCoord.lat < 22.292;
+      const isEastKln = combined.includes('觀塘') || combined.includes('九龍灣') || combined.includes('將軍澳') || combined.includes('太古') || combined.includes('柴灣');
+      const isTsuenWan = combined.includes('荃灣') || combined.includes('葵芳') || combined.includes('青衣') || combined.includes('屯門') || combined.includes('元朗');
+      const isAirport = combined.includes('機場');
+      const isSaiKung = combined.includes('西貢');
+
+      let routeDesc = '沿沙田路 / 大埔公路直達';
+      let items = [];
+
+      if (isAirport) {
+        routeDesc = '青沙公路（尖山隧道）→ 青嶼幹線 → 北大嶼山公路';
+        items = [
+          { name: '尖山隧道及沙田嶺隧道', fee: 8, note: '私家車全日劃一' },
+          { name: '青嶼幹線（青馬大橋）', fee: 0, note: '已豁免收費' }
+        ];
+      } else if (isCrossHarbour && isEastKln) {
+        const ehc = calcCrossHarbourToll('EHC');
+        routeDesc = '大老山隧道 → 觀塘繞道 → 東區海底隧道';
+        items = [
+          { name: '大老山隧道', fee: 20, note: '私家車全日劃一' },
+          { name: '東區海底隧道', fee: ehc.fee, note: `私家車即時 · ${ehc.periodLabel}` }
+        ];
+      } else if (isCrossHarbour) {
+        const cht = calcCrossHarbourToll('CHT');
+        routeDesc = '獅子山隧道 → 窩打老道 → 紅磡海底隧道';
+        items = [
+          { name: '獅子山隧道', fee: 8, note: '私家車全日劃一' },
+          { name: '紅磡海底隧道', fee: cht.fee, note: `私家車即時 · ${cht.periodLabel}` }
+        ];
+      } else if (isEastKln) {
+        routeDesc = '大老山隧道 → 觀塘繞道';
+        items = [
+          { name: '大老山隧道', fee: 20, note: '私家車全日劃一' }
+        ];
+      } else if (isTsuenWan) {
+        routeDesc = '城門隧道 → 象鼻山路 / 荃灣路';
+        items = [
+          { name: '城門隧道', fee: 5, note: '私家車全日劃一' }
+        ];
+      } else if (isSaiKung) {
+        routeDesc = '馬鞍山繞道 → 西沙路直達西貢';
+        items = [];
+      } else if (dCoord.lat < 22.345 || oCoord.lat < 22.345) {
+        routeDesc = '獅子山隧道 / 尖山隧道 → 窩打老道 / 連翔道';
+        items = [
+          { name: '獅子山隧道 / 尖山隧道', fee: 8, note: '私家車全日劃一' }
+        ];
+      }
+
+      const totalFee = items.reduce((sum, it) => sum + it.fee, 0);
+      return {
+        routeDesc,
+        items,
+        totalFee
+      };
     }
 
     function calcDrivingRouteInfo(originName, destName) {
@@ -1793,58 +2141,18 @@
       const straightKm = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       const roadKm = Math.max(2.2, +(straightKm * 1.42).toFixed(1));
 
-      // 判斷行經隧道與建議路線
-      const combined = `${originName} ${destName}`;
-      let routeDesc = '沿沙田路 / 大埔公路直達';
-      let tollFee = 0;
-      let tollName = '無需隧道費';
-
-      const isCrossHarbour = d.lat < 22.292 || o.lat < 22.292;
-      const isEastKln = combined.includes('觀塘') || combined.includes('九龍灣') || combined.includes('將軍澳') || combined.includes('太古') || combined.includes('柴灣');
-      const isTsuenWan = combined.includes('荃灣') || combined.includes('葵芳') || combined.includes('青衣') || combined.includes('屯門') || combined.includes('元朗');
-      const isAirport = combined.includes('機場');
-      const isSaiKung = combined.includes('西貢');
-
-      if (isAirport) {
-        routeDesc = '青沙公路（尖山隧道）→ 青嶼幹線 → 北大嶼山公路';
-        tollFee = 8;
-        tollName = '尖山隧道 $8';
-      } else if (isCrossHarbour && isEastKln) {
-        routeDesc = '大老山隧道 → 觀塘繞道 → 東區海底隧道';
-        tollFee = 60;
-        tollName = '大老山 $20 + 東隧 $40';
-      } else if (isCrossHarbour) {
-        routeDesc = '獅子山隧道 / 青沙公路 → 紅磡海底隧道（或西隧）';
-        tollFee = 48;
-        tollName = '獅隧 $8 + 紅隧 $40';
-      } else if (isEastKln) {
-        routeDesc = '大老山隧道 → 觀塘繞道';
-        tollFee = 20;
-        tollName = '大老山隧道 $20';
-      } else if (isTsuenWan) {
-        routeDesc = '城門隧道 → 象鼻山路 / 荃灣路';
-        tollFee = 5;
-        tollName = '城門隧道 $5';
-      } else if (isSaiKung) {
-        routeDesc = '馬鞍山繞道 → 西沙路直達西貢';
-        tollFee = 0;
-        tollName = '無需隧道費';
-      } else if (d.lat < 22.345 || o.lat < 22.345) {
-        routeDesc = '獅子山隧道 / 尖山隧道 → 窩打老道 / 連翔道';
-        tollFee = 8;
-        tollName = '獅子山 / 尖山隧道 $8';
-      }
-
+      const tunnelData = getRealtimePrivateCarTunnels(originName, destName, o, d);
       const traffic = getCurrentTrafficMultiplier();
-      const baseMins = Math.round((roadKm / 42) * 60 + (tollFee > 0 ? 4 : 2));
+      const baseMins = Math.round((roadKm / 42) * 60 + (tunnelData.totalFee > 0 ? 4 : 2));
       const estMins = Math.max(6, Math.round(baseMins * traffic.mult));
 
       return {
         roadKm,
         estMins,
-        routeDesc,
-        tollFee,
-        tollName,
+        routeDesc: tunnelData.routeDesc,
+        tunnelItems: tunnelData.items,
+        tollFee: tunnelData.totalFee,
+        destPlace: d,
         traffic
       };
     }
@@ -1903,9 +2211,51 @@
       const info = calcDrivingRouteInfo(origin, dest);
       const taxi = estimateHkUrbanTaxiFare(info.roadKm, info.tollFee, info.traffic.mult);
       const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin + ' 香港')}&destination=${encodeURIComponent(dest + ' 香港')}&travelmode=driving`;
+      const parkingSearchUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dest + ' 停車場 咪錶 香港')}`;
+
+      const nowTimeStr = `${String(new Date().getHours()).padStart(2, '0')}:${String(new Date().getMinutes()).padStart(2, '0')}`;
+
+      // 隧道項目收費 HTML
+      const tunnelListHtml = info.tunnelItems.length > 0
+        ? info.tunnelItems.map(t => `
+            <div class="flex items-center justify-between bg-[#FBF8F1] rounded-xl px-2.5 py-1.5 border border-[#2C2A29]/20">
+              <div>
+                <div class="text-xs font-black text-[#2C2A29]">🚧 ${escapeHtml(t.name)}</div>
+                <div class="text-[10px] text-[#6B665F] font-bold">${escapeHtml(t.note)}</div>
+              </div>
+              <div class="text-sm font-black ${t.fee === 0 ? 'text-[#7BA07B]' : 'text-[#3B6998]'}">
+                ${t.fee === 0 ? '免費' : `$${t.fee}`}
+              </div>
+            </div>
+          `).join('')
+        : `<div class="bg-[#EEF5EE] rounded-xl px-3 py-2 text-xs font-bold text-[#3B6998] border border-[#2C2A29]/20">✅ 此路線無需經過收費隧道（隧道費 $0）</div>`;
+
+      // 停車場列表 HTML
+      const carparksHtml = (info.destPlace.carparks || []).map(cp => `
+        <div class="bg-[#FBF8F1] rounded-xl p-2.5 border border-[#2C2A29]/25 flex items-start justify-between gap-2">
+          <div class="min-w-0">
+            <div class="text-xs font-black text-[#2C2A29] flex items-center gap-1 flex-wrap">
+              <span>🅿️ ${escapeHtml(cp.name)}</span>
+              <span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[#EAF2F8] text-[#3B6998] border border-[#2C2A29]/20">${escapeHtml(cp.type)}</span>
+            </div>
+            <div class="text-[11px] text-[#6B665F] mt-0.5">${escapeHtml(cp.note)}</div>
+          </div>
+          <div class="text-xs font-black text-[#E06D53] bg-white px-2 py-1 rounded-lg border border-[#2C2A29] shrink-0">
+            ${escapeHtml(cp.rate)}
+          </div>
+        </div>
+      `).join('');
+
+      // 泊車咪錶位置 HTML
+      const metersHtml = (info.destPlace.meters || []).map(m => `
+        <div class="flex items-center gap-1.5 text-xs text-[#2C2A29] bg-[#FFF9E6] px-2.5 py-1.5 rounded-xl border border-[#2C2A29]/20">
+          <span class="text-sm">⏱️</span>
+          <span class="font-bold">${escapeHtml(m)}</span>
+        </div>
+      `).join('');
 
       container.innerHTML = `
-        <div class="sketch-card bg-[#FFFDF7] p-4 space-y-3">
+        <div class="sketch-card bg-[#FFFDF7] p-4 space-y-3.5">
           <div class="flex items-center justify-between border-b-2 border-dashed border-[#D6CFC2] pb-2">
             <div>
               <div class="text-[11px] font-bold text-[#6B665F]">行車與的士預算</div>
@@ -1931,17 +2281,40 @@
             </div>
           </div>
 
-          <div class="bg-white rounded-xl p-3 border border-[#2C2A29]/25 space-y-1.5 text-xs">
+          <!-- 建議路線與即時隧道私家車項目收費 -->
+          <div class="bg-white rounded-2xl p-3 border-2 border-[#2C2A29] space-y-2">
             <div class="flex items-center justify-between">
-              <span class="font-bold text-[#6B665F]">🛣️ 建議行車路線：</span>
-              <span class="font-black text-[#2C2A29]">${escapeHtml(info.routeDesc)}</span>
+              <span class="text-xs font-black text-[#2C2A29]">🛣️ 即時隧道私家車收費（${nowTimeStr}）</span>
+              <span class="text-xs font-black px-2 py-0.5 rounded-full bg-[#3B6998] text-white border border-[#2C2A29]">
+                合計 $${info.tollFee}
+              </span>
             </div>
-            <div class="flex items-center justify-between">
-              <span class="font-bold text-[#6B665F]">🚧 單程隧道費：</span>
-              <span class="font-bold text-[#3B6998]">${escapeHtml(info.tollName)}</span>
+            <div class="text-[11px] font-bold text-[#6B665F]">建議路線：${escapeHtml(info.routeDesc)}</div>
+            <div class="space-y-1.5 pt-1">
+              ${tunnelListHtml}
             </div>
             <div class="text-[10px] text-[#6B665F] pt-1 border-t border-dashed border-[#D6CFC2]">
-              * 的士收費已按市區紅的起錶 $29、距離跳錶及單程隧道費估算（未計行李附加費）。
+              * 過海隧道已按「易通行」私家車分時段收費自動計算；的士過海（紅隧/東隧/西隧）劃一收費不同。
+            </div>
+          </div>
+
+          <!-- 目的地附近停車場及泊車咪錶位置 -->
+          <div class="bg-white rounded-2xl p-3 border-2 border-[#2C2A29] space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black text-[#2C2A29]">🅿️ 「${escapeHtml(dest)}」附近停車場及咪錶</span>
+              <a href="${parkingSearchUrl}" target="_blank" rel="noopener noreferrer" class="text-[11px] font-black text-[#3B6998] underline">
+                地圖查看 ↗
+              </a>
+            </div>
+
+            <div class="space-y-1.5">
+              <div class="text-[11px] font-bold text-[#6B665F]">🏢 鄰近時租停車場：</div>
+              ${carparksHtml}
+            </div>
+
+            <div class="space-y-1.5 pt-1">
+              <div class="text-[11px] font-bold text-[#6B665F]">🪙 路旁泊車咪錶位置（八達通 / 入錶易）：</div>
+              ${metersHtml}
             </div>
           </div>
 
